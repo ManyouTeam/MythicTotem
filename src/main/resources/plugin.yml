@@ -1,0 +1,15 @@
+name: MythicTotem
+version: '${project.version}'
+main: cn.superiormc.mythictotem.MythicTotem
+api-version: 1.13
+softdepend:
+  - ItemsAdder
+  - Oraxen
+  - PlaceholderAPI
+commands:
+  mythictotem:
+    aliases:
+      - "mt"
+      - "totem"
+    usage: "/mythictotem"
+    description: "MythicTotem Main Command."
