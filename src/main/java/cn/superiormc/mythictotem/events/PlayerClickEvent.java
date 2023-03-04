@@ -17,8 +17,7 @@ public class PlayerClickEvent implements Listener {
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
-            Object obj = new Object();
-            synchronized(obj) {
+            synchronized(event) {
                 new ValidManager(event);
             }
         });
