@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.events;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.managers.ValidManager;
+import dev.lone.itemsadder.api.CustomBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,14 +18,14 @@ public class PlayerPlaceEvent implements Listener {
         }
         if (event.canBuild() && (!event.isCancelled())){
             Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
-                Object obj = new Object();
-                synchronized(obj) {
+                synchronized(event) {
                     new ValidManager(event);
                 }
             });
         }
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getBlockPlaced().getLocation().toString());
+            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlockPlaced()).getNamespacedID());
         }
     }
 }

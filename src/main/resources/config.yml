@@ -28,7 +28,7 @@ totems:
         D: 'none'
       actions:
         - 'message: Hello!'
-        - 'console_command: mm spawn test %world% %block_x% %block_y% %block_z%'
+        - 'console_command: mm m spawn test %world%, %block_x%, %block_y%, %block_z%'
       conditions:
         - 'world: world'
       disappear: true

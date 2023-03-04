@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -254,11 +253,11 @@ public class ValidManager {
             }
         }
         else if (material.startsWith("itemsadder:")) {
-            CustomBlock iaMaterial = CustomBlock.getInstance(material.split(":")[1] + material.split(":")[2]);
-            if (iaMaterial == null) {
+            try {
+                return (material.split(":")[1] + ":" + material.split(":")[2]).equals(CustomBlock.byAlreadyPlaced(block).getNamespacedID());
+            } catch (NullPointerException exception) {
+                SetErrorValue();
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
-            } else {
-                return (iaMaterial == CustomBlock.byAlreadyPlaced(block));
             }
         }
         else if (material.startsWith("oraxen:")) {
@@ -282,7 +281,6 @@ public class ValidManager {
             } else if (singleAction.startsWith("message: ")) {
                 player.sendMessage(Messages.GetActionMessages(singleAction.substring(9)));
             } else if (singleAction.startsWith("console_command: ")) {
-                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                     DispatchCommand.DoIt(ReplacePlaceholder(singleAction.substring(17), player, block));
                     return null;
