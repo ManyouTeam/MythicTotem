@@ -5,9 +5,9 @@ Spigot Link: https://www.spigotmc.org/resources/mythictotem-create-your-own-tote
 Just use Maven run the pom file.
 
 ## TO-DO
-Oraxen support.
-Permant bonus support.
-WorldGuard, PlotSquared and other lands plugin protection support.
-hasItem condition.
-consumeItem action.
-Your ideals?
+- Oraxen support.
+- Permant bonus support.
+- WorldGuard, PlotSquared and other lands plugin protection support.
+- hasItem condition.
+- consumeItem action.
+- Your ideals?
