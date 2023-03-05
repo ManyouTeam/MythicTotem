@@ -32,8 +32,8 @@ public class ValidManager {
     }
 
     public void CheckTotem(Player player, Block block) {
-        // 处理 ItemsAdder 方块
         List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
+        // 处理 ItemsAdder 方块
         if (ItemsAdderHook.CheckLoad() && CustomBlock.byAlreadyPlaced(block) != null &&
                 MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID());
@@ -57,13 +57,20 @@ public class ValidManager {
             // 初始坐标为第一行第一列的坐标，通过这个offset的值偏移到正确的初始坐标
             Location startLocation_1 = new Location(block.getWorld(), block.getLocation().getX(), block.getLocation().getY() + offset_y, block.getLocation().getZ() - offset_x_or_z);
             Location startLocation_2 = new Location(block.getWorld(), block.getLocation().getX() - offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
-            // 图腾的行列
+            // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
             int base_row = singleTotem.GetTotemManager().GetRealRow();
             int base_column = singleTotem.GetTotemManager().GetRealColumn();
-            // 遍历周围的方块
+            // 先弄一个图腾是否摆放正确的 validTrueOrFalse
             boolean validTrueOrFalse = false;
+            // 这种带 None 的是空白方块数量
+            // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
             int validXNoneBlockAmount1 = 0;
+            // 存放实际方块摆放位置和图腾配置一致的 List
             List<Location> validXTotemBlockLocation1 = new ArrayList<>();
+            // 四种遍历规则
+            /*
+            假设一个二维坐标轴，
+            */
             xbianli1:
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {

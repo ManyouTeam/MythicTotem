@@ -25,6 +25,9 @@ public class MainTotem  implements CommandExecutor {
         else if (args[0].equals("list")) {
             SubList.SubListCommand(sender);
         }
+        else if (args[0].equals("reload")) {
+            SubReload.SubReloadCommand(sender);
+        }
         else
         {
             sender.sendMessage(Messages.GetMessages("error-args"));

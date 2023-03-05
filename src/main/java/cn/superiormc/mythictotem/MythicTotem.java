@@ -1,6 +1,7 @@
 package cn.superiormc.mythictotem;
 
 import cn.superiormc.mythictotem.commands.MainTotem;
+import cn.superiormc.mythictotem.commands.MainTotemTab;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.PlayerClickEvent;
@@ -54,6 +55,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public void Commands() {
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setExecutor(new MainTotem());
+        Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setTabCompleter(new MainTotemTab());
     }
 
     public static void SetErrorValue(){

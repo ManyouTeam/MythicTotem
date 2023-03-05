@@ -11,7 +11,6 @@ totems:
       C: 'minecraft:netherrack'
     actions:
       - 'message: Hello!'
-      - 'console_command: mm spawn test %world% %block_x% %block_y% %block_z%'
     conditions:
       - 'world: world'
     disappear: true
@@ -46,6 +45,7 @@ settings:
 
 # Message Configs
 messages:
+  plugin-reloaded:  "&#98FB98[MythicTotem] &fPlugin reloaded!"
   help-main: |
     &#98FB98&lMythicTotem &7Made by @PQguanfang
     &f/mythictotem help &7- View help.
@@ -53,10 +53,12 @@ messages:
     &#98FB98&lMythicTotem &7Made by @PQguanfang
     &f/mythictotem help &7- View help.
     &f/mythictotem list &7- View list of valid totems.
+    &f/mythictotem reload &7- Reload the plugin.
   help-main-console: |
     &#98FB98&lMythicTotem &7Made by @PQguanfang
     &f/mythictotem help &7- View help.
     &f/mythictotem list &7- View list of valid totems.
+    &f/mythictotem reload &7- Reload the plugin.
   list-head: "&#98FB98[MythicTotem] &fValid Totem List:"
   list-prefix: "&f"
   error-args: "&#98FB98[MythicTotem] &cWrong command usage, if you need help, use /mythictotem help!"
