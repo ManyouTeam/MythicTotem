@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -89,6 +89,13 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.oraxen</groupId>
+            <artifactId>oraxen</artifactId>
+            <version>1.152.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/oraxen-1.152.2.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
