@@ -9,7 +9,7 @@ public class SubReload {
 
     public static void SubReloadCommand(CommandSender sender)
     {
-        if(sender.hasPermission("economyexchange.admin")) {
+        if(sender.hasPermission("mythictotem.admin")) {
             MythicTotem.getTotemMaterial.clear();
             MythicTotem.getTotemMap.clear();
             MythicTotem.instance.reloadConfig();
