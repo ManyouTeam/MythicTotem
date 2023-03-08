@@ -34,18 +34,25 @@ public class ValidManager {
     public void CheckTotem(Player player, Block block) {
         List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
         // 处理 ItemsAdder 方块
-        if (CheckPluginLoad.DoIt("ItemsAdder") && CustomBlock.byAlreadyPlaced(block) != null &&
-                MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
-            placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID());
+        if (CheckPluginLoad.DoIt("ItemsAdder")) {
+            if (CustomBlock.byAlreadyPlaced(block) != null &&
+                    MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
+                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID());
+            }
         }
         // 处理 Oraxen 方块
-        else if (CheckPluginLoad.DoIt("Oraxen") && OraxenBlocks.isOraxenBlock(block) &&
-                (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID())) ||
+        if (CheckPluginLoad.DoIt("Oraxen")) {
+            if((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
+                (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
+                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
+            }
+            else if((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getStringMechanic(block).getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
-            placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
+                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID());
+            }
         }
         // 处理原版方块
-        else if (MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
+        if (MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
@@ -270,7 +277,12 @@ public class ValidManager {
         }
         else if (material.startsWith("oraxen:")) {
             try {
-                return ((material.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID()) || (material.split(":")[1]).equals(OraxenBlocks.getStringMechanic(block).getItemID()));
+                if (OraxenBlocks.getNoteBlockMechanic(block).getItemID() == null){
+                    return (material.split(":")[1]).equals(OraxenBlocks.getStringMechanic(block).getItemID());
+                }
+                else if (OraxenBlocks.getStringMechanic(block).getItemID() == null) {
+                    return (material.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID());
+                }
             } catch (NullPointerException exception) {
                 SetErrorValue();
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
