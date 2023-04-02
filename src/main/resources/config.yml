@@ -31,7 +31,7 @@ totems:
       D: 'none'
     actions:
       - 'message: Hello!'
-      - 'console_command: mm m spawn test %world%, %block_x%, %block_y%, %block_z%'
+      - 'console_command: mm m spawn SkeletalKnight:1 1 %world%, %block_x%, %block_y%, %block_z%'
     conditions:
       - 'world: world'
     disappear: true
@@ -43,9 +43,11 @@ settings:
     BlockPlaceEvent:
       enabled: true
       require-shift: false
+      black-creative-mode: true
     PlayerInteractEvent:
       enabled: true
       require-shift: true
+      black-creative-mode: true
 
 # Message Configs
 messages:

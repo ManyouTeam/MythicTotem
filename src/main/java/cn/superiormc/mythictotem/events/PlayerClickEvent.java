@@ -13,6 +13,9 @@ public class PlayerClickEvent implements Listener {
 
     @EventHandler
     public void InteractEvent(PlayerInteractEvent event) {
+        if (GeneralSettingConfigs.GetPlayerInteractEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
+            return;
+        }
         if (GeneralSettingConfigs.GetPlayerInteractEventRequireShift() && (!event.getPlayer().isSneaking())) {
             return;
         }

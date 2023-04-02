@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import cn.superiormc.mythictotem.utils.DispatchCommand;
+import cn.superiormc.mythictotem.utils.MythicMobsSpawn;
 import cn.superiormc.mythictotem.utils.RemoveBlock;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
@@ -102,7 +103,7 @@ public class ValidManager {
                         }
                     }
                     // 条件满足
-                    if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
+                    if (!validTrueOrFalse && validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -144,7 +145,7 @@ public class ValidManager {
                             validXNoneBlockAmount2 ++;
                         }
                     }
-                    if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
+                    if (!validTrueOrFalse && validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -189,7 +190,7 @@ public class ValidManager {
                             validZNoneBlockAmount1 ++;
                         }
                     }
-                    if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
+                    if (!validTrueOrFalse && validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -234,7 +235,7 @@ public class ValidManager {
                             validZNoneBlockAmount2 ++;
                         }
                     }
-                    if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
+                    if (!validTrueOrFalse && validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -304,15 +305,22 @@ public class ValidManager {
                 return;
             } else if (singleAction.startsWith("message: ")) {
                 player.sendMessage(Messages.GetActionMessages(singleAction.substring(9)));
+            } else if (CheckPluginLoad.DoIt("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
+                Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
+                    try {
+                        MythicMobsSpawn.DoIt(block, singleAction.substring(18).split(";;")[0], Integer.parseInt(singleAction.substring(18).split(";;")[1]));
+                    }
+                    catch (ArrayIndexOutOfBoundsException e) {
+                        MythicMobsSpawn.DoIt(block, singleAction.substring(18).split(";;")[0], 1);
+                    }
+                });
             } else if (singleAction.startsWith("console_command: ")) {
-                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+                Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     DispatchCommand.DoIt(ReplacePlaceholder(singleAction.substring(17), player, block));
-                    return null;
                 });
             } else if (singleAction.startsWith("player_command: ")) {
-                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+                Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     DispatchCommand.DoIt(player, ReplacePlaceholder(singleAction.substring(16), player, block));
-                    return null;
                 });
             }
         }
@@ -425,6 +433,8 @@ public class ValidManager {
                 .replace("%player_x%", String.valueOf(player.getLocation().getX()))
                 .replace("%player_y%", String.valueOf(player.getLocation().getY()))
                 .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
+                .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
+                .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
                 .replace("%player%", player.getName());
     }
 

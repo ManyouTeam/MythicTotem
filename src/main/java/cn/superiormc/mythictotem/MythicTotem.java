@@ -7,6 +7,7 @@ import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.PlayerClickEvent;
 import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
 import cn.superiormc.mythictotem.managers.*;
+import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,6 +35,9 @@ public final class MythicTotem extends JavaPlugin {
         TotemConfigs.GetTotemConfigs();
         Events();
         Commands();
+        if ((CheckPluginLoad.DoIt("MythicMobs"))) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFound MythicMobs in server, try hooking into it...");
+        }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }
 
@@ -44,12 +48,12 @@ public final class MythicTotem extends JavaPlugin {
 
     public void Events() {
         if(GeneralSettingConfigs.GetBlockPlaceEventEnabled()) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockPlaceEvent trigger.");
             Bukkit.getPluginManager().registerEvents(new PlayerPlaceEvent(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockPlaceEvent trigger.");
         }
         if(GeneralSettingConfigs.GetPlayerInteractEventEnabled()) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerInteractEvent trigger.");
             Bukkit.getPluginManager().registerEvents(new PlayerClickEvent(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerInteractEvent trigger.");
         }
     }
 

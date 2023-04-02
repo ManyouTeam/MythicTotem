@@ -12,6 +12,9 @@ public class PlayerPlaceEvent implements Listener {
 
     @EventHandler
     public void PlaceEvent(BlockPlaceEvent event){
+        if (GeneralSettingConfigs.GetPlayerPlaceEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
+            return;
+        }
         if (GeneralSettingConfigs.GetBlockPlaceEventRequireShift() && (!event.getPlayer().isSneaking())) {
             return;
         }

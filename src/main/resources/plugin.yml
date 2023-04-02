@@ -6,6 +6,7 @@ softdepend:
   - ItemsAdder
   - Oraxen
   - PlaceholderAPI
+  - MythicMobs
 commands:
   mythictotem:
     aliases:
