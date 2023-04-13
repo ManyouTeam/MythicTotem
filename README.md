@@ -4,8 +4,11 @@ Spigot Link: https://www.spigotmc.org/resources/mythictotem-create-your-own-tote
 ## Want to build by yourself?
 Just use Maven run the pom file.
 
+## Credits
+EasyPlugin: https://github.com/CarmJos/EasyPlugin
+
 ## TO-DO
-- Oraxen support.
+- Oraxen support. (DONE)
 - Permant bonus support.
 - WorldGuard, PlotSquared and other lands plugin protection support.
 - hasItem condition.
