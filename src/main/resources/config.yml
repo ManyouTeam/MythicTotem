@@ -15,6 +15,7 @@ totems:
       C: 'minecraft:netherrack'
     actions:
       - 'message: Hello!'
+      - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
     disappear: true

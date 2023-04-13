@@ -1,6 +1,7 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import cn.superiormc.mythictotem.utils.DispatchCommand;
@@ -42,8 +43,8 @@ public class ValidManager {
             }
         }
         // 处理 Oraxen 方块
-        if (CheckPluginLoad.DoIt("Oraxen")) {
-            if((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
+        if (placedBlockCheckManagers.size() == 0 && CheckPluginLoad.DoIt("Oraxen")) {
+            if ((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
             }
@@ -53,7 +54,7 @@ public class ValidManager {
             }
         }
         // 处理原版方块
-        if (MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
+        if (placedBlockCheckManagers.size() == 0 && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
@@ -68,7 +69,9 @@ public class ValidManager {
             // 那么这里的 offset_y 和 offset_x_or_z 应该分别为 0，0 0，1 0，2
             // 初始坐标为第一行第一列的坐标，通过这个offset的值偏移到正确的初始坐标
             Location startLocation_1 = new Location(block.getWorld(), block.getLocation().getX(), block.getLocation().getY() + offset_y, block.getLocation().getZ() - offset_x_or_z);
-            Location startLocation_2 = new Location(block.getWorld(), block.getLocation().getX() - offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
+            Location startLocation_2 = new Location(block.getWorld(), block.getLocation().getX(), block.getLocation().getY() + offset_y, block.getLocation().getZ() + offset_x_or_z);
+            Location startLocation_3 = new Location(block.getWorld(), block.getLocation().getX() - offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
+            Location startLocation_4 = new Location(block.getWorld(), block.getLocation().getX() + offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
             // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
             int base_row = singleTotem.GetTotemManager().GetRealRow();
             int base_column = singleTotem.GetTotemManager().GetRealColumn();
@@ -124,15 +127,15 @@ public class ValidManager {
             int validXNoneBlockAmount2 = 0;
             List<Location> validXTotemBlockLocation2 = new ArrayList<>();
             xbianli2:for (int i = 0; i < base_row ; i ++){
-                for(int b = 0 ; b < base_column ; b ++) {
-                    Location nowLocation = startLocation_1.clone().add(0, -i, b);
-                    String material = singleTotem.GetTotemManager().GetRealMaterial(i, base_column - b - 1);
+                for (int b = 0 ; b < base_column ; b ++) {
+                    Location nowLocation = startLocation_2.clone().add(0, -i, -b);
+                    String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §2Rule: X2 §eSize: " +
                                 validXTotemBlockLocation2.size());
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_1);
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_2);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation + " " + nowLocation.getBlock());
                     }
                     if (!CheckMaterial(material, nowLocation.getBlock())) {
@@ -170,14 +173,14 @@ public class ValidManager {
                     if (validTrueOrFalse) {
                         break zbianli1;
                     }
-                    Location nowLocation = startLocation_2.clone().add(b, -i, 0);
-                    String material = singleTotem.GetTotemManager().GetRealMaterial(i, base_column - b - 1);
+                    Location nowLocation = startLocation_3.clone().add(b, -i, 0);
+                    String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §3Rule: Z1 §eSize: " +
                                 validZTotemBlockLocation1.size());
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_1);
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_3);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation + " " + nowLocation.getBlock());
                     }
                     if (!CheckMaterial(material, nowLocation.getBlock())) {
@@ -215,14 +218,14 @@ public class ValidManager {
                     if (validTrueOrFalse) {
                         break zbianli2;
                     }
-                    Location nowLocation = startLocation_2.clone().add(b, -i, 0);
+                    Location nowLocation = startLocation_4.clone().add(-b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §5Rule: Z2 §eSize: " +
                                 validZTotemBlockLocation2.size());
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_1);
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_4);
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation + " " + nowLocation.getBlock());
                     }
                     if (!CheckMaterial(material, nowLocation.getBlock())) {
@@ -264,16 +267,12 @@ public class ValidManager {
             try {
                 return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
             } catch (IllegalArgumentException | NullPointerException exception) {
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
             }
         }
         else if (material.startsWith("itemsadder:")) {
             try {
                 return (material.split(":")[1] + ":" + material.split(":")[2]).equals(CustomBlock.byAlreadyPlaced(block).getNamespacedID());
             } catch (NullPointerException exception) {
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
             }
         }
         else if (material.startsWith("oraxen:")) {
@@ -285,15 +284,11 @@ public class ValidManager {
                     return (material.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID());
                 }
             } catch (NullPointerException exception) {
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
             }
         } else {
             try {
                 return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
             } catch (IllegalArgumentException | NullPointerException exception) {
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is illegal material in your totem config layout explain.");
             }
         }
         return false;
