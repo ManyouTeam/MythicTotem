@@ -40,6 +40,14 @@ totems:
 # General Setting Configs
 settings:
   debug: false
+  disappear:
+    BukkitAPI:
+      # Can not disable!
+      enabled: true
+    BlockDamageEvent:
+      enabled: false
+    BlockBreakEvent:
+      enabled: false
   trigger:
     BlockPlaceEvent:
       enabled: true

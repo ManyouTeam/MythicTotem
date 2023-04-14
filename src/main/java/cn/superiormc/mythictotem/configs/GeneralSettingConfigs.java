@@ -29,4 +29,12 @@ public class GeneralSettingConfigs {
         return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerInteractEvent.black-creative-mode", true);
     }
 
+    public static boolean GetBlockBreakEventCancel(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.disappear.BlockBreakEvent.enabled", false);
+    }
+
+    public static boolean GetBlockDamageEventCancel(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.disappear.BlockDamageEvent.enabled", false);
+    }
+
 }

@@ -9,18 +9,18 @@ import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
 import cn.superiormc.mythictotem.managers.*;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class MythicTotem extends JavaPlugin {
 
     public static JavaPlugin instance;
 
     public static boolean getError = false;
+
+    public static List<Block> getCheckingBlock = new ArrayList<>();
 
     // 图腾ID，图腾信息
     public static Map<String, TotemManager> getTotemMap = new HashMap<>();

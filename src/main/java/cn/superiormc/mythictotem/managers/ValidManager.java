@@ -1,7 +1,6 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import cn.superiormc.mythictotem.utils.DispatchCommand;
@@ -21,8 +20,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cn.superiormc.mythictotem.MythicTotem.SetErrorValue;
-
 public class ValidManager {
 
     public ValidManager(BlockPlaceEvent event){
@@ -34,7 +31,11 @@ public class ValidManager {
     }
 
     public void CheckTotem(Player player, Block block) {
+        if (MythicTotem.getCheckingBlock.contains(block)) {
+            return;
+        }
         List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
+        MythicTotem.getCheckingBlock.add(block);
         // 处理 ItemsAdder 方块
         if (CheckPluginLoad.DoIt("ItemsAdder")) {
             if (CustomBlock.byAlreadyPlaced(block) != null &&
@@ -75,8 +76,6 @@ public class ValidManager {
             // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
             int base_row = singleTotem.GetTotemManager().GetRealRow();
             int base_column = singleTotem.GetTotemManager().GetRealColumn();
-            // 先弄一个图腾是否摆放正确的 validTrueOrFalse
-            boolean validTrueOrFalse = false;
             // 这种带 None 的是空白方块数量
             // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
             int validXNoneBlockAmount1 = 0;
@@ -106,20 +105,21 @@ public class ValidManager {
                         }
                     }
                     // 条件满足
-                    if (!validTrueOrFalse && validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
+                    if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
+                        MythicTotem.getCheckingBlock.remove(block);
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                    RemoveBlock.DoIt(loc);
+                                    RemoveBlock.DoIt(player, loc);
                                     return null;
                                 });
                             }
                         }
-                        validTrueOrFalse = true;
                         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
+                        Bukkit.getConsoleSender().sendMessage("X1");
                         break;
                     }
                 }
@@ -148,20 +148,21 @@ public class ValidManager {
                             validXNoneBlockAmount2 ++;
                         }
                     }
-                    if (!validTrueOrFalse && validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
+                    if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
+                        MythicTotem.getCheckingBlock.remove(block);
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                    RemoveBlock.DoIt(loc);
+                                    RemoveBlock.DoIt(player, loc);
                                     return null;
                                 });
                             }
                         }
-                        validTrueOrFalse = true;
                         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
+                        Bukkit.getConsoleSender().sendMessage("X2");
                         break;
                     }
                 }
@@ -170,9 +171,6 @@ public class ValidManager {
             List<Location> validZTotemBlockLocation1 = new ArrayList<>();
             zbianli1:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
-                    if (validTrueOrFalse) {
-                        break zbianli1;
-                    }
                     Location nowLocation = startLocation_3.clone().add(b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -193,20 +191,21 @@ public class ValidManager {
                             validZNoneBlockAmount1 ++;
                         }
                     }
-                    if (!validTrueOrFalse && validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
+                    if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
+                        MythicTotem.getCheckingBlock.remove(block);
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                    RemoveBlock.DoIt(loc);
+                                    RemoveBlock.DoIt(player, loc);
                                     return null;
                                 });
                             }
                         }
-                        validTrueOrFalse = true;
                         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
+                        Bukkit.getConsoleSender().sendMessage("Z1");
                         break;
                     }
                 }
@@ -215,9 +214,6 @@ public class ValidManager {
             List<Location> validZTotemBlockLocation2 = new ArrayList<>();
             zbianli2:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
-                    if (validTrueOrFalse) {
-                        break zbianli2;
-                    }
                     Location nowLocation = startLocation_4.clone().add(-b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -238,23 +234,27 @@ public class ValidManager {
                             validZNoneBlockAmount2 ++;
                         }
                     }
-                    if (!validTrueOrFalse && validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
+                    if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
+                        MythicTotem.getCheckingBlock.remove(block);
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                    RemoveBlock.DoIt(loc);
+                                    RemoveBlock.DoIt(player, loc);
                                     return null;
                                 });
                             }
                         }
-                        validTrueOrFalse = true;
                         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
+                        Bukkit.getConsoleSender().sendMessage("Z2");
                         break;
                     }
                 }
+            }
+            if (MythicTotem.getCheckingBlock.contains(block)) {
+                MythicTotem.getCheckingBlock.remove(block);
             }
         }
     }
@@ -266,13 +266,13 @@ public class ValidManager {
         else if (material.startsWith("minecraft:")) {
             try {
                 return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
-            } catch (IllegalArgumentException | NullPointerException exception) {
+            } catch (IllegalArgumentException | NullPointerException ignored) {
             }
         }
         else if (material.startsWith("itemsadder:")) {
             try {
                 return (material.split(":")[1] + ":" + material.split(":")[2]).equals(CustomBlock.byAlreadyPlaced(block).getNamespacedID());
-            } catch (NullPointerException exception) {
+            } catch (NullPointerException ignored) {
             }
         }
         else if (material.startsWith("oraxen:")) {
@@ -283,12 +283,12 @@ public class ValidManager {
                 else if (OraxenBlocks.getStringMechanic(block).getItemID() == null) {
                     return (material.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID());
                 }
-            } catch (NullPointerException exception) {
+            } catch (NullPointerException ignored) {
             }
         } else {
             try {
                 return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
-            } catch (IllegalArgumentException | NullPointerException exception) {
+            } catch (IllegalArgumentException | NullPointerException ignored) {
             }
         }
         return false;
