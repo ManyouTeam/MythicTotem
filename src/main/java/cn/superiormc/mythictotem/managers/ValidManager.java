@@ -31,6 +31,7 @@ public class ValidManager {
     }
 
     public void CheckTotem(Player player, Block block) {
+        boolean checkTrueOrFalse = false;
         if (MythicTotem.getCheckingBlock.contains(block)) {
             return;
         }
@@ -85,6 +86,9 @@ public class ValidManager {
             xbianli1:
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
+                    if (checkTrueOrFalse) {
+                        break;
+                    }
                     Location nowLocation = startLocation_1.clone().add(0, -i, b);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -107,6 +111,7 @@ public class ValidManager {
                     // 条件满足
                     if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
                         MythicTotem.getCheckingBlock.remove(block);
+                        checkTrueOrFalse = true;
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -119,7 +124,6 @@ public class ValidManager {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
-                        Bukkit.getConsoleSender().sendMessage("X1");
                         break;
                     }
                 }
@@ -128,6 +132,9 @@ public class ValidManager {
             List<Location> validXTotemBlockLocation2 = new ArrayList<>();
             xbianli2:for (int i = 0; i < base_row ; i ++){
                 for (int b = 0 ; b < base_column ; b ++) {
+                    if (checkTrueOrFalse) {
+                        break;
+                    }
                     Location nowLocation = startLocation_2.clone().add(0, -i, -b);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -150,6 +157,7 @@ public class ValidManager {
                     }
                     if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
                         MythicTotem.getCheckingBlock.remove(block);
+                        checkTrueOrFalse = true;
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validXTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -162,7 +170,6 @@ public class ValidManager {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
-                        Bukkit.getConsoleSender().sendMessage("X2");
                         break;
                     }
                 }
@@ -171,6 +178,9 @@ public class ValidManager {
             List<Location> validZTotemBlockLocation1 = new ArrayList<>();
             zbianli1:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
+                    if (checkTrueOrFalse) {
+                        break;
+                    }
                     Location nowLocation = startLocation_3.clone().add(b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -193,6 +203,7 @@ public class ValidManager {
                     }
                     if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
                         MythicTotem.getCheckingBlock.remove(block);
+                        checkTrueOrFalse = true;
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation1) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -205,7 +216,6 @@ public class ValidManager {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
-                        Bukkit.getConsoleSender().sendMessage("Z1");
                         break;
                     }
                 }
@@ -214,6 +224,9 @@ public class ValidManager {
             List<Location> validZTotemBlockLocation2 = new ArrayList<>();
             zbianli2:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
+                    if (checkTrueOrFalse) {
+                        break;
+                    }
                     Location nowLocation = startLocation_4.clone().add(-b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
@@ -236,6 +249,7 @@ public class ValidManager {
                     }
                     if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
                         MythicTotem.getCheckingBlock.remove(block);
+                        checkTrueOrFalse = true;
                         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
                             for (Location loc : validZTotemBlockLocation2) {
                                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
@@ -248,7 +262,6 @@ public class ValidManager {
                             CheckAction(singleTotem.GetTotemManager().GetTotemAction(), player, block);
                             return null;
                         });
-                        Bukkit.getConsoleSender().sendMessage("Z2");
                         break;
                     }
                 }

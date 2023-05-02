@@ -20,6 +20,8 @@ public final class MythicTotem extends JavaPlugin {
 
     public static boolean getError = false;
 
+    public static boolean getIA = false;
+
     public static List<Block> getCheckingBlock = new ArrayList<>();
 
     // 图腾ID，图腾信息
