@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.managers.ValidManager;
 import dev.lone.itemsadder.api.CustomBlock;
+import io.lumine.mythic.core.items.MythicItem;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,11 +20,18 @@ public class PlayerClickEvent implements Listener {
         if (GeneralSettingConfigs.GetPlayerInteractEventRequireShift() && (!event.getPlayer().isSneaking())) {
             return;
         }
+        if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
+            return;
+        }
+        MythicTotem.getCheckingPlayer.add(event.getPlayer());
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
             synchronized(event) {
                 new ValidManager(event);
             }
         });
+        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
+            MythicTotem.getCheckingPlayer.remove(event.getPlayer());
+        }, MythicTotem.instance.getConfig().getLong("settings.cooldown-tick", 5L));
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getClickedBlock().getLocation());
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());

@@ -18,12 +18,19 @@ public class PlayerPlaceEvent implements Listener {
         if (GeneralSettingConfigs.GetBlockPlaceEventRequireShift() && (!event.getPlayer().isSneaking())) {
             return;
         }
+        if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
+            return;
+        }
+        MythicTotem.getCheckingPlayer.add(event.getPlayer());
         if (event.canBuild() && (!event.isCancelled())){
             Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
                 synchronized(event) {
                     new ValidManager(event);
                 }
             });
+            Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
+                MythicTotem.getCheckingPlayer.remove(event.getPlayer());
+            }, MythicTotem.instance.getConfig().getLong("settings.cooldown-tick", 5L));
         }
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getBlockPlaced().getLocation());

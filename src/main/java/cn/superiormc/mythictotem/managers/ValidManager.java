@@ -87,7 +87,7 @@ public class ValidManager {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     if (checkTrueOrFalse) {
-                        break;
+                        break xbianli1;
                     }
                     Location nowLocation = startLocation_1.clone().add(0, -i, b);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
@@ -133,7 +133,7 @@ public class ValidManager {
             xbianli2:for (int i = 0; i < base_row ; i ++){
                 for (int b = 0 ; b < base_column ; b ++) {
                     if (checkTrueOrFalse) {
-                        break;
+                        break xbianli2;
                     }
                     Location nowLocation = startLocation_2.clone().add(0, -i, -b);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
@@ -179,7 +179,7 @@ public class ValidManager {
             zbianli1:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
                     if (checkTrueOrFalse) {
-                        break;
+                        break zbianli1;
                     }
                     Location nowLocation = startLocation_3.clone().add(b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
@@ -225,7 +225,7 @@ public class ValidManager {
             zbianli2:for (int i = 0 ; i < base_row ; i ++) {
                 for (int b = 0; b < base_column; b ++) {
                     if (checkTrueOrFalse) {
-                        break;
+                        break zbianli2;
                     }
                     Location nowLocation = startLocation_4.clone().add(-b, -i, 0);
                     String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);

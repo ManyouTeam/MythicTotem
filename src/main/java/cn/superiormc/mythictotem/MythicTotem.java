@@ -10,6 +10,7 @@ import cn.superiormc.mythictotem.managers.*;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -20,9 +21,9 @@ public final class MythicTotem extends JavaPlugin {
 
     public static boolean getError = false;
 
-    public static boolean getIA = false;
-
     public static List<Block> getCheckingBlock = new ArrayList<>();
+
+    public static List<Player> getCheckingPlayer = new ArrayList<>();
 
     // 图腾ID，图腾信息
     public static Map<String, TotemManager> getTotemMap = new HashMap<>();

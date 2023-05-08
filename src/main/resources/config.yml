@@ -33,6 +33,7 @@ totems:
     actions:
       - 'message: Hello!'
       - 'console_command: mm m spawn SkeletalKnight:1 1 %world%, %block_x%, %block_y%, %block_z%'
+      - 'trigger: BlockPlaceEvent'
     conditions:
       - 'world: world'
     disappear: true
@@ -40,9 +41,12 @@ totems:
 # General Setting Configs
 settings:
   debug: false
+  cooldown-tick: 5
   disappear:
     BukkitAPI:
-      # Can not disable!
+      # This BukkitAPI option can not be disabled!
+      # If you are facing totem blocks not disappear issue, you can try enabled below options.
+      # However, they are not fully tested and will lead unknown issues!
       enabled: true
     BlockDamageEvent:
       enabled: false
