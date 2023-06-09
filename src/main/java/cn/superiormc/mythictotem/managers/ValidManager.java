@@ -23,10 +23,16 @@ import java.util.List;
 public class ValidManager {
 
     public ValidManager(BlockPlaceEvent event){
+        if (event.getBlockPlaced() == null) {
+            return;
+        }
         CheckTotem(event.getPlayer(), event.getBlockPlaced());
     }
 
     public ValidManager(PlayerInteractEvent event){
+        if (event.getClickedBlock() == null) {
+            return;
+        }
         CheckTotem(event.getPlayer(), event.getClickedBlock());
     }
 
