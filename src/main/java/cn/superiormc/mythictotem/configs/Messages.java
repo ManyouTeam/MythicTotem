@@ -3,9 +3,6 @@ package cn.superiormc.mythictotem.configs;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.ColorParser;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Messages {
 
     public static String GetMessages(String textName){

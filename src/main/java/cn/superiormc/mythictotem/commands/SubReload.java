@@ -12,6 +12,8 @@ public class SubReload {
         if(sender.hasPermission("mythictotem.admin")) {
             MythicTotem.getTotemMaterial.clear();
             MythicTotem.getTotemMap.clear();
+            MythicTotem.getCheckingPlayer.clear();
+            MythicTotem.getCheckingBlock.clear();
             MythicTotem.instance.reloadConfig();
             TotemConfigs.GetTotemConfigs();
             sender.sendMessage(Messages.GetMessages("plugin-reloaded"));
