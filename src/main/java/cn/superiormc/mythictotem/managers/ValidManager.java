@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ValidManager {
@@ -319,6 +320,11 @@ public class ValidManager {
                 return;
             } else if (singleAction.startsWith("message: ")) {
                 player.sendMessage(Messages.GetActionMessages(singleAction.substring(9)));
+            } else if (singleAction.startsWith("announcement: ")) {
+                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+                for (Player p : players) {
+                    p.sendMessage(singleAction.substring(14));
+                }
             } else if (CheckPluginLoad.DoIt("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     try {
