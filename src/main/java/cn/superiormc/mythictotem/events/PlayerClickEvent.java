@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerClickEvent implements Listener {
 
@@ -21,6 +22,9 @@ public class PlayerClickEvent implements Listener {
             return;
         }
         if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
+            return;
+        }
+        if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
         MythicTotem.getCheckingPlayer.add(event.getPlayer());
