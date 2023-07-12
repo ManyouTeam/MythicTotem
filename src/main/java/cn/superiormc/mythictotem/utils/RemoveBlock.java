@@ -13,7 +13,9 @@ public class RemoveBlock {
 
     public static void DoIt(Player player, Location loc){
         loc.getBlock().setType(Material.AIR);
-        CustomBlock.remove(loc);
+        if (CheckPluginLoad.DoIt("ItemsAdder")) {
+            CustomBlock.remove(loc);
+        }
         if (GeneralSettingConfigs.GetBlockBreakEventCancel() && !loc.getBlock().getType().isAir()) {
             BlockBreakEvent bbe = new BlockBreakEvent(loc.getBlock(), player);
             bbe.setDropItems(false);
