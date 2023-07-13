@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.configs;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.TotemManager;
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -22,23 +23,8 @@ public class TotemConfigs {
         }
         for (String totemID : totemList){
             try {
-                boolean totemDisappear = MythicTotem.instance.getConfig().getBoolean("totems." + totemID + ".disappear");
-                List<String> totemLayout = MythicTotem.instance.getConfig().getStringList("totems." + totemID + ".layout");
-                List<String> totemAction = MythicTotem.instance.getConfig().getStringList("totems." + totemID + ".actions");
-                List<String> totemCondition = MythicTotem.instance.getConfig().getStringList("totems." + totemID + ".conditions");
-                ConfigurationSection totemLayoutsExplainConfig = MythicTotem.instance.getConfig().getConfigurationSection("totems." + totemID + ".explains");
-                Set<String> totemLayoutsExplainList = totemLayoutsExplainConfig.getKeys(false);
-                Map<String, String> totemLayoutExplain = new HashMap<>();
-                for (String totemLayoutsChar : totemLayoutsExplainList) {
-                    String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar).toLowerCase();
-                    totemLayoutExplain.put(totemLayoutsChar, totemLayoutsMaterial);
-                    if (totemLayoutsChar.length() > 1) {
-                        SetErrorValue();
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem layout explain config keys must be a char, like A.");
-                        return;
-                    }
-                }
-                MythicTotem.getTotemMap.put(totemID, new TotemManager(totemDisappear, totemLayout, totemAction, totemCondition, totemLayoutExplain));
+                ConfigurationSection section = MythicTotem.instance.getConfig().getConfigurationSection("totems." + totemID);
+                MythicTotem.getTotemMap.put(totemID, new TotemManager(section));
             }
             catch (NullPointerException exception){
                 SetErrorValue();
