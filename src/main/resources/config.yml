@@ -21,15 +21,11 @@ totems:
     disappear: true
 
   test2:
-    layouts:
-      1:
-        - 'AAAAA'
-        - 'BBBBB'
-        - 'CCCCD'
-      2:
-        - 'AAAAA'
-        - 'BBBBB'
-        - 'CCCCD'
+    layout:
+      - 'AAAAA'
+      - 'BBBBB'
+      - 'CCCCD'
+
     explains:
       A: 'minecraft:stone'
       B: 'minecraft:end_stone'

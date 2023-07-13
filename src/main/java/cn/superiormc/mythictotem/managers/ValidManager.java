@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ValidManager {
@@ -94,10 +95,10 @@ public class ValidManager {
         int validZNoneBlockAmount1 = 0;
         int validZNoneBlockAmount2 = 0;
         // 存放实际方块摆放位置和图腾配置一致的 List
-        List<Location> validXTotemBlockLocation1 = new ArrayList<>();
-        List<Location> validXTotemBlockLocation2 = new ArrayList<>();
-        List<Location> validZTotemBlockLocation1 = new ArrayList<>();
-        List<Location> validZTotemBlockLocation2 = new ArrayList<>();
+        List<Location> validXTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validXTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validZTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validZTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
         boolean checkXTrueOrFalse1 = true;
         boolean checkXTrueOrFalse2 = true;
         boolean checkZTrueOrFalse1 = true;
@@ -110,11 +111,53 @@ public class ValidManager {
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
                 String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
-                //1
                 MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
+                if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && checkZTrueOrFalse1 && checkZTrueOrFalse2) {
+                    break;
+                }
+                //1
+                if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validXNoneBlockAmount1++;
+                    } else {
+                        validXTotemBlockLocation1.add(nowLocation_1);
+                    }
+                } else if (checkXTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
+                    checkXTrueOrFalse1 = false;
+                }
+                //2
+                if (checkXTrueOrFalse2 && materialManager_2.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validXNoneBlockAmount2++;
+                    } else {
+                        validXTotemBlockLocation2.add(nowLocation_2);
+                    }
+                } else if (checkXTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
+                    checkXTrueOrFalse2 = false;
+                }
+                //3
+                if (checkZTrueOrFalse1 && materialManager_3.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validZNoneBlockAmount1++;
+                    } else {
+                        validZTotemBlockLocation1.add(nowLocation_3);
+                    }
+                } else if (checkZTrueOrFalse1 && !materialManager_3.CheckMaterial()) {
+                    checkZTrueOrFalse1 = false;
+                }
+                //4
+                if (checkZTrueOrFalse2 && materialManager_4.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validZNoneBlockAmount2++;
+                    } else {
+                        validZTotemBlockLocation2.add(nowLocation_4);
+                    }
+                } else if (checkZTrueOrFalse2 && !materialManager_4.CheckMaterial()) {
+                    checkZTrueOrFalse2 = false;
+                }
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §1Rule: X1 §eSize: " +
                             validXTotemBlockLocation1.size());
@@ -140,50 +183,8 @@ public class ValidManager {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_4);
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_4 + " " + nowLocation_4.getBlock());
-
                 }
-                if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validXNoneBlockAmount1++;
-                    } else {
-                        validXTotemBlockLocation1.add(nowLocation_1);
-                    }
-                } else if (checkXTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
-                    checkXTrueOrFalse1 = false;
-                }
-                //2
-                else if (checkXTrueOrFalse2 && materialManager_2.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validXNoneBlockAmount2++;
-                    } else {
-                        validXTotemBlockLocation2.add(nowLocation_2);
-                    }
-                } else if (checkXTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
-                    checkXTrueOrFalse2 = false;
-                }
-                //3
-                else if (checkZTrueOrFalse1 && materialManager_3.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validZNoneBlockAmount1++;
-                    } else {
-                        validZTotemBlockLocation1.add(nowLocation_3);
-                    }
-                } else if (checkZTrueOrFalse1 && !materialManager_3.CheckMaterial()) {
-                    checkZTrueOrFalse1 = false;
-                }
-                //4
-                else if (checkZTrueOrFalse2 && materialManager_4.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validZNoneBlockAmount2++;
-                    } else {
-                        validZTotemBlockLocation2.add(nowLocation_4);
-                    }
-                } else if (checkZTrueOrFalse2 && !materialManager_4.CheckMaterial()) {
-                    checkZTrueOrFalse2 = false;
-                } else {
-                    break;
-                }
-                // 条件满足
+                    // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
                     AfterCheck(singleTotem, validXTotemBlockLocation1, player, block);
                     break;
@@ -255,14 +256,14 @@ public class ValidManager {
         int validNoneBlockAmount7 = 0;
         int validNoneBlockAmount8 = 0;
         // 存放实际方块摆放位置和图腾配置一致的 List
-        List<Location> validTotemBlockLocation1 = new ArrayList<>();
-        List<Location> validTotemBlockLocation2 = new ArrayList<>();
-        List<Location> validTotemBlockLocation3 = new ArrayList<>();
-        List<Location> validTotemBlockLocation4 = new ArrayList<>();
-        List<Location> validTotemBlockLocation5 = new ArrayList<>();
-        List<Location> validTotemBlockLocation6 = new ArrayList<>();
-        List<Location> validTotemBlockLocation7 = new ArrayList<>();
-        List<Location> validTotemBlockLocation8 = new ArrayList<>();
+        List<Location> validTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation3 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation4 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation5 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation6 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation7 = Collections.synchronizedList(new ArrayList<>());
+        List<Location> validTotemBlockLocation8 = Collections.synchronizedList(new ArrayList<>());
         boolean checkTrueOrFalse1 = true;
         boolean checkTrueOrFalse2 = true;
         boolean checkTrueOrFalse3 = true;
@@ -292,6 +293,10 @@ public class ValidManager {
                 MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_4.getBlock());
+                if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
+                !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
+                    break;
+                }
                 if (checkTrueOrFalse1 && materialManager_1.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount1++;
@@ -302,7 +307,7 @@ public class ValidManager {
                     checkTrueOrFalse1 = false;
                 }
                 //2
-                else if (checkTrueOrFalse2 && materialManager_2.CheckMaterial()) {
+                if (checkTrueOrFalse2 && materialManager_2.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount2++;
                     } else {
@@ -312,7 +317,7 @@ public class ValidManager {
                     checkTrueOrFalse2 = false;
                 }
                 //3
-                else if (checkTrueOrFalse3 && materialManager_3.CheckMaterial()) {
+                if (checkTrueOrFalse3 && materialManager_3.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount3++;
                     } else {
@@ -322,7 +327,7 @@ public class ValidManager {
                     checkTrueOrFalse3 = false;
                 }
                 //4
-                else if (checkTrueOrFalse4 && materialManager_4.CheckMaterial()) {
+                if (checkTrueOrFalse4 && materialManager_4.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount4++;
                     } else {
@@ -332,7 +337,7 @@ public class ValidManager {
                     checkTrueOrFalse4 = false;
                 }
                 //5
-                else if (checkTrueOrFalse5 && materialManager_5.CheckMaterial()) {
+                if (checkTrueOrFalse5 && materialManager_5.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount5++;
                     } else {
@@ -342,7 +347,7 @@ public class ValidManager {
                     checkTrueOrFalse5 = false;
                 }
                 //6
-                else if (checkTrueOrFalse6 && materialManager_6.CheckMaterial()) {
+                if (checkTrueOrFalse6 && materialManager_6.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount6++;
                     } else {
@@ -352,7 +357,7 @@ public class ValidManager {
                     checkTrueOrFalse6 = false;
                 }
                 //7
-                else if (checkTrueOrFalse7 && materialManager_7.CheckMaterial()) {
+                if (checkTrueOrFalse7 && materialManager_7.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount7++;
                     } else {
@@ -362,7 +367,7 @@ public class ValidManager {
                     checkTrueOrFalse7 = false;
                 }
                 //8
-                else if (checkTrueOrFalse8 && materialManager_8.CheckMaterial()) {
+                if (checkTrueOrFalse8 && materialManager_8.CheckMaterial()) {
                     if (material.equals("none")) {
                         validNoneBlockAmount8++;
                     } else {

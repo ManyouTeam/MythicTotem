@@ -13,7 +13,7 @@ public class MaterialManager {
 
     public MaterialManager(String material, Block block) {
         this.material = material;
-        this.block =block;
+        this.block = block;
     }
     public boolean CheckMaterial(){
         if (material.equals("none")) {
