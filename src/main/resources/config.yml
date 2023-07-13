@@ -25,7 +25,6 @@ totems:
       - 'AAAAA'
       - 'BBBBB'
       - 'CCCCD'
-
     explains:
       A: 'minecraft:stone'
       B: 'minecraft:end_stone'
