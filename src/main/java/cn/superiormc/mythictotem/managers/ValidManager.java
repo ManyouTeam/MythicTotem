@@ -115,6 +115,33 @@ public class ValidManager {
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
+                if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §1Rule: X1 §eSize: " +
+                            validXTotemBlockLocation1.size());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_1);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_1 + " " + nowLocation_1.getBlock());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §2Rule: X2 §eSize: " +
+                            validXTotemBlockLocation2.size());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_2);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_2 + " " + nowLocation_2.getBlock());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §3Rule: Z1 §eSize: " +
+                            validZTotemBlockLocation1.size());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_3);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_3 + " " + nowLocation_3.getBlock());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §5Rule: Z2 §eSize: " +
+                            validZTotemBlockLocation2.size());
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bMaterial: " + material + " §dR. C.:" + i + " " + b);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Base R. C.: " + base_row + " " + base_column);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_4);
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_4 + " " + nowLocation_4.getBlock());
+
+                }
                 if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
                     if (material.equals("none")) {
                         validXNoneBlockAmount1++;
@@ -158,68 +185,16 @@ public class ValidManager {
                 }
                 // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validXTotemBlockLocation1) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                    AfterCheck(singleTotem, validXTotemBlockLocation1, player, block);
                     break;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validXTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                    AfterCheck(singleTotem, validXTotemBlockLocation2, player, block);
                     break;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validZTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                    AfterCheck(singleTotem, validZTotemBlockLocation1, player, block);
                     break;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validZTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                    AfterCheck(singleTotem, validZTotemBlockLocation2, player, block);
                     break;
                 }
             }
@@ -271,141 +246,176 @@ public class ValidManager {
         int base_column = singleTotem.GetTotemManager().GetRealColumn();
         // 这种带 None 的是空白方块数量
         // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
-        int validXNoneBlockAmount1 = 0;
-        int validXNoneBlockAmount2 = 0;
-        int validZNoneBlockAmount1 = 0;
-        int validZNoneBlockAmount2 = 0;
+        int validNoneBlockAmount1 = 0;
+        int validNoneBlockAmount2 = 0;
+        int validNoneBlockAmount3 = 0;
+        int validNoneBlockAmount4 = 0;
+        int validNoneBlockAmount5 = 0;
+        int validNoneBlockAmount6 = 0;
+        int validNoneBlockAmount7 = 0;
+        int validNoneBlockAmount8 = 0;
         // 存放实际方块摆放位置和图腾配置一致的 List
-        List<Location> validXTotemBlockLocation1 = new ArrayList<>();
-        List<Location> validXTotemBlockLocation2 = new ArrayList<>();
-        List<Location> validZTotemBlockLocation1 = new ArrayList<>();
-        List<Location> validZTotemBlockLocation2 = new ArrayList<>();
-        boolean checkXTrueOrFalse1 = true;
-        boolean checkXTrueOrFalse2 = true;
-        boolean checkZTrueOrFalse1 = true;
-        boolean checkZTrueOrFalse2 = true;
-        // 四种遍历规则
+        List<Location> validTotemBlockLocation1 = new ArrayList<>();
+        List<Location> validTotemBlockLocation2 = new ArrayList<>();
+        List<Location> validTotemBlockLocation3 = new ArrayList<>();
+        List<Location> validTotemBlockLocation4 = new ArrayList<>();
+        List<Location> validTotemBlockLocation5 = new ArrayList<>();
+        List<Location> validTotemBlockLocation6 = new ArrayList<>();
+        List<Location> validTotemBlockLocation7 = new ArrayList<>();
+        List<Location> validTotemBlockLocation8 = new ArrayList<>();
+        boolean checkTrueOrFalse1 = true;
+        boolean checkTrueOrFalse2 = true;
+        boolean checkTrueOrFalse3 = true;
+        boolean checkTrueOrFalse4 = true;
+        boolean checkTrueOrFalse5 = true;
+        boolean checkTrueOrFalse6 = true;
+        boolean checkTrueOrFalse7 = true;
+        boolean checkTrueOrFalse8 = true;
+        // 八种遍历规则
         for (int i = 0; i < base_row; i++) {
             for (int b = 0; b < base_column; b++) {
-                Location nowLocation_1 = startLocation_1.clone().add(0, -i, b);
-                Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
-                Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
-                Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
+                Location nowLocation_1 = startLocation_1.clone().add(-i, 0, -b);
+                Location nowLocation_2 = startLocation_2.clone().add(-i, 0, b);
+                Location nowLocation_3 = startLocation_3.clone().add(i, 0, -b);
+                Location nowLocation_4 = startLocation_4.clone().add(i, 0, b);
+                Location nowLocation_5 = startLocation_5.clone().add(-b, 0, -i);
+                Location nowLocation_6 = startLocation_6.clone().add(-b, 0, i);
+                Location nowLocation_7 = startLocation_7.clone().add(b, 0, -i);
+                Location nowLocation_8 = startLocation_8.clone().add(b, 0, i);
                 String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
                 //1
                 MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
-                if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
+                MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_1.getBlock());
+                MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_2.getBlock());
+                MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_3.getBlock());
+                MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_4.getBlock());
+                if (checkTrueOrFalse1 && materialManager_1.CheckMaterial()) {
                     if (material.equals("none")) {
-                        validXNoneBlockAmount1++;
+                        validNoneBlockAmount1++;
                     } else {
-                        validXTotemBlockLocation1.add(nowLocation_1);
+                        validTotemBlockLocation1.add(nowLocation_1);
                     }
-                } else if (checkXTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
-                    checkXTrueOrFalse1 = false;
+                } else if (checkTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
+                    checkTrueOrFalse1 = false;
                 }
                 //2
-                else if (checkXTrueOrFalse2 && materialManager_2.CheckMaterial()) {
+                else if (checkTrueOrFalse2 && materialManager_2.CheckMaterial()) {
                     if (material.equals("none")) {
-                        validXNoneBlockAmount2++;
+                        validNoneBlockAmount2++;
                     } else {
-                        validXTotemBlockLocation2.add(nowLocation_2);
+                        validTotemBlockLocation2.add(nowLocation_2);
                     }
-                } else if (checkXTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
-                    checkXTrueOrFalse2 = false;
+                } else if (checkTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
+                    checkTrueOrFalse2 = false;
                 }
                 //3
-                else if (checkZTrueOrFalse1 && materialManager_3.CheckMaterial()) {
+                else if (checkTrueOrFalse3 && materialManager_3.CheckMaterial()) {
                     if (material.equals("none")) {
-                        validZNoneBlockAmount1++;
+                        validNoneBlockAmount3++;
                     } else {
-                        validZTotemBlockLocation1.add(nowLocation_3);
+                        validTotemBlockLocation3.add(nowLocation_3);
                     }
-                } else if (checkZTrueOrFalse1 && !materialManager_3.CheckMaterial()) {
-                    checkZTrueOrFalse1 = false;
+                } else if (checkTrueOrFalse3 && !materialManager_3.CheckMaterial()) {
+                    checkTrueOrFalse3 = false;
                 }
                 //4
-                else if (checkZTrueOrFalse2 && materialManager_4.CheckMaterial()) {
+                else if (checkTrueOrFalse4 && materialManager_4.CheckMaterial()) {
                     if (material.equals("none")) {
-                        validZNoneBlockAmount2++;
+                        validNoneBlockAmount4++;
                     } else {
-                        validZTotemBlockLocation2.add(nowLocation_4);
+                        validTotemBlockLocation4.add(nowLocation_4);
                     }
-                } else if (checkZTrueOrFalse2 && !materialManager_4.CheckMaterial()) {
-                    checkZTrueOrFalse2 = false;
-                } else {
-                    break;
+                } else if (checkTrueOrFalse4 && !materialManager_4.CheckMaterial()) {
+                    checkTrueOrFalse4 = false;
+                }
+                //5
+                else if (checkTrueOrFalse5 && materialManager_5.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validNoneBlockAmount5++;
+                    } else {
+                        validTotemBlockLocation5.add(nowLocation_5);
+                    }
+                } else if (checkTrueOrFalse5 && !materialManager_5.CheckMaterial()) {
+                    checkTrueOrFalse5 = false;
+                }
+                //6
+                else if (checkTrueOrFalse6 && materialManager_6.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validNoneBlockAmount6++;
+                    } else {
+                        validTotemBlockLocation6.add(nowLocation_6);
+                    }
+                } else if (checkTrueOrFalse6 && !materialManager_6.CheckMaterial()) {
+                    checkTrueOrFalse6 = false;
+                }
+                //7
+                else if (checkTrueOrFalse7 && materialManager_7.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validNoneBlockAmount7++;
+                    } else {
+                        validTotemBlockLocation7.add(nowLocation_7);
+                    }
+                } else if (checkTrueOrFalse7 && !materialManager_7.CheckMaterial()) {
+                    checkTrueOrFalse7 = false;
+                }
+                //8
+                else if (checkTrueOrFalse8 && materialManager_8.CheckMaterial()) {
+                    if (material.equals("none")) {
+                        validNoneBlockAmount8++;
+                    } else {
+                        validTotemBlockLocation8.add(nowLocation_8);
+                    }
+                } else if (checkTrueOrFalse8 && !materialManager_8.CheckMaterial()) {
+                    checkTrueOrFalse8 = false;
                 }
                 // 条件满足
-                if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validXTotemBlockLocation1) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                if (validTotemBlockLocation1.size() == (base_row * base_column - validNoneBlockAmount1)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation1, player, block);
                     break;
-                } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validXTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                } else if (validTotemBlockLocation2.size() == (base_row * base_column - validNoneBlockAmount2)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation2, player, block);
                     break;
-                } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validZTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                } else if (validTotemBlockLocation3.size() == (base_row * base_column - validNoneBlockAmount3)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
                     break;
-                } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
-                    MythicTotem.getCheckingBlock.remove(block);
-                    if (singleTotem.GetTotemManager().GetTotemDisappear()) {
-                        for (Location loc : validZTotemBlockLocation2) {
-                            Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                                RemoveBlock.DoIt(player, loc);
-                                return null;
-                            });
-                        }
-                    }
-                    Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                        ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
-                        actionManager.CheckAction();
-                        return null;
-                    });
+                } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                    break;
+                } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                    break;
+                } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                    break;
+                } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                    break;
+                } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8)) {
+                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
                     break;
                 }
             }
         }
+    }
+
+    private void AfterCheck(PlacedBlockCheckManager singleTotem, List<Location> validTotemBlockLocation, Player player, Block block) {
+        MythicTotem.getCheckingBlock.remove(block);
+        if (singleTotem.GetTotemManager().GetTotemDisappear()) {
+            for (Location loc : validTotemBlockLocation) {
+                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+                    RemoveBlock.DoIt(player, loc);
+                    return null;
+                });
+            }
+        }
+        Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+            ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
+            actionManager.CheckAction();
+            return null;
+        });
     }
 
 }
