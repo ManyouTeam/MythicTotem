@@ -13,24 +13,31 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class ValidManager {
 
+    private Block block;
+
+    private Player player;
+
     public ValidManager(BlockPlaceEvent event){
-        CheckTotem(event.getPlayer(), event.getBlockPlaced());
+        this.block = event.getBlockPlaced();
+        this.player = event.getPlayer();
+        CheckTotem();
     }
 
     public ValidManager(PlayerInteractEvent event){
         if (event.getClickedBlock() == null) {
             return;
         }
-        CheckTotem(event.getPlayer(), event.getClickedBlock());
+        this.block = event.getClickedBlock();
+        this.player = event.getPlayer();
+        CheckTotem();
     }
 
-    public void CheckTotem(Player player, Block block) {
+    public void CheckTotem() {
         if (MythicTotem.getCheckingBlock.contains(block)) {
             return;
         }
@@ -64,16 +71,19 @@ public class ValidManager {
                 continue;
             }
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
-                VerticalTotem(singleTotem, player, block);
+                VerticalTotem(singleTotem);
             }
-            else {
-                HorizontalTotem(singleTotem, player, block);
+            else {;
+                for (int i = 1 ; i < singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
+                    if (HorizontalTotem(i, singleTotem)) {
+                        break;
+                    }
+                }
             }
             MythicTotem.getCheckingBlock.remove(block);
         }
     }
-
-    private void VerticalTotem(PlacedBlockCheckManager singleTotem, Player player, Block block) {
+    private void VerticalTotem(PlacedBlockCheckManager singleTotem) {
         // 玩家放置的方块的坐标的偏移
         int offset_y = singleTotem.GetRow();
         int offset_x_or_z = singleTotem.GetColumn();
@@ -110,13 +120,13 @@ public class ValidManager {
                 Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
-                String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
+                String material = singleTotem.GetTotemManager().GetRealMaterial(1, i, b);
                 MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
-                if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && checkZTrueOrFalse1 && checkZTrueOrFalse2) {
-                    break;
+                if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && !checkZTrueOrFalse1 && !checkZTrueOrFalse2) {
+                    return;
                 }
                 //1
                 if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
@@ -184,25 +194,25 @@ public class ValidManager {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Start Location: " + startLocation_4);
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §9Now Location: " + nowLocation_4 + " " + nowLocation_4.getBlock());
                 }
-                    // 条件满足
+                // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
                     AfterCheck(singleTotem, validXTotemBlockLocation1, player, block);
-                    break;
+                    return;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
                     AfterCheck(singleTotem, validXTotemBlockLocation2, player, block);
-                    break;
+                    return;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
                     AfterCheck(singleTotem, validZTotemBlockLocation1, player, block);
-                    break;
+                    return;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
                     AfterCheck(singleTotem, validZTotemBlockLocation2, player, block);
-                    break;
+                    return;
                 }
             }
         }
     }
 
-    private void HorizontalTotem(PlacedBlockCheckManager singleTotem, Player player, Block block) {
+    private boolean HorizontalTotem(int offset_layer, PlacedBlockCheckManager singleTotem) {
         // 玩家放置的方块的坐标的偏移
         int offset_row = singleTotem.GetRow();
         int offset_column = singleTotem.GetColumn();
@@ -212,39 +222,40 @@ public class ValidManager {
         // 初始坐标为第一行第一列的坐标，通过这个offset的值偏移到正确的初始坐标
         Location startLocation_1 = new Location(block.getWorld(),
                 block.getLocation().getX() + offset_column,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() + offset_row);
         Location startLocation_2 = new Location(block.getWorld(),
                 block.getLocation().getX() + offset_column,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_row);
         Location startLocation_3 = new Location(block.getWorld(),
                 block.getLocation().getX() - offset_column,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() + offset_row);
         Location startLocation_4 = new Location(block.getWorld(),
                 block.getLocation().getX() - offset_column,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_row);
         Location startLocation_5 = new Location(block.getWorld(),
                 block.getLocation().getX() + offset_row,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() + offset_column);
         Location startLocation_6 = new Location(block.getWorld(),
                 block.getLocation().getX() + offset_row,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
         Location startLocation_7 = new Location(block.getWorld(),
                 block.getLocation().getX() - offset_row,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() + offset_column);
         Location startLocation_8 = new Location(block.getWorld(),
                 block.getLocation().getX() - offset_row,
-                block.getLocation().getY(),
+                block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.GetTotemManager().GetRealRow();
         int base_column = singleTotem.GetTotemManager().GetRealColumn();
+        int base_layer = singleTotem.GetTotemManager().GetTotemLayer();
         // 这种带 None 的是空白方块数量
         // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
         int validNoneBlockAmount1 = 0;
@@ -273,137 +284,140 @@ public class ValidManager {
         boolean checkTrueOrFalse7 = true;
         boolean checkTrueOrFalse8 = true;
         // 八种遍历规则
-        for (int i = 0; i < base_row; i++) {
-            for (int b = 0; b < base_column; b++) {
-                Location nowLocation_1 = startLocation_1.clone().add(-i, 0, -b);
-                Location nowLocation_2 = startLocation_2.clone().add(-i, 0, b);
-                Location nowLocation_3 = startLocation_3.clone().add(i, 0, -b);
-                Location nowLocation_4 = startLocation_4.clone().add(i, 0, b);
-                Location nowLocation_5 = startLocation_5.clone().add(-b, 0, -i);
-                Location nowLocation_6 = startLocation_6.clone().add(-b, 0, i);
-                Location nowLocation_7 = startLocation_7.clone().add(b, 0, -i);
-                Location nowLocation_8 = startLocation_8.clone().add(b, 0, i);
-                String material = singleTotem.GetTotemManager().GetRealMaterial(i, b);
-                //1
-                MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
-                MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
-                MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
-                MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
-                MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_1.getBlock());
-                MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_2.getBlock());
-                MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_3.getBlock());
-                MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_4.getBlock());
-                if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
-                !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
-                    break;
-                }
-                if (checkTrueOrFalse1 && materialManager_1.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount1++;
-                    } else {
-                        validTotemBlockLocation1.add(nowLocation_1);
+        for (int a = 1; a < base_layer ; a++) {
+            for (int i = 0; i < base_row; i++) {
+                for (int b = 0; b < base_column; b++) {
+                    Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
+                    Location nowLocation_2 = startLocation_2.clone().add(-i, 1 - a, b);
+                    Location nowLocation_3 = startLocation_3.clone().add(i, 1 - a, -b);
+                    Location nowLocation_4 = startLocation_4.clone().add(i, 1 - a, b);
+                    Location nowLocation_5 = startLocation_5.clone().add(-b, 1 - a, -i);
+                    Location nowLocation_6 = startLocation_6.clone().add(-b, 1 - a, i);
+                    Location nowLocation_7 = startLocation_7.clone().add(b, 1 - a, -i);
+                    Location nowLocation_8 = startLocation_8.clone().add(b, 1 - a, i);
+                    String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
+                    //1
+                    MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
+                    MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
+                    MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
+                    MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
+                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_1.getBlock());
+                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_2.getBlock());
+                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_3.getBlock());
+                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_4.getBlock());
+                    if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
+                            !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
+                        break;
                     }
-                } else if (checkTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
-                    checkTrueOrFalse1 = false;
-                }
-                //2
-                if (checkTrueOrFalse2 && materialManager_2.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount2++;
-                    } else {
-                        validTotemBlockLocation2.add(nowLocation_2);
+                    if (checkTrueOrFalse1 && materialManager_1.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount1++;
+                        } else {
+                            validTotemBlockLocation1.add(nowLocation_1);
+                        }
+                    } else if (checkTrueOrFalse1 && !materialManager_1.CheckMaterial()) {
+                        checkTrueOrFalse1 = false;
                     }
-                } else if (checkTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
-                    checkTrueOrFalse2 = false;
-                }
-                //3
-                if (checkTrueOrFalse3 && materialManager_3.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount3++;
-                    } else {
-                        validTotemBlockLocation3.add(nowLocation_3);
+                    //2
+                    if (checkTrueOrFalse2 && materialManager_2.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount2++;
+                        } else {
+                            validTotemBlockLocation2.add(nowLocation_2);
+                        }
+                    } else if (checkTrueOrFalse2 && !materialManager_2.CheckMaterial()) {
+                        checkTrueOrFalse2 = false;
                     }
-                } else if (checkTrueOrFalse3 && !materialManager_3.CheckMaterial()) {
-                    checkTrueOrFalse3 = false;
-                }
-                //4
-                if (checkTrueOrFalse4 && materialManager_4.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount4++;
-                    } else {
-                        validTotemBlockLocation4.add(nowLocation_4);
+                    //3
+                    if (checkTrueOrFalse3 && materialManager_3.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount3++;
+                        } else {
+                            validTotemBlockLocation3.add(nowLocation_3);
+                        }
+                    } else if (checkTrueOrFalse3 && !materialManager_3.CheckMaterial()) {
+                        checkTrueOrFalse3 = false;
                     }
-                } else if (checkTrueOrFalse4 && !materialManager_4.CheckMaterial()) {
-                    checkTrueOrFalse4 = false;
-                }
-                //5
-                if (checkTrueOrFalse5 && materialManager_5.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount5++;
-                    } else {
-                        validTotemBlockLocation5.add(nowLocation_5);
+                    //4
+                    if (checkTrueOrFalse4 && materialManager_4.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount4++;
+                        } else {
+                            validTotemBlockLocation4.add(nowLocation_4);
+                        }
+                    } else if (checkTrueOrFalse4 && !materialManager_4.CheckMaterial()) {
+                        checkTrueOrFalse4 = false;
                     }
-                } else if (checkTrueOrFalse5 && !materialManager_5.CheckMaterial()) {
-                    checkTrueOrFalse5 = false;
-                }
-                //6
-                if (checkTrueOrFalse6 && materialManager_6.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount6++;
-                    } else {
-                        validTotemBlockLocation6.add(nowLocation_6);
+                    //5
+                    if (checkTrueOrFalse5 && materialManager_5.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount5++;
+                        } else {
+                            validTotemBlockLocation5.add(nowLocation_5);
+                        }
+                    } else if (checkTrueOrFalse5 && !materialManager_5.CheckMaterial()) {
+                        checkTrueOrFalse5 = false;
                     }
-                } else if (checkTrueOrFalse6 && !materialManager_6.CheckMaterial()) {
-                    checkTrueOrFalse6 = false;
-                }
-                //7
-                if (checkTrueOrFalse7 && materialManager_7.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount7++;
-                    } else {
-                        validTotemBlockLocation7.add(nowLocation_7);
+                    //6
+                    if (checkTrueOrFalse6 && materialManager_6.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount6++;
+                        } else {
+                            validTotemBlockLocation6.add(nowLocation_6);
+                        }
+                    } else if (checkTrueOrFalse6 && !materialManager_6.CheckMaterial()) {
+                        checkTrueOrFalse6 = false;
                     }
-                } else if (checkTrueOrFalse7 && !materialManager_7.CheckMaterial()) {
-                    checkTrueOrFalse7 = false;
-                }
-                //8
-                if (checkTrueOrFalse8 && materialManager_8.CheckMaterial()) {
-                    if (material.equals("none")) {
-                        validNoneBlockAmount8++;
-                    } else {
-                        validTotemBlockLocation8.add(nowLocation_8);
+                    //7
+                    if (checkTrueOrFalse7 && materialManager_7.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount7++;
+                        } else {
+                            validTotemBlockLocation7.add(nowLocation_7);
+                        }
+                    } else if (checkTrueOrFalse7 && !materialManager_7.CheckMaterial()) {
+                        checkTrueOrFalse7 = false;
                     }
-                } else if (checkTrueOrFalse8 && !materialManager_8.CheckMaterial()) {
-                    checkTrueOrFalse8 = false;
-                }
-                // 条件满足
-                if (validTotemBlockLocation1.size() == (base_row * base_column - validNoneBlockAmount1)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation1, player, block);
-                    break;
-                } else if (validTotemBlockLocation2.size() == (base_row * base_column - validNoneBlockAmount2)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation2, player, block);
-                    break;
-                } else if (validTotemBlockLocation3.size() == (base_row * base_column - validNoneBlockAmount3)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
-                } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
-                } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
-                } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
-                } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
-                } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8)) {
-                    AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
-                    break;
+                    //8
+                    if (checkTrueOrFalse8 && materialManager_8.CheckMaterial()) {
+                        if (material.equals("none")) {
+                            validNoneBlockAmount8++;
+                        } else {
+                            validTotemBlockLocation8.add(nowLocation_8);
+                        }
+                    } else if (checkTrueOrFalse8 && !materialManager_8.CheckMaterial()) {
+                        checkTrueOrFalse8 = false;
+                    }
+                    // 条件满足
+                    if (validTotemBlockLocation1.size() == (base_row * base_column - validNoneBlockAmount1) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation1, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation2.size() == (base_row * base_column - validNoneBlockAmount2) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation2, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation3.size() == (base_row * base_column - validNoneBlockAmount3) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8) * base_layer) {
+                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        return true;
+                    }
                 }
             }
         }
+        return false;
     }
 
     private void AfterCheck(PlacedBlockCheckManager singleTotem, List<Location> validTotemBlockLocation, Player player, Block block) {
