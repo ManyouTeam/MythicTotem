@@ -74,7 +74,7 @@ public class ValidManager {
                 VerticalTotem(singleTotem);
             }
             else {;
-                for (int i = 1 ; i < singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
+                for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
                     if (HorizontalTotem(i, singleTotem)) {
                         break;
                     }
@@ -284,7 +284,7 @@ public class ValidManager {
         boolean checkTrueOrFalse7 = true;
         boolean checkTrueOrFalse8 = true;
         // 八种遍历规则
-        for (int a = 1; a < base_layer ; a++) {
+        for (int a = 1; a <= base_layer ; a++) {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
