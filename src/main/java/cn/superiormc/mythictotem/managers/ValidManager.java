@@ -399,19 +399,19 @@ public class ValidManager {
                         AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
                         return true;
                     } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, validTotemBlockLocation4, player, block);
                         return true;
                     } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, validTotemBlockLocation5, player, block);
                         return true;
                     } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, validTotemBlockLocation6, player, block);
                         return true;
                     } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, validTotemBlockLocation7, player, block);
                         return true;
                     } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, validTotemBlockLocation8, player, block);
                         return true;
                     }
                 }

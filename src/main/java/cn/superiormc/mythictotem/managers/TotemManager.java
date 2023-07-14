@@ -77,11 +77,11 @@ public class TotemManager {
                         }
                         this.totemLocationMaterial.put(GenerateID(i, totemRow, totemColumn), realString);
                     }
-                    Bukkit.getConsoleSender().sendMessage("" + i + totemRow + totemColumn);
                     this.totemRow++;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage(totemLocationMaterial + "");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: " + section.getName() +
+                    "with size: " + totemRow + "x" + totemColumn);
         }
         else {
             List<String> totemLayout = section.getStringList("layout");
@@ -106,6 +106,8 @@ public class TotemManager {
                 this.totemRow++;
             }
             this.totemLayer = 1;
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: " + section.getName() +
+                    "with size: " + totemRow + "x" + totemColumn);
         }
     }
 
