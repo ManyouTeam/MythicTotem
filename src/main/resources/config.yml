@@ -5,6 +5,7 @@
 # Totem Configs
 totems:
   test:
+    mode: 'VERTICAL'
     layout:
       - 'AAA'
       - 'BBB'
@@ -21,6 +22,7 @@ totems:
     disappear: true
 
   test2:
+    mode: 'VERTICAL'
     layout:
       - 'AAAAA'
       - 'BBBBB'
@@ -35,6 +37,28 @@ totems:
       - 'console_command: mm m spawn SkeletalKnight:1 1 %world%, %block_x%, %block_y%, %block_z%'
     conditions:
       - 'world: world'
+    disappear: true
+
+  3d-totem:
+    mode: 'HORIZONTAL'
+    layouts:
+      1:
+        - 'AAAA'
+        - 'BBBB'
+        - 'CCCC'
+      2:
+        - 'CCCC'
+        - 'BBBB'
+        - 'AAAA'
+    explains:
+      A: 'minecraft:stone'
+      B: 'minecraft:dirt'
+      C: 'minecraft:netherrack'
+    actions:
+      - 'message: Hello World!'
+      - 'mythicmobs_spawn: SkeletalKnight'
+    conditions:
+      - 'none'
     disappear: true
 
 # General Setting Configs
