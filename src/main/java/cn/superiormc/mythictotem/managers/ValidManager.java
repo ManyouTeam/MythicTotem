@@ -301,10 +301,10 @@ public class ValidManager {
                     MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                     MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                     MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
-                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_1.getBlock());
-                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_2.getBlock());
-                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_3.getBlock());
-                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_4.getBlock());
+                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_5.getBlock());
+                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_6.getBlock());
+                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_7.getBlock());
+                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8.getBlock());
                     if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
                             !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
                         break;
