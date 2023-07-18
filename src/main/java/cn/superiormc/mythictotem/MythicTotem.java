@@ -21,6 +21,11 @@ public final class MythicTotem extends JavaPlugin {
 
     public static boolean getError = false;
 
+    // You are not allowed to change this if you didn't purchase this plugin.
+    public static boolean freeVersion = true;
+
+    public static int threeDtotemAmount = 0;
+
     public static List<Block> getCheckingBlock = new ArrayList<>();
 
     public static List<Player> getCheckingPlayer = new ArrayList<>();
@@ -40,6 +45,10 @@ public final class MythicTotem extends JavaPlugin {
         Commands();
         if ((CheckPluginLoad.DoIt("MythicMobs"))) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFound MythicMobs in server, try hooking into it...");
+        }
+        if (freeVersion) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cYou are using free version, " +
+                    "you can only create 3 3D totem with this version.");
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }

@@ -73,15 +73,24 @@ public class ValidManager {
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
                 VerticalTotem(singleTotem);
             }
-            else {;
+            else {
                 for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
+                    if (singleTotem.GetTotemManager().GetTotemLayer() != 1) {
+                        MythicTotem.threeDtotemAmount++;
+                    }
+                    if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
+                                " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
+                                " remove, otherwise plugin won't check 3D totems!");
+                        break;
+                    }
                     if (HorizontalTotem(i, singleTotem)) {
                         break;
                     }
                 }
             }
-            MythicTotem.getCheckingBlock.remove(block);
         }
+        MythicTotem.getCheckingBlock.remove(block);
     }
     private void VerticalTotem(PlacedBlockCheckManager singleTotem) {
         // 玩家放置的方块的坐标的偏移
