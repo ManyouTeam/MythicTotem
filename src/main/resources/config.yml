@@ -19,8 +19,6 @@ totems:
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
-    disappear: true
-
   test2:
     mode: 'VERTICAL'
     layout:
@@ -114,5 +112,6 @@ messages:
     &f/mythictotem reload &7- Reload the plugin.
   list-head: "&#98FB98[MythicTotem] &fValid Totem List:"
   list-prefix: "&f"
+  saved: "&#98FB98[MythicTotem] &fSaved your mainhand item!"
   error-args: "&#98FB98[MythicTotem] &cWrong command usage, if you need help, use /mythictotem help!"
   error-miss-permission: "&#98FB98[MythicTotem] &cYou don't have permission to use this command!"

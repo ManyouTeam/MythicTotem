@@ -146,4 +146,8 @@ public class TotemManager {
     public int GetTotemLayer() {
         return this.totemLayer;
     }
+
+    public ConfigurationSection GetSection() {
+        return this.totemSection;
+    }
 }

@@ -9,6 +9,7 @@ import io.th0rgal.oraxen.api.OraxenBlocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -77,6 +78,14 @@ public class ValidManager {
             ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(), player, block);
             if (!conditionManager.CheckCondition()) {
                 continue;
+            }
+            if (singleTotem.GetTotemManager().GetSection().contains("prices")) {
+                for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
+                    PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
+                    if (!priceManager.CheckPrice(false)) {
+                        return;
+                    }
+                }
             }
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
                 VerticalTotem(singleTotem);
