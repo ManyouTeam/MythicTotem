@@ -504,6 +504,12 @@ public class ValidManager {
 
     private void AfterCheck(PlacedBlockCheckManager singleTotem, List<Location> validTotemBlockLocation, Player player, Block block) {
         MythicTotem.getCheckingBlock.remove(block);
+        if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+            for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
+                PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
+                priceManager.CheckPrice(true);
+            }
+        }
         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
             for (Location loc : validTotemBlockLocation) {
                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
