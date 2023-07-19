@@ -6,8 +6,10 @@ import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.PlayerClickEvent;
 import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
+import cn.superiormc.mythictotem.events.TotemRedstoneEvent;
 import cn.superiormc.mythictotem.managers.*;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -39,6 +41,7 @@ public final class MythicTotem extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        ProtectionLib.init(this);
         this.saveDefaultConfig();
         TotemConfigs.GetTotemConfigs();
         Events();
@@ -66,6 +69,10 @@ public final class MythicTotem extends JavaPlugin {
         if(GeneralSettingConfigs.GetPlayerInteractEventEnabled()) {
             Bukkit.getPluginManager().registerEvents(new PlayerClickEvent(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerInteractEvent trigger.");
+        }
+        if(GeneralSettingConfigs.GetBlockRedstoneEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new TotemRedstoneEvent(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockRedstoneEvent trigger.");
         }
     }
 

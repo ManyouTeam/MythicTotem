@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.CheckProtection;
 import cn.superiormc.mythictotem.utils.RemoveBlock;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
@@ -10,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
@@ -34,6 +36,12 @@ public class ValidManager {
         }
         this.block = event.getClickedBlock();
         this.player = event.getPlayer();
+        CheckTotem();
+    }
+
+    public ValidManager(BlockRedstoneEvent event){
+        this.block = event.getBlock();
+        this.player = null;
         CheckTotem();
     }
 
@@ -126,9 +134,21 @@ public class ValidManager {
         for (int i = 0; i < base_row; i++) {
             for (int b = 0; b < base_column; b++) {
                 Location nowLocation_1 = startLocation_1.clone().add(0, -i, b);
+                if (CheckProtection.DoIt(player, nowLocation_1)) {
+                    checkXTrueOrFalse1 = false;
+                }
                 Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
+                if (CheckProtection.DoIt(player, nowLocation_2)) {
+                    checkXTrueOrFalse2 = false;
+                }
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
+                if (CheckProtection.DoIt(player, nowLocation_3)) {
+                    checkZTrueOrFalse1 = false;
+                }
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
+                if (CheckProtection.DoIt(player, nowLocation_4)) {
+                    checkZTrueOrFalse2 = false;
+                }
                 String material = singleTotem.GetTotemManager().GetRealMaterial(1, i, b);
                 MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
@@ -297,13 +317,37 @@ public class ValidManager {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
+                    if (CheckProtection.DoIt(player, nowLocation_1)) {
+                        checkTrueOrFalse1 = false;
+                    }
                     Location nowLocation_2 = startLocation_2.clone().add(-i, 1 - a, b);
+                    if (CheckProtection.DoIt(player, nowLocation_2)) {
+                        checkTrueOrFalse2 = false;
+                    }
                     Location nowLocation_3 = startLocation_3.clone().add(i, 1 - a, -b);
+                    if (CheckProtection.DoIt(player, nowLocation_3)) {
+                        checkTrueOrFalse3 = false;
+                    }
                     Location nowLocation_4 = startLocation_4.clone().add(i, 1 - a, b);
+                    if (CheckProtection.DoIt(player, nowLocation_4)) {
+                        checkTrueOrFalse4 = false;
+                    }
                     Location nowLocation_5 = startLocation_5.clone().add(-b, 1 - a, -i);
+                    if (CheckProtection.DoIt(player, nowLocation_5)) {
+                        checkTrueOrFalse5 = false;
+                    }
                     Location nowLocation_6 = startLocation_6.clone().add(-b, 1 - a, i);
+                    if (CheckProtection.DoIt(player, nowLocation_6)) {
+                        checkTrueOrFalse6 = false;
+                    }
                     Location nowLocation_7 = startLocation_7.clone().add(b, 1 - a, -i);
+                    if (CheckProtection.DoIt(player, nowLocation_7)) {
+                        checkTrueOrFalse7 = false;
+                    }
                     Location nowLocation_8 = startLocation_8.clone().add(b, 1 - a, i);
+                    if (CheckProtection.DoIt(player, nowLocation_8)) {
+                        checkTrueOrFalse8 = false;
+                    }
                     String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
                     //1
                     MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());

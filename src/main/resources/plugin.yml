@@ -7,6 +7,13 @@ softdepend:
   - Oraxen
   - PlaceholderAPI
   - MythicMobs
+  - WorldGuard
+  - Towny
+  - Factions
+  - Lands
+  - PlotSquared
+  - CrashClaim
+
 commands:
   mythictotem:
     aliases:

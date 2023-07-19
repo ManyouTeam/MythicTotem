@@ -65,6 +65,11 @@ totems:
 settings:
   debug: false
   cooldown-tick: 5
+  check-protection:
+    can-build: false
+    can-break: false
+    can-interact: false
+    can-use: false
   disappear:
     BukkitAPI:
       # This BukkitAPI option can not be disabled!
@@ -84,6 +89,12 @@ settings:
       enabled: true
       require-shift: true
       black-creative-mode: true
+    # This event does not support get the player object, so cooldown-tick option does not effect this trigger.
+    # And all actions and conditions that related to player is can not be used.
+    # And all placeholders that related to player also can not be used.
+    # Otherwise you will get tons of errors on console!!!
+    BlockRedstoneEvent:
+      enabled: true
 
 # Message Configs
 messages:

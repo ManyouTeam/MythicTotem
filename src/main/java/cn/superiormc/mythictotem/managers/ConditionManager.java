@@ -22,7 +22,7 @@ public class ConditionManager {
         this.block = block;
     }
 
-    public boolean CheckCondition(){
+    public boolean CheckCondition() {
         boolean conditionTrueOrFasle = true;
         for(String singleCondition : condition){
             if (singleCondition.startsWith("none")){
@@ -53,7 +53,7 @@ public class ConditionManager {
                     conditionTrueOrFasle = false;
                     break;
                 }
-            } else if (singleCondition.startsWith("permission: "))
+            } else if (singleCondition.startsWith("permission: ") && player != null)
             {
                 for(String str : singleCondition.substring(12).split(";;")){
                     if(!player.hasPermission(str)){
@@ -61,7 +61,8 @@ public class ConditionManager {
                         break;
                     }
                 }
-            } else if (CheckPluginLoad.DoIt("PlaceholderAPI") && singleCondition.startsWith("placeholder: "))
+            } else if (CheckPluginLoad.DoIt("PlaceholderAPI") && singleCondition.startsWith("placeholder: ") &&
+            player != null)
             {
                 String[] conditionString = singleCondition.substring(13).split(";;");
                 String placeholder = conditionString[0];
