@@ -1,11 +1,17 @@
 package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import com.willfp.ecoarmor.sets.ArmorSet;
+import com.willfp.ecoarmor.sets.ArmorSets;
+import com.willfp.ecoarmor.sets.ArmorSlot;
+import com.willfp.ecoitems.items.EcoItem;
+import com.willfp.ecoitems.items.EcoItems;
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.th0rgal.oraxen.api.OraxenItems;
 import io.th0rgal.oraxen.items.ItemBuilder;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
