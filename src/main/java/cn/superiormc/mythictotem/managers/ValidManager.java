@@ -80,11 +80,15 @@ public class ValidManager {
                 continue;
             }
             if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+                int i = 0;
                 for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
                     if (!priceManager.CheckPrice(false)) {
-                        return;
+                        i ++;
                     }
+                }
+                if (i > 0) {
+                    continue;
                 }
             }
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
