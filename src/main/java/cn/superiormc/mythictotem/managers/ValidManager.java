@@ -102,7 +102,7 @@ public class ValidManager {
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
                 VerticalTotem(singleTotem);
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStared " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
                             " type A totem check!");
                 }
             }
@@ -118,7 +118,7 @@ public class ValidManager {
                         break;
                     }
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStared " + singleTotem.GetTotemManager().GetSection().getName() +
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
                                 " type B totem check!");
                     }
                     if (HorizontalTotem(i, singleTotem)) {
@@ -163,19 +163,19 @@ public class ValidManager {
         for (int i = 0; i < base_row; i++) {
             for (int b = 0; b < base_column; b++) {
                 Location nowLocation_1 = startLocation_1.clone().add(0, -i, b);
-                if (CheckProtection.DoIt(player, nowLocation_1)) {
+                if (!CheckProtection.DoIt(player, nowLocation_1)) {
                     checkXTrueOrFalse1 = false;
                 }
                 Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
-                if (CheckProtection.DoIt(player, nowLocation_2)) {
+                if (!CheckProtection.DoIt(player, nowLocation_2)) {
                     checkXTrueOrFalse2 = false;
                 }
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
-                if (CheckProtection.DoIt(player, nowLocation_3)) {
+                if (!CheckProtection.DoIt(player, nowLocation_3)) {
                     checkZTrueOrFalse1 = false;
                 }
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
-                if (CheckProtection.DoIt(player, nowLocation_4)) {
+                if (!CheckProtection.DoIt(player, nowLocation_4)) {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.GetTotemManager().GetRealMaterial(1, i, b);
@@ -346,35 +346,35 @@ public class ValidManager {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
-                    if (CheckProtection.DoIt(player, nowLocation_1)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_1)) {
                         checkTrueOrFalse1 = false;
                     }
                     Location nowLocation_2 = startLocation_2.clone().add(-i, 1 - a, b);
-                    if (CheckProtection.DoIt(player, nowLocation_2)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_2)) {
                         checkTrueOrFalse2 = false;
                     }
                     Location nowLocation_3 = startLocation_3.clone().add(i, 1 - a, -b);
-                    if (CheckProtection.DoIt(player, nowLocation_3)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_3)) {
                         checkTrueOrFalse3 = false;
                     }
                     Location nowLocation_4 = startLocation_4.clone().add(i, 1 - a, b);
-                    if (CheckProtection.DoIt(player, nowLocation_4)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_4)) {
                         checkTrueOrFalse4 = false;
                     }
                     Location nowLocation_5 = startLocation_5.clone().add(-b, 1 - a, -i);
-                    if (CheckProtection.DoIt(player, nowLocation_5)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_5)) {
                         checkTrueOrFalse5 = false;
                     }
                     Location nowLocation_6 = startLocation_6.clone().add(-b, 1 - a, i);
-                    if (CheckProtection.DoIt(player, nowLocation_6)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_6)) {
                         checkTrueOrFalse6 = false;
                     }
                     Location nowLocation_7 = startLocation_7.clone().add(b, 1 - a, -i);
-                    if (CheckProtection.DoIt(player, nowLocation_7)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_7)) {
                         checkTrueOrFalse7 = false;
                     }
                     Location nowLocation_8 = startLocation_8.clone().add(b, 1 - a, i);
-                    if (CheckProtection.DoIt(player, nowLocation_8)) {
+                    if (!CheckProtection.DoIt(player, nowLocation_8)) {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
