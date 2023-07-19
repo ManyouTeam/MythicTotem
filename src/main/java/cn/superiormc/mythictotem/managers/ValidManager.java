@@ -77,6 +77,10 @@ public class ValidManager {
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
             ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(), player, block);
             if (!conditionManager.CheckCondition()) {
+                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
+                            " because conditions not meet!");
+                }
                 continue;
             }
             if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
@@ -88,11 +92,19 @@ public class ValidManager {
                     }
                 }
                 if (i > 0) {
+                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
+                                " because prices not meet!");
+                    }
                     continue;
                 }
             }
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
                 VerticalTotem(singleTotem);
+                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStared " + singleTotem.GetTotemManager().GetSection().getName() +
+                            " type A totem check!");
+                }
             }
             else {
                 for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
@@ -104,6 +116,10 @@ public class ValidManager {
                                 " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
                                 " remove, otherwise plugin won't check 3D totems!");
                         break;
+                    }
+                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStared " + singleTotem.GetTotemManager().GetSection().getName() +
+                                " type B totem check!");
                     }
                     if (HorizontalTotem(i, singleTotem)) {
                         break;
