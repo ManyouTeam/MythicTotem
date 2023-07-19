@@ -79,7 +79,7 @@ public class ValidManager {
             if (!conditionManager.CheckCondition()) {
                 continue;
             }
-            if (singleTotem.GetTotemManager().GetSection().contains("prices")) {
+            if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
                 for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
                     if (!priceManager.CheckPrice(false)) {

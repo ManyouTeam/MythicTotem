@@ -15,16 +15,16 @@ import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemHook {
+public class ItemsHook {
     public static ItemStack getHookItem(String pluginName, String itemID) {
         if (!CheckPluginLoad.DoIt(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Your server don't have " + pluginName +
-                    " plugin, but your UI config try use its hook!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
+                    " plugin, but your totem config try use its hook!");
             return null;
         }
         if (pluginName.equals("ItemsAdder")) {
             if (CustomStack.getInstance(itemID) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotemd] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
@@ -35,7 +35,7 @@ public class ItemHook {
         }
         else if (pluginName.equals("Oraxen")) {
             if (OraxenItems.getItemById(itemID) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
@@ -46,12 +46,12 @@ public class ItemHook {
         }
         else if (pluginName.equals("MMOItems")) {
             if (MMOItems.plugin.getTypes().get(itemID.split(";;")[0]) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
             else if (MMOItems.plugin.getItem(itemID.split(";;")[0], itemID.split(";;")[1]) == null){
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
@@ -59,7 +59,7 @@ public class ItemHook {
         }
         else if (pluginName.equals("EcoItems")) {
             if (EcoItems.getByID(itemID) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
@@ -86,7 +86,7 @@ public class ItemHook {
                 itemStack = armorSet.getItemStack(ArmorSlot.LEGGINGS);
             }
             if (itemStack == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + itemID + "!");
                 return null;
             }
@@ -97,7 +97,7 @@ public class ItemHook {
         else if (pluginName.equals("MythicMobs")) {
             try {
                 if (MythicBukkit.inst().getItemManager().getItemStack(itemID) == null) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " v5 item: " + itemID + "!");
                     return null;
                 } else {
@@ -106,7 +106,7 @@ public class ItemHook {
             }
             catch (NoClassDefFoundError ep) {
                 if (MythicMobs.inst().getItemManager().getItemStack(itemID) == null) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " v4 item: " + itemID + "!");
                     return null;
                 } else {
@@ -114,8 +114,8 @@ public class ItemHook {
                 }
             }
         }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: You set hook plugin to "
-                + pluginName + " in UI config, however for now FlipCard does not support it!");
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+                + pluginName + " in UI config, however for now MythicTotem does not support it!");
         return null;
     }
 }

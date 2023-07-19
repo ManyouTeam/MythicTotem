@@ -1,9 +1,19 @@
 package cn.superiormc.mythictotem.hooks;
 
+import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import me.TechsCode.UltraEconomy.UltraEconomy;
+import me.TechsCode.UltraEconomy.UltraEconomyAPI;
+import net.milkbowl.vault.economy.Economy;
+import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import su.nightexpress.coinsengine.api.CoinsEngineAPI;
+import su.nightexpress.coinsengine.api.currency.Currency;
+import su.nightexpress.gamepoints.api.GamePointsAPI;
+import su.nightexpress.gamepoints.data.PointUser;
 
 public class PriceHook {
 
@@ -11,9 +21,9 @@ public class PriceHook {
         if (value < 0) {
             return false;
         }
-        if (!FlipCard.instance.getServer().getPluginManager().isPluginEnabled(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Your server don't have " + pluginName +
-                    " plugin, but your UI config try use its hook!");
+        if (!CheckPluginLoad.DoIt(pluginName)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
+                    " plugin, but your totem config try use its hook!");
             return false;
         }
         pluginName = pluginName.toLowerCase();
@@ -32,7 +42,7 @@ public class PriceHook {
         else if (pluginName.equals("playerpoints")) {
             PlayerPoints playerPoints = PlayerPoints.getInstance();
             if (playerPoints == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not hook into PlayerPoints plugin, " +
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into PlayerPoints plugin, " +
                         "maybe your are using old version, please try update it to newer version!");
                 return false;
             }
@@ -48,9 +58,9 @@ public class PriceHook {
             }
         }
         else if (pluginName.equals("vault")) {
-            RegisteredServiceProvider<Economy> rsp = FlipCard.instance.getServer().getServicesManager().getRegistration(Economy.class);
+            RegisteredServiceProvider<Economy> rsp = MythicTotem.instance.getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not hook into Vault plugin, " +
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into Vault plugin, " +
                         "Vault is a API plugin, maybe you didn't install a Vault-based economy plugin in your server!");
                 return false;
             }
@@ -68,7 +78,7 @@ public class PriceHook {
         else if (pluginName.equals("coinsengine")) {
             Currency currency = CoinsEngineAPI.getCurrency(currencyName);
             if (currency == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not find currency " +
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                         currencyName + " in CoinsEngine plugin!");
                 return false;
             }
@@ -85,11 +95,11 @@ public class PriceHook {
         else if (pluginName.equals("ultraeconomy")) {
             UltraEconomyAPI ueAPI = UltraEconomy.getAPI();
             if (ueAPI == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not hook into UltraEconomy plugin!");
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into UltraEconomy plugin!");
                 return false;
             }
             if (UltraEconomy.getAPI().getCurrencies().name(currencyName) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not find currency " +
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                         currencyName + " in UltraEconomy plugin!");
                 return false;
             }
@@ -103,8 +113,8 @@ public class PriceHook {
                 return false;
             }
         }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: You set hook plugin to "
-                + pluginName + " in UI config, however for now FlipCard does not support it!");
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+                + pluginName + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
 
@@ -132,8 +142,8 @@ public class PriceHook {
                 return false;
             }
         }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: You set economy type to "
-                + vanillaType + " in UI config, however for now FlipCard does not support it!");
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
+                + vanillaType + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
 
@@ -142,14 +152,14 @@ public class PriceHook {
             return false;
         }
         pluginName = pluginName.toLowerCase();
-        if (!FlipCard.instance.getServer().getPluginManager().isPluginEnabled(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: You set hook plugin to "
-                    + pluginName + " in UI config, however for now FlipCard is not support it!");
+        if (!CheckPluginLoad.DoIt(pluginName)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+                    + pluginName + " in UI config, however for now MythicTotem is not support it!");
             return false;
         }
         else if (pluginName.equals("itemsadder")) {
             if (ItemsHook.getHookItem("ItemsAdder", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -159,7 +169,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("oraxen")) {
             if (ItemsHook.getHookItem("Oraxen", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -169,7 +179,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("mmoitems")) {
             if (ItemsHook.getHookItem("MMOItems", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -179,7 +189,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("ecoitems")) {
             if (ItemsHook.getHookItem("EcoItems", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -189,7 +199,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("ecoarmor")) {
             if (ItemsHook.getHookItem("EcoArmor", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -199,7 +209,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("mythicmobs")) {
             if (ItemsHook.getHookItem("MythicMobs", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: Can not get "
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -208,8 +218,8 @@ public class PriceHook {
             }
         }
         else {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cError: You set hook plugin to "
-                    + pluginName + " in UI config, however for now FlipCard is not support it!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+                    + pluginName + " in UI config, however for now MythicTotem is not support it!");
             return false;
         }
     }
