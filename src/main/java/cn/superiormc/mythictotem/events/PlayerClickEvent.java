@@ -15,6 +15,9 @@ public class PlayerClickEvent implements Listener {
 
     @EventHandler
     public void InteractEvent(PlayerInteractEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         if (GeneralSettingConfigs.GetPlayerInteractEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
             return;
         }
