@@ -7,9 +7,8 @@ public class Messages {
 
     public static String GetMessages(String textName){
         String textValue = MythicTotem.instance.getConfig().getString("messages." + textName);
-
         if (textValue == null)
-            return "§x§9§8§F§B§9§8[MythicTotem] §cThere is something wrong in your config file!";
+            return "§x§9§8§F§B§9§8[MythicTotem] §cThere is something wrong in your message config!";
         else {
             textValue = ColorParser.parse(textValue);
             return textValue;
