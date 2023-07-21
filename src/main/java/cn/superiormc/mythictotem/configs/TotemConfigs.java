@@ -29,7 +29,6 @@ public class TotemConfigs {
             catch (NullPointerException exception){
                 SetErrorValue();
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: All config section is required in totem configs, if you do not want use there feature, please view plugin Wiki.");
-                throw new RuntimeException(exception);
             }
         }
     }
