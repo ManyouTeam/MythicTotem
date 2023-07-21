@@ -19,8 +19,6 @@ totems:
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
-    disappear: true
-
   test2:
     mode: 'VERTICAL'
     layout:
@@ -65,6 +63,11 @@ totems:
 settings:
   debug: false
   cooldown-tick: 5
+  check-protection:
+    can-build: false
+    can-break: false
+    can-interact: false
+    can-use: false
   disappear:
     BukkitAPI:
       # This BukkitAPI option can not be disabled!
@@ -84,6 +87,12 @@ settings:
       enabled: true
       require-shift: true
       black-creative-mode: true
+    # This event does not support get the player object, so cooldown-tick option does not effect this trigger.
+    # And all actions and conditions that related to player is can not be used.
+    # And all placeholders that related to player also can not be used.
+    # Otherwise you will get tons of errors on console!!!
+    BlockRedstoneEvent:
+      enabled: true
 
 # Message Configs
 messages:
@@ -103,5 +112,6 @@ messages:
     &f/mythictotem reload &7- Reload the plugin.
   list-head: "&#98FB98[MythicTotem] &fValid Totem List:"
   list-prefix: "&f"
+  saved: "&#98FB98[MythicTotem] &fSaved your mainhand item!"
   error-args: "&#98FB98[MythicTotem] &cWrong command usage, if you need help, use /mythictotem help!"
   error-miss-permission: "&#98FB98[MythicTotem] &cYou don't have permission to use this command!"
