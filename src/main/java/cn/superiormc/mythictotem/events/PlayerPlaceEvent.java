@@ -13,6 +13,9 @@ public class PlayerPlaceEvent implements Listener {
 
     @EventHandler
     public void PlaceEvent(BlockPlaceEvent event){
+        if (event.isCancelled()) {
+            return;
+        }
         if (GeneralSettingConfigs.GetPlayerPlaceEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
             return;
         }
