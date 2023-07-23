@@ -90,7 +90,9 @@ public class ValidManager {
                 }
                 continue;
             }
-            if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+            if (!MythicTotem.freeVersion &&
+                    MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                    singleTotem.GetTotemManager().GetSection().contains("prices")) {
                 int i = 0;
                 for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
@@ -518,7 +520,9 @@ public class ValidManager {
                             Player player,
                             Block block) {
         MythicTotem.getCheckingBlock.remove(block);
-        if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+        if (!MythicTotem.freeVersion &&
+                MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                singleTotem.GetTotemManager().GetSection().contains("prices")) {
             for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                 PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
                 priceManager.CheckPrice(true);
