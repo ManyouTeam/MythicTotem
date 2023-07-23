@@ -11,6 +11,6 @@ public class DispatchCommand {
     }
 
     public static void DoIt(Player player, String command){
-        Bukkit.dispatchCommand(player, PlaceholderAPI.setPlaceholders(player, command));
+        Bukkit.dispatchCommand(player, command);
     }
 }
