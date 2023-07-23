@@ -78,7 +78,7 @@ public class ValidManager {
         if (placedBlockCheckManagers.size() == 0 && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
-        for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
+        bigfor: for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
             ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(),
                     event,
                     player,
@@ -115,7 +115,7 @@ public class ValidManager {
                 }
                 if (VerticalTotem(singleTotem)) {
                     break;
-                };
+                }
             }
             else {
                 for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
@@ -133,7 +133,7 @@ public class ValidManager {
                                 " type B totem check!");
                     }
                     if (HorizontalTotem(i, singleTotem)) {
-                        break;
+                        break bigfor;
                     }
                 }
             }
@@ -401,7 +401,7 @@ public class ValidManager {
                     MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8.getBlock());
                     if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
                             !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
-                        break;
+                        return false;
                     }
                     if (checkTrueOrFalse1 && materialManager_1.CheckMaterial()) {
                         if (material.equals("none")) {
@@ -483,28 +483,28 @@ public class ValidManager {
                         checkTrueOrFalse8 = false;
                     }
                     // 条件满足
-                    if (validTotemBlockLocation1.size() == (base_row * base_column - validNoneBlockAmount1) * base_layer) {
+                    if (validTotemBlockLocation1.size() == (base_row * base_column) * base_layer - validNoneBlockAmount1) {
                         AfterCheck(singleTotem, startLocation_1, validTotemBlockLocation1, player, block);
                         return true;
-                    } else if (validTotemBlockLocation2.size() == (base_row * base_column - validNoneBlockAmount2) * base_layer) {
+                    } else if (validTotemBlockLocation2.size() == (base_row * base_column) * base_layer - validNoneBlockAmount2) {
                         AfterCheck(singleTotem, startLocation_2, validTotemBlockLocation2, player, block);
                         return true;
-                    } else if (validTotemBlockLocation3.size() == (base_row * base_column - validNoneBlockAmount3) * base_layer) {
+                    } else if (validTotemBlockLocation3.size() == (base_row * base_column) * base_layer - validNoneBlockAmount3) {
                         AfterCheck(singleTotem, startLocation_3, validTotemBlockLocation3, player, block);
                         return true;
-                    } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4) * base_layer) {
+                    } else if (validTotemBlockLocation4.size() == (base_row * base_column) * base_layer - validNoneBlockAmount4) {
                         AfterCheck(singleTotem, startLocation_4, validTotemBlockLocation4, player, block);
                         return true;
-                    } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5) * base_layer) {
+                    } else if (validTotemBlockLocation5.size() == (base_row * base_column) * base_layer - validNoneBlockAmount5) {
                         AfterCheck(singleTotem, startLocation_5, validTotemBlockLocation5, player, block);
                         return true;
-                    } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6) * base_layer) {
+                    } else if (validTotemBlockLocation6.size() == (base_row * base_column) * base_layer - validNoneBlockAmount6) {
                         AfterCheck(singleTotem, startLocation_6, validTotemBlockLocation6, player, block);
                         return true;
-                    } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7) * base_layer) {
+                    } else if (validTotemBlockLocation7.size() == (base_row * base_column) * base_layer - validNoneBlockAmount7) {
                         AfterCheck(singleTotem, startLocation_7, validTotemBlockLocation7, player, block);
                         return true;
-                    } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8) * base_layer) {
+                    } else if (validTotemBlockLocation8.size() == (base_row * base_column) * base_layer - validNoneBlockAmount8) {
                         AfterCheck(singleTotem, startLocation_8, validTotemBlockLocation8, player, block);
                         return true;
                     }

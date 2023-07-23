@@ -2,10 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.Messages;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
-import cn.superiormc.mythictotem.utils.DispatchCommand;
-import cn.superiormc.mythictotem.utils.MythicMobsSpawn;
-import cn.superiormc.mythictotem.utils.StringMath;
+import cn.superiormc.mythictotem.utils.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +40,7 @@ public class ActionManager {
             if (singleAction.startsWith("none")) {
                 return;
             } else if (singleAction.startsWith("message: ") && player != null) {
-                player.sendMessage(Messages.GetActionMessages(singleAction.substring(9)));
+                player.sendMessage(ReplacePlaceholder(ColorParser.parse(singleAction.substring(9))));
             } else if (singleAction.startsWith("announcement: ")) {
                 Collection<? extends Player> players = Bukkit.getOnlinePlayers();
                 for (Player p : players) {
@@ -71,29 +68,23 @@ public class ActionManager {
     }
     private String ReplacePlaceholder(String str){
         if (Objects.nonNull(player)) {
-            str = PlaceholderAPI.setPlaceholders(player,
-                    str.replace("%world%", block.getWorld().getName())
-                            .replace("%block_x%", String.valueOf(block.getX()))
-                            .replace("%block_y%", String.valueOf(block.getY()))
-                            .replace("%block_z%", String.valueOf(block.getZ()))
-                            .replace("%player_x%", String.valueOf(player.getLocation().getX()))
-                            .replace("%player_y%", String.valueOf(player.getLocation().getY()))
-                            .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
-                            .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
-                            .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
-                            .replace("%player%", player.getName())
-                            .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
-                            .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
-                            .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
-                            .replace("%totem_column%", String.valueOf(totem.GetColumn()))
-                            .replace("%totem_raw%", String.valueOf(totem.GetRow())));
-            if (MythicTotem.instance.getConfig().getBoolean("settings.check-math", false)) {
-                Pattern pattern = Pattern.compile("%stringmath_[\\d\\s+\\-*/.]+%");
-                Matcher matcher = pattern.matcher(str);
-                while (matcher.find()) {
-                    String match = matcher.group();
-                    str.replace(match, StringMath.doCalculate(match).toString());
-                }
+                str = str.replace("%world%", block.getWorld().getName())
+                        .replace("%block_x%", String.valueOf(block.getX()))
+                        .replace("%block_y%", String.valueOf(block.getY()))
+                        .replace("%block_z%", String.valueOf(block.getZ()))
+                        .replace("%player_x%", String.valueOf(player.getLocation().getX()))
+                        .replace("%player_y%", String.valueOf(player.getLocation().getY()))
+                        .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
+                        .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
+                        .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
+                        .replace("%player%", player.getName())
+                        .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
+                        .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
+                        .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
+                        .replace("%totem_column%", String.valueOf(totem.GetColumn()))
+                        .replace("%totem_raw%", String.valueOf(totem.GetRow()));
+            if (CheckPluginLoad.DoIt("PlaceholderAPI")) {
+                str = PlaceholderAPI.setPlaceholders(player, str);
             }
             return str;
         }
