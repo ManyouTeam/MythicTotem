@@ -24,7 +24,10 @@ public class ValidManager {
 
     private Player player;
 
+    private String event;
+
     public ValidManager(BlockPlaceEvent event){
+        this.event = "BlockPlaceEvent";
         this.block = event.getBlockPlaced();
         this.player = event.getPlayer();
         CheckTotem();
@@ -34,12 +37,14 @@ public class ValidManager {
         if (event.getClickedBlock() == null) {
             return;
         }
+        this.event = "PlayerInteractEvent";
         this.block = event.getClickedBlock();
         this.player = event.getPlayer();
         CheckTotem();
     }
 
     public ValidManager(BlockRedstoneEvent event){
+        this.event = "BlockRedstoneEvent";
         this.block = event.getBlock();
         this.player = null;
         CheckTotem();
@@ -74,7 +79,10 @@ public class ValidManager {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
-            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(), player, block);
+            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(),
+                    event,
+                    player,
+                    block);
             if (!conditionManager.CheckCondition()) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
