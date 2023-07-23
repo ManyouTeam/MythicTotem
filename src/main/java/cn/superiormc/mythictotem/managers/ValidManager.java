@@ -9,7 +9,6 @@ import io.th0rgal.oraxen.api.OraxenBlocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -100,11 +99,13 @@ public class ValidManager {
                 }
             }
             if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
-                VerticalTotem(singleTotem);
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
                             " type A totem check!");
                 }
+                if (VerticalTotem(singleTotem)) {
+                    break;
+                };
             }
             else {
                 for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
@@ -129,7 +130,7 @@ public class ValidManager {
         }
         MythicTotem.getCheckingBlock.remove(block);
     }
-    private void VerticalTotem(PlacedBlockCheckManager singleTotem) {
+    private boolean VerticalTotem(PlacedBlockCheckManager singleTotem) {
         // 玩家放置的方块的坐标的偏移
         int offset_y = singleTotem.GetRow();
         int offset_x_or_z = singleTotem.GetColumn();
@@ -184,7 +185,7 @@ public class ValidManager {
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
                 MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
                 if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && !checkZTrueOrFalse1 && !checkZTrueOrFalse2) {
-                    return;
+                    return false;
                 }
                 //1
                 if (checkXTrueOrFalse1 && materialManager_1.CheckMaterial()) {
@@ -255,19 +256,20 @@ public class ValidManager {
                 // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
                     AfterCheck(singleTotem, validXTotemBlockLocation1, player, block);
-                    return;
+                    return true;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
                     AfterCheck(singleTotem, validXTotemBlockLocation2, player, block);
-                    return;
+                    return true;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
                     AfterCheck(singleTotem, validZTotemBlockLocation1, player, block);
-                    return;
+                    return true;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
                     AfterCheck(singleTotem, validZTotemBlockLocation2, player, block);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     private boolean HorizontalTotem(int offset_layer, PlacedBlockCheckManager singleTotem) {
