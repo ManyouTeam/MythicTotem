@@ -15,6 +15,9 @@ public class PlayerClickEvent implements Listener {
 
     @EventHandler
     public void InteractEvent(PlayerInteractEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         if (GeneralSettingConfigs.GetPlayerInteractEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
             return;
         }
@@ -39,6 +42,7 @@ public class PlayerClickEvent implements Listener {
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getClickedBlock().getLocation());
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cBiome: " + event.getClickedBlock().getBiome().name());
         }
     }
 }

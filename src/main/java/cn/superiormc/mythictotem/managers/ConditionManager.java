@@ -44,7 +44,7 @@ public class ConditionManager {
             {
                 int i = 0;
                 for (String str : singleCondition.substring(7).toUpperCase().split(";;")){
-                    if (str.equals(block.getBiome().getKey().toString())){
+                    if (str.toUpperCase().equals(block.getBiome().name())){
                         break;
                     }
                     i ++;

@@ -30,7 +30,7 @@ public class GeneralSettingConfigs {
     }
 
     public static boolean GetBlockRedstoneEventEnabled(){
-        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.BlockRedstone.enabled", true);
+        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.BlockRedstoneEvent.enabled", true);
     }
 
     public static boolean GetBlockBreakEventCancel(){

@@ -16,6 +16,7 @@ public class MainTotemTab implements TabCompleter {
                 strings.add("reload");
                 strings.add("help");
                 strings.add("list");
+                strings.add("save");
                 return strings;
             }
             else{
