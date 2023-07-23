@@ -24,7 +24,10 @@ public class ValidManager {
 
     private Player player;
 
+    private String event;
+
     public ValidManager(BlockPlaceEvent event){
+        this.event = "BlockPlaceEvent";
         this.block = event.getBlockPlaced();
         this.player = event.getPlayer();
         CheckTotem();
@@ -34,12 +37,14 @@ public class ValidManager {
         if (event.getClickedBlock() == null) {
             return;
         }
+        this.event = "PlayerInteractEvent";
         this.block = event.getClickedBlock();
         this.player = event.getPlayer();
         CheckTotem();
     }
 
     public ValidManager(BlockRedstoneEvent event){
+        this.event = "BlockRedstoneEvent";
         this.block = event.getBlock();
         this.player = null;
         CheckTotem();
@@ -74,7 +79,10 @@ public class ValidManager {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
-            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(), player, block);
+            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(),
+                    event,
+                    player,
+                    block);
             if (!conditionManager.CheckCondition()) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
@@ -82,7 +90,9 @@ public class ValidManager {
                 }
                 continue;
             }
-            if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+            if (!MythicTotem.freeVersion &&
+                    MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                    singleTotem.GetTotemManager().GetSection().contains("prices")) {
                 int i = 0;
                 for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
@@ -255,16 +265,16 @@ public class ValidManager {
                 }
                 // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
-                    AfterCheck(singleTotem, validXTotemBlockLocation1, player, block);
+                    AfterCheck(singleTotem, startLocation_1, validXTotemBlockLocation1, player, block);
                     return true;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
-                    AfterCheck(singleTotem, validXTotemBlockLocation2, player, block);
+                    AfterCheck(singleTotem, startLocation_2, validXTotemBlockLocation2, player, block);
                     return true;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
-                    AfterCheck(singleTotem, validZTotemBlockLocation1, player, block);
+                    AfterCheck(singleTotem, startLocation_3, validZTotemBlockLocation1, player, block);
                     return true;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
-                    AfterCheck(singleTotem, validZTotemBlockLocation2, player, block);
+                    AfterCheck(singleTotem, startLocation_4, validZTotemBlockLocation2, player, block);
                     return true;
                 }
             }
@@ -474,28 +484,28 @@ public class ValidManager {
                     }
                     // 条件满足
                     if (validTotemBlockLocation1.size() == (base_row * base_column - validNoneBlockAmount1) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation1, player, block);
+                        AfterCheck(singleTotem, startLocation_1, validTotemBlockLocation1, player, block);
                         return true;
                     } else if (validTotemBlockLocation2.size() == (base_row * base_column - validNoneBlockAmount2) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation2, player, block);
+                        AfterCheck(singleTotem, startLocation_2, validTotemBlockLocation2, player, block);
                         return true;
                     } else if (validTotemBlockLocation3.size() == (base_row * base_column - validNoneBlockAmount3) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation3, player, block);
+                        AfterCheck(singleTotem, startLocation_3, validTotemBlockLocation3, player, block);
                         return true;
                     } else if (validTotemBlockLocation4.size() == (base_row * base_column - validNoneBlockAmount4) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation4, player, block);
+                        AfterCheck(singleTotem, startLocation_4, validTotemBlockLocation4, player, block);
                         return true;
                     } else if (validTotemBlockLocation5.size() == (base_row * base_column - validNoneBlockAmount5) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation5, player, block);
+                        AfterCheck(singleTotem, startLocation_5, validTotemBlockLocation5, player, block);
                         return true;
                     } else if (validTotemBlockLocation6.size() == (base_row * base_column - validNoneBlockAmount6) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation6, player, block);
+                        AfterCheck(singleTotem, startLocation_6, validTotemBlockLocation6, player, block);
                         return true;
                     } else if (validTotemBlockLocation7.size() == (base_row * base_column - validNoneBlockAmount7) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation7, player, block);
+                        AfterCheck(singleTotem, startLocation_7, validTotemBlockLocation7, player, block);
                         return true;
                     } else if (validTotemBlockLocation8.size() == (base_row * base_column - validNoneBlockAmount8) * base_layer) {
-                        AfterCheck(singleTotem, validTotemBlockLocation8, player, block);
+                        AfterCheck(singleTotem, startLocation_8, validTotemBlockLocation8, player, block);
                         return true;
                     }
                 }
@@ -504,9 +514,15 @@ public class ValidManager {
         return false;
     }
 
-    private void AfterCheck(PlacedBlockCheckManager singleTotem, List<Location> validTotemBlockLocation, Player player, Block block) {
+    private void AfterCheck(PlacedBlockCheckManager singleTotem,
+                            Location startLocation,
+                            List<Location> validTotemBlockLocation,
+                            Player player,
+                            Block block) {
         MythicTotem.getCheckingBlock.remove(block);
-        if (!MythicTotem.freeVersion && singleTotem.GetTotemManager().GetSection().contains("prices")) {
+        if (!MythicTotem.freeVersion &&
+                MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                singleTotem.GetTotemManager().GetSection().contains("prices")) {
             for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
                 PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
                 priceManager.CheckPrice(true);
@@ -521,7 +537,7 @@ public class ValidManager {
             }
         }
         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-            ActionManager actionManager = new ActionManager(singleTotem.GetTotemManager().GetTotemAction(), player, block);
+            ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().GetTotemAction(), player, block);
             actionManager.CheckAction();
             return null;
         });

@@ -5,26 +5,37 @@ import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import cn.superiormc.mythictotem.utils.DispatchCommand;
 import cn.superiormc.mythictotem.utils.MythicMobsSpawn;
+import cn.superiormc.mythictotem.utils.StringMath;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ActionManager {
 
-    private List<String> action = new ArrayList<>();
+    private final List<String> action;
 
-    private Player player;
+    private final Player player;
 
-    private Block block;
+    private final Block block;
 
-    public ActionManager(List<String> action, Player player, Block block) {
+    private final PlacedBlockCheckManager totem;
+
+    private final Location startLocation;
+
+    public ActionManager(Location startLocation, PlacedBlockCheckManager totem, List<String> action, Player player, Block block) {
         this.action = action;
         this.player = player;
         this.block = block;
+        this.totem = totem;
+        this.startLocation = startLocation;
     }
 
     public void CheckAction(){
@@ -49,35 +60,55 @@ public class ActionManager {
                 });
             } else if (singleAction.startsWith("console_command: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                    DispatchCommand.DoIt(ReplacePlaceholder(singleAction.substring(17), player, block));
+                    DispatchCommand.DoIt(ReplacePlaceholder(singleAction.substring(17)));
                 });
             } else if (singleAction.startsWith("player_command: ") && player != null) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                    DispatchCommand.DoIt(player, ReplacePlaceholder(singleAction.substring(16), player, block));
+                    DispatchCommand.DoIt(player, ReplacePlaceholder(singleAction.substring(16)));
                 });
             }
         }
     }
-    private String ReplacePlaceholder(String str, Player player, Block block){
-        try {
-            return str.replace("%world%", block.getWorld().getName())
-                    .replace("%block_x%", String.valueOf(block.getX()))
-                    .replace("%block_y%", String.valueOf(block.getY()))
-                    .replace("%block_z%", String.valueOf(block.getZ()))
-                    .replace("%player_x%", String.valueOf(player.getLocation().getX()))
-                    .replace("%player_y%", String.valueOf(player.getLocation().getY()))
-                    .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
-                    .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
-                    .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
-                    .replace("%player%", player.getName());
+    private String ReplacePlaceholder(String str){
+        if (Objects.nonNull(player)) {
+            str = PlaceholderAPI.setPlaceholders(player,
+                    str.replace("%world%", block.getWorld().getName())
+                            .replace("%block_x%", String.valueOf(block.getX()))
+                            .replace("%block_y%", String.valueOf(block.getY()))
+                            .replace("%block_z%", String.valueOf(block.getZ()))
+                            .replace("%player_x%", String.valueOf(player.getLocation().getX()))
+                            .replace("%player_y%", String.valueOf(player.getLocation().getY()))
+                            .replace("%player_z%", String.valueOf(player.getLocation().getZ()))
+                            .replace("%player_pitch%", String.valueOf(player.getLocation().getPitch()))
+                            .replace("%player_yaw%", String.valueOf(player.getLocation().getYaw()))
+                            .replace("%player%", player.getName())
+                            .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
+                            .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
+                            .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
+                            .replace("%totem_column%", String.valueOf(totem.GetColumn()))
+                            .replace("%totem_raw%", String.valueOf(totem.GetRow())));
+            if (MythicTotem.instance.getConfig().getBoolean("settings.check-math", false)) {
+                Pattern pattern = Pattern.compile("%stringmath_[\\d\\s+\\-*/.]+%");
+                Matcher matcher = pattern.matcher(str);
+                while (matcher.find()) {
+                    String match = matcher.group();
+                    str.replace(match, StringMath.doCalculate(match).toString());
+                }
+            }
+            return str;
         }
-        catch (NullPointerException ep) {
+        else {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Some triggers can not get the player, " +
                     "please don't use placeholder that related to player!");
             return str.replace("%world%", block.getWorld().getName())
                     .replace("%block_x%", String.valueOf(block.getX()))
                     .replace("%block_y%", String.valueOf(block.getY()))
-                    .replace("%block_z%", String.valueOf(block.getZ()));
+                    .replace("%block_z%", String.valueOf(block.getZ()))
+                    .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
+                    .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
+                    .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
+                    .replace("%totem_column%", String.valueOf(totem.GetColumn()))
+                    .replace("%totem_raw%", String.valueOf(totem.GetRow()));
         }
     }
 }
