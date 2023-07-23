@@ -24,7 +24,7 @@ public final class MythicTotem extends JavaPlugin {
     public static boolean getError = false;
 
     // You are not allowed to change this if you didn't purchase this plugin.
-    public static boolean freeVersion = false;
+    public static boolean freeVersion = true;
 
     public static int threeDtotemAmount = 0;
 
