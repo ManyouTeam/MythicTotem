@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -23,7 +24,9 @@ public final class MythicTotem extends JavaPlugin {
 
     public static boolean getError = false;
 
-    public static boolean freeVersion = true;
+    public static String lastErrorMessage = "";
+
+    public static boolean freeVersion = false;
 
     public static int threeDtotemAmount = 0;
 
@@ -80,10 +83,17 @@ public final class MythicTotem extends JavaPlugin {
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setTabCompleter(new MainTotemTab());
     }
 
-    public static void SetErrorValue(){
-        if (!getError){
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFailed to load plugin configs, see errors below to fix this.");
-            getError = true;
+    public static void checkError(String text) {
+        if (!getError || !text.equals(lastErrorMessage)) {
+            Bukkit.getConsoleSender().sendMessage(text);
+            lastErrorMessage = text;
+            getError = true; // Mark the error message as displayed
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    getError = false; // Reset errorMessageDisplayed after 5 seconds
+                }
+            }.runTaskLater(instance, 100); // 100 ticks = 5 seconds
         }
     }
 }

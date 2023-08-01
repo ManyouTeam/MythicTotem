@@ -22,7 +22,7 @@ public class PriceHook {
             return false;
         }
         if (!CheckPluginLoad.DoIt(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem config try use its hook!");
             return false;
         }
@@ -113,7 +113,7 @@ public class PriceHook {
                 return false;
             }
         }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                 + pluginName + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
@@ -142,7 +142,7 @@ public class PriceHook {
                 return false;
             }
         }
-        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
+        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
                 + vanillaType + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
@@ -153,13 +153,13 @@ public class PriceHook {
         }
         pluginName = pluginName.toLowerCase();
         if (!CheckPluginLoad.DoIt(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                     + pluginName + " in UI config, however for now MythicTotem is not support it!");
             return false;
         }
         else if (pluginName.equals("itemsadder")) {
             if (ItemsHook.getHookItem("ItemsAdder", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -169,7 +169,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("oraxen")) {
             if (ItemsHook.getHookItem("Oraxen", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -179,7 +179,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("mmoitems")) {
             if (ItemsHook.getHookItem("MMOItems", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -189,7 +189,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("ecoitems")) {
             if (ItemsHook.getHookItem("EcoItems", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -199,7 +199,8 @@ public class PriceHook {
         }
         else if (pluginName.equals("ecoarmor")) {
             if (ItemsHook.getHookItem("EcoArmor", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError
+                ("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -209,7 +210,7 @@ public class PriceHook {
         }
         else if (pluginName.equals("mythicmobs")) {
             if (ItemsHook.getHookItem("MythicMobs", item) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                         + pluginName + " item: " + item + "!");
                 return false;
             }
@@ -218,8 +219,8 @@ public class PriceHook {
             }
         }
         else {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
-                    + pluginName + " in UI config, however for now MythicTotem is not support it!");
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+                    + pluginName + " in totem config, however for now MythicTotem is not support it!");
             return false;
         }
     }

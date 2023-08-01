@@ -123,7 +123,7 @@ public class ValidManager {
                         MythicTotem.threeDtotemAmount++;
                     }
                     if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
                                 " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
                                 " remove, otherwise plugin won't check 3D totems!");
                         break;

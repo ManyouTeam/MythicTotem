@@ -5,9 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
-
-import static cn.superiormc.mythictotem.MythicTotem.SetErrorValue;
-
 public class TotemManager {
 
     // 图腾的行和列
@@ -42,8 +39,7 @@ public class TotemManager {
         Map<String, String> totemLayoutsExplain = new HashMap<>();
         for (String totemLayoutsChar : totemLayoutsExplainList) {
             if (totemLayoutsChar.length() > 1) {
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem layout explain config keys must be a char, like A.");
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem layout explain config keys must be a char, like A.");
                 return;
             }
             String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar).toLowerCase();

@@ -89,7 +89,7 @@ public class ActionManager {
             return str;
         }
         else {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Some triggers can not get the player, " +
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Some triggers can not get the player, " +
                     "please don't use placeholder that related to player!");
             return str.replace("%world%", block.getWorld().getName())
                     .replace("%block_x%", String.valueOf(block.getX()))

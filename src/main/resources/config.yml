@@ -36,7 +36,6 @@ totems:
     conditions:
       - 'world: world'
     disappear: true
-
   3d-totem:
     mode: 'HORIZONTAL'
     layouts:
@@ -100,7 +99,7 @@ settings:
 
 # Message Configs
 messages:
-  plugin-reloaded:  "&#98FB98[MythicTotem] &fPlugin reloaded!"
+  plugin-reloaded: "&#98FB98[MythicTotem] &fPlugin reloaded!"
   help-main: |
     &#98FB98&lMythicTotem &7Made by @PQguanfang
     &f/mythictotem help &7- View help.

@@ -8,8 +8,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
 
-import static cn.superiormc.mythictotem.MythicTotem.SetErrorValue;
-
 public class TotemConfigs {
     public static Set<String> totemList = new HashSet<>();
 
@@ -18,8 +16,7 @@ public class TotemConfigs {
             totemList = MythicTotem.instance.getConfig().getConfigurationSection("totems").getKeys(false);
         }
         catch (NullPointerException exception){
-            SetErrorValue();
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: We can not find any totem configs, you must provide at least 1 totem config to use this plugin.");
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: We can not find any totem configs, you must provide at least 1 totem config to use this plugin.");
         }
         for (String totemID : totemList){
             try {
@@ -27,8 +24,7 @@ public class TotemConfigs {
                 MythicTotem.getTotemMap.put(totemID, new TotemManager(section));
             }
             catch (NullPointerException exception){
-                SetErrorValue();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: All config section is required in totem configs, if you do not want use there feature, please view plugin Wiki.");
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: All config section is required in totem configs, if you do not want use there feature, please view plugin Wiki.");
                 throw new RuntimeException(exception);
             }
         }

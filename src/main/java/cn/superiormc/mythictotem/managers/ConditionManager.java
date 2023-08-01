@@ -1,9 +1,11 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import io.lumine.mythic.bukkit.compatibility.WorldGuardSupport;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import su.nexmedia.engine.hooks.external.WorldGuardHook;
 
 import java.util.ArrayList;
 import java.util.List;
