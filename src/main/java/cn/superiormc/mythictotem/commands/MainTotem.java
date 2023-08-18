@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.commands;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +29,7 @@ public class MainTotem implements CommandExecutor {
         else if (args[0].equals("reload")) {
             SubReload.SubReloadCommand(sender);
         }
-        else if (args[0].equals("save")) {
+        else if (args[0].equals("save") && !MythicTotem.freeVersion) {
             SubSave.SubSaveCommand(sender, args);
         }
         else

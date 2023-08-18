@@ -10,7 +10,7 @@ public class SubReload {
 
     public static void SubReloadCommand(CommandSender sender)
     {
-        if(sender.hasPermission("mythictotem.admin")) {
+        if (sender.hasPermission("mythictotem.admin")) {
             MythicTotem.getTotemMaterial.clear();
             MythicTotem.getTotemMap.clear();
             MythicTotem.getCheckingPlayer.clear();
@@ -18,13 +18,13 @@ public class SubReload {
             MythicTotem.threeDtotemAmount = 0;
             MythicTotem.instance.reloadConfig();
             TotemConfigs.GetTotemConfigs();
-            if (MythicTotem.freeVersion) {
+            if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cYou are using free version, " +
                         "you can only create up to 3 3D totems with this version. Normal totems don't have this limit!");
             }
             sender.sendMessage(Messages.GetMessages("plugin-reloaded"));
         }
-        else{
+        else {
             sender.sendMessage(Messages.GetMessages("error-miss-permission"));
         }
     }
