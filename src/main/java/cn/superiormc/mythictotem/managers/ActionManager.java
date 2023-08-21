@@ -1,19 +1,19 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.utils.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ActionManager {
 
@@ -46,13 +46,91 @@ public class ActionManager {
                 for (Player p : players) {
                     p.sendMessage(singleAction.substring(14));
                 }
+            } else if (singleAction.startsWith("effect: ") && player != null) {
+                try {
+                    if (PotionEffectType.getByName(singleAction.substring(8).split(";;")[0].toUpperCase()) == null) {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found potion effect: " +
+                                singleAction.split(";;")[0] + ".");
+                    }
+                    PotionEffect effect = new PotionEffect(PotionEffectType.getByName(singleAction.split(";;")[0].toUpperCase()),
+                            Integer.parseInt(singleAction.substring(8).split(";;")[2]),
+                            Integer.parseInt(singleAction.substring(8).split(";;")[1]) - 1,
+                            true,
+                            true,
+                            true);
+                    player.addPotionEffect(effect);
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your effect action in totem configs can not being correctly load.");
+                }
+            } else if (singleAction.startsWith("teleport: ") && player != null) {
+                try {
+                    if (singleAction.split(";;").length == 4) {
+                        Location loc = new Location(Bukkit.getWorld(singleAction.substring(10).split(";;")[0]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[1]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[2]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[3]),
+                                player.getLocation().getYaw(),
+                                player.getLocation().getPitch());
+                        player.teleport(loc);
+                    }
+                    else if (singleAction.split(";;").length == 6) {
+                        Location loc = new Location(Bukkit.getWorld(singleAction.split(";;")[0]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[1]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[2]),
+                                Double.parseDouble(singleAction.substring(10).split(";;")[3]),
+                                Float.parseFloat(singleAction.substring(10).split(";;")[4]),
+                                Float.parseFloat(singleAction.substring(10).split(";;")[5]));
+                        player.teleport(loc);
+                    }
+                    else {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
+                    }
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
+                }
             } else if (CheckPluginLoad.DoIt("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     try {
-                        MythicMobsSpawn.DoIt(block, singleAction.substring(18).split(";;")[0], Integer.parseInt(singleAction.substring(18).split(";;")[1]));
+                        if (singleAction.substring(18).split(";;").length == 1) {
+                            MythicMobsSpawn.DoIt(block.getLocation(),
+                                    singleAction.substring(18).split(";;")[0],
+                                    1);
+                        }
+                        else if (singleAction.substring(18).split(";;").length == 2) {
+                            MythicMobsSpawn.DoIt(block.getLocation(),
+                                    singleAction.substring(18).split(";;")[0],
+                                    Integer.parseInt(singleAction.substring(18).split(";;")[1]));
+                        }
+                        else if (singleAction.substring(18).split(";;").length == 5) {
+                            World world = Bukkit.getWorld(singleAction.substring(18).split(";;")[1]);
+                            Location location = new Location(world,
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[2]),
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[3]),
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[4])
+                                    );
+                            MythicMobsSpawn.DoIt(location,
+                                    singleAction.substring(18).split(";;")[0],
+                                    1);
+                        }
+                        else if (singleAction.substring(18).split(";;").length == 6) {
+                            World world = Bukkit.getWorld(singleAction.substring(18).split(";;")[2]);
+                            Location location = new Location(world,
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[3]),
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[4]),
+                                    Double.parseDouble(singleAction.substring(18).split(";;")[5])
+                            );
+                            MythicMobsSpawn.DoIt(location,
+                                    singleAction.substring(18).split(";;")[0],
+                                    Integer.parseInt(singleAction.substring(18).split(";;")[1]));
+                        }
+                        else {
+                            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
+                        }
                     }
                     catch (ArrayIndexOutOfBoundsException e) {
-                        MythicMobsSpawn.DoIt(block, singleAction.substring(18).split(";;")[0], 1);
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
                     }
                 });
             } else if (singleAction.startsWith("console_command: ")) {
@@ -89,8 +167,6 @@ public class ActionManager {
             return str;
         }
         else {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Some triggers can not get the player, " +
-                    "please don't use placeholder that related to player!");
             return str.replace("%world%", block.getWorld().getName())
                     .replace("%block_x%", String.valueOf(block.getX()))
                     .replace("%block_y%", String.valueOf(block.getY()))

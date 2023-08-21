@@ -7,13 +7,13 @@ import org.bukkit.command.CommandSender;
 public class SubList {
 
     public static void SubListCommand(CommandSender sender) {
-        if(sender.hasPermission("mythictotem.admin")) {
+        if (sender.hasPermission("mythictotem.admin")) {
             sender.sendMessage(Messages.GetMessages("list-head"));
             for (String totemID : TotemConfigs.totemList) {
                 sender.sendMessage(Messages.GetMessages("list-prefix") + totemID);
             }
         }
-        else{
+        else {
             sender.sendMessage(Messages.GetMessages("error-miss-permission"));
         }
     }

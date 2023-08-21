@@ -123,7 +123,7 @@ public class PriceManager {
                     section.getInt("amount", 0), take);
         }
         else if (type.equals("unknwon")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cThere is something wrong in your UI configs!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cThere is something wrong in your UI configs!");
             priceBoolean = false;
         }
         return priceBoolean;

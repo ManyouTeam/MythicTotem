@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.commands;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -11,12 +12,14 @@ public class MainTotemTab implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1)
         {
-            if(sender.hasPermission("mythictotem.admin")) {
+            if (sender.hasPermission("mythictotem.admin")) {
                 List<String> strings = new ArrayList();
                 strings.add("reload");
                 strings.add("help");
                 strings.add("list");
-                strings.add("save");
+                if (!MythicTotem.freeVersion) {
+                    strings.add("save");
+                }
                 return strings;
             }
             else{

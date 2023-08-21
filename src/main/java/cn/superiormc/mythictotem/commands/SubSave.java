@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class SubSave {
 
     public static void SubSaveCommand(CommandSender sender, String[] args) {
-        if(sender.hasPermission("mythictotem.admin")) {
+        if (sender.hasPermission("mythictotem.admin")) {
             if(args.length == 2) {
                 SavedItem.SaveMainHandItem((Player) sender, args[1]);
                 sender.sendMessage(Messages.GetMessages("saved"));
@@ -17,7 +17,7 @@ public class SubSave {
                 sender.sendMessage(Messages.GetMessages("error-args"));
             }
         }
-        else{
+        else {
             sender.sendMessage(Messages.GetMessages("error-miss-permission"));
         }
     }
