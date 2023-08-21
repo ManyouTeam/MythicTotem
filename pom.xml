@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>2.5.4</version>
+    <version>2.6.0</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -162,9 +162,9 @@
         <dependency>
             <groupId>com.willfp</groupId>
             <artifactId>EcoItems</artifactId>
-            <version>3.141.5</version>
+            <version>5.10.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/EcoItems v3.141.5.jar</systemPath>
+            <systemPath>${project.basedir}/lib/EcoItems v5.10.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.willfp</groupId>
@@ -172,6 +172,20 @@
             <version>7.145.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/EcoArmor v7.145.4.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>libreforge</artifactId>
+            <version>4.25.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/libreforge-4.25.4-shadow.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>eco</artifactId>
+            <version>6.65.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/eco-6.65.4-all.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

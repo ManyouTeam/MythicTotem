@@ -93,9 +93,13 @@ public class ValidManager {
             if (!MythicTotem.freeVersion &&
                     MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
                     singleTotem.GetTotemManager().GetSection().contains("prices")) {
+                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.GetTotemManager().GetSection().getName() +
+                            " prices...");
+                }
                 int i = 0;
-                for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
-                    PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
+                for (String singleSection : singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices").getKeys(false)) {
+                    PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!priceManager.CheckPrice(false)) {
                         i ++;
                     }
@@ -523,8 +527,8 @@ public class ValidManager {
         if (!MythicTotem.freeVersion &&
                 MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
                 singleTotem.GetTotemManager().GetSection().contains("prices")) {
-            for (String singleSection : singleTotem.GetTotemManager().GetSection().getKeys(false)) {
-                PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection(singleSection), player, block);
+            for (String singleSection : singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices").getKeys(false)) {
+                PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection), player, block);
                 priceManager.CheckPrice(true);
             }
         }

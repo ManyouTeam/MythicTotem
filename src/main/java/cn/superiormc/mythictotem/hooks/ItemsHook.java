@@ -7,6 +7,7 @@ import com.willfp.ecoarmor.sets.ArmorSets;
 import com.willfp.ecoarmor.sets.ArmorSlot;
 import com.willfp.ecoitems.items.EcoItem;
 import com.willfp.ecoitems.items.EcoItems;
+import com.willfp.eco.core.items.Items;
 import dev.lone.itemsadder.api.CustomStack;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -54,14 +55,17 @@ public class ItemsHook {
                 }
                 return MMOItems.plugin.getItem(itemID.split(";;")[0], itemID.split(";;")[1]);
             case "EcoItems":
-                if (EcoItems.getByID(itemID) == null) {
+                EcoItems ecoItems = EcoItems.INSTANCE;
+                if (ecoItems.getByID(itemID) == null) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " item: " + itemID + "!");
                     return null;
                 } else {
-                    EcoItem ecoItem = EcoItems.getByID(itemID);
+                    EcoItem ecoItem = ecoItems.getByID(itemID);
                     return ecoItem.getItemStack();
                 }
+            case "eco":
+                return Items.lookup(itemID).getItem();
             case "EcoArmor":
                 if (ArmorSets.getByID(itemID.split(";;")[0]) == null) {
                     return null;
