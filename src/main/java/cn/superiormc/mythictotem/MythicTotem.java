@@ -7,8 +7,13 @@ import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.PlayerClickEvent;
 import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
 import cn.superiormc.mythictotem.events.TotemRedstoneEvent;
+import cn.superiormc.mythictotem.libreforge.EffectCastMythicSkill;
+import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.*;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import com.willfp.libreforge.effects.Effects;
+import com.willfp.libreforge.triggers.Triggers;
+import io.lumine.mythic.api.config.ConfigManager;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -45,6 +50,12 @@ public final class MythicTotem extends JavaPlugin {
         instance = this;
         ProtectionLib.init(this);
         this.saveDefaultConfig();
+        if (GeneralSettingConfigs.GetRegisterLibreforge()) {
+            Effects.INSTANCE.register(new EffectCastMythicSkill());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered cast_mythic_skill effect for libreforge!");
+            Triggers.INSTANCE.register(new TriggerTotemActived());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered totem_actived trigger for libreforge!");
+        }
         TotemConfigs.GetTotemConfigs();
         Events();
         Commands();

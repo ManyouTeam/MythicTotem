@@ -41,4 +41,8 @@ public class GeneralSettingConfigs {
         return MythicTotem.instance.getConfig().getBoolean("settings.disappear.BlockDamageEvent.enabled", false);
     }
 
+    public static boolean GetRegisterLibreforge(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.register-libreforge", false);
+    }
+
 }

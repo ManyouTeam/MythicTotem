@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.commands;
 
 import cn.superiormc.mythictotem.configs.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 
 public class SubHelp {
