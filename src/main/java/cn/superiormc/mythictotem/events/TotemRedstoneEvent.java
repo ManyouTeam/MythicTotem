@@ -14,9 +14,6 @@ public class TotemRedstoneEvent implements Listener {
 
     @EventHandler
     public void RedstoneEvent(BlockRedstoneEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
             synchronized(event) {
                 new ValidManager(event);
