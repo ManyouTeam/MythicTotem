@@ -13,7 +13,6 @@ softdepend:
   - Lands
   - PlotSquared
   - CrashClaim
-  - libreforge
 
 commands:
   mythictotem:

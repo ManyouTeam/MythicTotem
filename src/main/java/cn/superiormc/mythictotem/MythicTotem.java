@@ -11,7 +11,6 @@ import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
 import cn.superiormc.mythictotem.managers.TotemManager;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
-import com.willfp.libreforge.triggers.Triggers;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -29,7 +28,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = true;
+    public static boolean freeVersion = false;
 
     public static int threeDtotemAmount = 0;
 
@@ -49,7 +48,8 @@ public final class MythicTotem extends JavaPlugin {
         ProtectionLib.init(this);
         this.saveDefaultConfig();
         if (GeneralSettingConfigs.GetRegisterLibreforge()) {
-            Triggers.INSTANCE.register(new TriggerTotemActived());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into libreforge...");
+            TriggerTotemActived.load();
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered totem_actived trigger for libreforge!");
         }
         TotemConfigs.GetTotemConfigs();

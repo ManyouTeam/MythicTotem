@@ -7,6 +7,7 @@ import com.willfp.libreforge.SimpleProvidedHolder;
 import com.willfp.libreforge.triggers.Trigger;
 import com.willfp.libreforge.triggers.TriggerData;
 import com.willfp.libreforge.triggers.TriggerParameter;
+import com.willfp.libreforge.triggers.Triggers;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,6 +19,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TriggerTotemActived extends Trigger {
+
+    public static void load() {
+        Triggers.INSTANCE.register(new TriggerTotemActived());
+    }
 
     public TriggerTotemActived() {
         super("totem_actived");

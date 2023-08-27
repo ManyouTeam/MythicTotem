@@ -71,7 +71,7 @@ settings:
     can-break: false
     can-interact: false
     can-use: false
-  register-libreforge: true
+  register-libreforge: false
   disappear:
     BukkitAPI:
       # This BukkitAPI option can not be disabled!
