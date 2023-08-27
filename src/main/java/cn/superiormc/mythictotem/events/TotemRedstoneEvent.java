@@ -14,9 +14,6 @@ public class TotemRedstoneEvent implements Listener {
 
     @EventHandler
     public void RedstoneEvent(BlockRedstoneEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
             synchronized(event) {
                 new ValidManager(event);
@@ -24,7 +21,7 @@ public class TotemRedstoneEvent implements Listener {
         });
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getBlock().getLocation());
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
+            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
         }
     }
 }

@@ -1,6 +1,7 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import cn.superiormc.mythictotem.utils.CheckProtection;
 import cn.superiormc.mythictotem.utils.RemoveBlock;
@@ -8,6 +9,7 @@ import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -543,6 +545,11 @@ public class ValidManager {
         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
             ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().GetTotemAction(), player, block);
             actionManager.CheckAction();
+            TotemActivedEvent totemActivedEvent = new TotemActivedEvent(
+                    singleTotem.GetTotemManager().GetSection().getName(),
+                    this.player,
+                    this.block.getLocation());
+            Bukkit.getPluginManager().callEvent(totemActivedEvent);
             return null;
         });
     }
