@@ -13,7 +13,7 @@ public class GeneralSettingConfigs {
     }
 
     public static boolean GetPlayerPlaceEventBlackCreative(){
-        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerInteractEvent.black-creative-mode", true);
+        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.BlockPlaceEvent.black-creative-mode", true);
     }
 
     public static boolean GetPlayerInteractEventEnabled(){

@@ -125,15 +125,6 @@ public class ValidManager {
             }
             else {
                 for (int i = 1 ; i <= singleTotem.GetTotemManager().GetTotemLayer() ; i++) {
-                    if (singleTotem.GetTotemManager().GetTotemLayer() != 1) {
-                        MythicTotem.threeDtotemAmount++;
-                    }
-                    if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
-                                " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
-                                " remove, otherwise plugin won't check 3D totems!");
-                        break;
-                    }
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
                                 " type B totem check!");
