@@ -53,8 +53,8 @@ public class PriceManager {
         }
         else if (type.equals("hook")) {
             priceBoolean = PriceHook.getPrice(section.getString("hook-plugin"),
-                    player,
                     section.getString("hook-item"),
+                    player,
                     section.getInt("amount", 0), take);
         }
         else if (type.equals("vanilla")) {
@@ -109,7 +109,7 @@ public class PriceManager {
                 }
                 itemStack.setItemMeta(itemMeta);
             }
-            priceBoolean = PriceHook.checkItemPrice(player, itemStack, section.getInt("amount", 0), take);
+            priceBoolean = PriceHook.getPrice(player, itemStack, section.getInt("amount", 0), take);
         }
         else if (type.equals("economy")) {
             priceBoolean = PriceHook.getPrice(section.getString("economy-plugin"),
