@@ -50,6 +50,13 @@ public class TotemManager {
             totemLayoutsExplain.put(totemLayoutsChar, totemLayoutsMaterial);
         }
         if (!(section.getConfigurationSection("layouts") == null)) {
+            MythicTotem.threeDtotemAmount++;
+            if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
+                        " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
+                        " remove, otherwise plugin won't check 3D totems!");
+                return;
+            }
             Map<Integer, List<String>> totemLayouts = new HashMap<>();
             for (int i = 1 ; i <= section.getConfigurationSection("layouts").getKeys(false).size() ; i++) {
                 if (!section.getStringList("layouts." + i).isEmpty()) {
