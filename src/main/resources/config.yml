@@ -96,15 +96,15 @@ settings:
     BlockPlaceEvent:
       enabled: true
       require-shift: false
-      black-creative-mode: true
+      black-creative-mode: false
     PlayerInteractEvent:
       enabled: false
       require-shift: true
-      black-creative-mode: true
+      black-creative-mode: false
     PlayerDropItemEvent:
       enabled: false
-      require-shift: true
-      black-creative-mode: true
+      require-shift: false
+      black-creative-mode: false
     # This event does not support get the player object, so cooldown-tick option does not effect this trigger.
     # And all actions and conditions that related to player is can not be used.
     # And all placeholders that related to player also can not be used.

@@ -41,27 +41,27 @@ public class ConditionManager {
             } else if (singleCondition.startsWith("trigger: "))
             {
                 return singleCondition.substring(9).equals(event);
-            } else if (singleCondition.startsWith("core_block:"))
+            } else if (singleCondition.startsWith("core_block: "))
             {
                 try {
                     int row = singleTotem.GetRow();
                     int column = singleTotem.GetLayer();
                     int layer = singleTotem.GetLayer();
-                    if (singleCondition.split(";;").length == 2 &&
-                            row == Integer.parseInt(singleCondition.split(";;")[0]) &&
-                            column == Integer.parseInt(singleCondition.split(";;")[1])) {
+                    if (singleCondition.substring(12).split(";;").length == 2 &&
+                            row == Integer.parseInt(singleCondition.substring(12).split(";;")[0]) &&
+                            column == Integer.parseInt(singleCondition.substring(12).split(";;")[1])) {
                         return true;
                     }
                     else if (singleCondition.split(";;").length == 3 &&
-                            row == Integer.parseInt(singleCondition.split(";;")[0]) &&
-                            column == Integer.parseInt(singleCondition.split(";;")[1]) &&
-                            layer == Integer.parseInt(singleCondition.split(";;")[2])) {
+                            row == Integer.parseInt(singleCondition.substring(12).split(";;")[0]) &&
+                            column == Integer.parseInt(singleCondition.substring(12).split(";;")[1]) &&
+                            layer == Integer.parseInt(singleCondition.substring(12).split(";;")[2])) {
                         return true;
                     }
                     return false;
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your core_block condition in totem configs can not being correctly load.");
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your core_block condition in totem configs can not being correctly load.");
                 return false;
             }
             } else if (singleCondition.startsWith("world: "))
