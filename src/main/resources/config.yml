@@ -19,23 +19,6 @@ totems:
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
-  test2:
-    mode: 'VERTICAL'
-    layout:
-      - 'AAAAA'
-      - 'BBBBB'
-      - 'CCCCD'
-    explains:
-      A: 'minecraft:stone'
-      B: 'minecraft:end_stone'
-      C: 'minecraft:netherrack'
-      D: 'none'
-    actions:
-      - 'message: Hello!'
-      - 'console_command: mm m spawn SkeletalKnight:1 1 %world%, %block_x%, %block_y%, %block_z%'
-    conditions:
-      - 'world: world'
-    disappear: true
   3d-totem:
     mode: 'HORIZONTAL'
     layouts:
@@ -57,6 +40,31 @@ totems:
     conditions:
       - 'none'
     disappear: true
+  3d-totem-with-price:
+    mode: 'HORIZONTAL'
+    layouts:
+      1:
+        - 'AAAA'
+        - 'BBBB'
+        - 'CCCC'
+      2:
+        - 'CCCC'
+        - 'BBBB'
+        - 'AAAA'
+    explains:
+      A: 'minecraft:stone'
+      B: 'minecraft:end_stone'
+      C: 'minecraft:netherrack'
+    actions:
+      - 'message: Hello World!'
+      - 'mythicmobs_spawn: SkeletalKnight'
+    conditions:
+      - 'none'
+    prices-as-key: true
+    prices:
+      1:
+        material: APPLE
+    disappear: true
 
 # General Setting Configs
 settings:
@@ -65,7 +73,9 @@ settings:
   cooldown-tick: 5
   check-math: false
   # Premium version only.
-  check-prices: false
+  check-prices:
+    enabled: false
+    only-check-mainhand: true
   check-protection:
     can-build: false
     can-break: false
@@ -88,6 +98,10 @@ settings:
       require-shift: false
       black-creative-mode: true
     PlayerInteractEvent:
+      enabled: false
+      require-shift: true
+      black-creative-mode: true
+    PlayerDropItemEvent:
       enabled: false
       require-shift: true
       black-creative-mode: true

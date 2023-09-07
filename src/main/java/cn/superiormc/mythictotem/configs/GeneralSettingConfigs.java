@@ -29,6 +29,19 @@ public class GeneralSettingConfigs {
         return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerInteractEvent.black-creative-mode", true);
     }
 
+    public static boolean GetPlayerDropEventEnabled(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerDropItemEvent.enabled", true);
+    }
+
+
+    public static boolean GetPlayerDropEventRequireShift(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerDropItemEvent.require-shift", true);
+    }
+
+    public static boolean GetPlayerDropEventBlackCreative(){
+        return MythicTotem.instance.getConfig().getBoolean("settings.trigger.PlayerDropItemEvent.black-creative-mode", true);
+    }
+
     public static boolean GetBlockRedstoneEventEnabled(){
         return MythicTotem.instance.getConfig().getBoolean("settings.trigger.BlockRedstoneEvent.enabled", true);
     }

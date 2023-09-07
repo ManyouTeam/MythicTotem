@@ -5,6 +5,7 @@ import cn.superiormc.mythictotem.commands.MainTotemTab;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.PlayerClickEvent;
+import cn.superiormc.mythictotem.events.PlayerDropEvent;
 import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
 import cn.superiormc.mythictotem.events.TotemRedstoneEvent;
 import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
@@ -14,6 +15,7 @@ import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,7 +30,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = false;
+    public static boolean freeVersion = true;
 
     public static int threeDtotemAmount = 0;
 
@@ -41,6 +43,8 @@ public final class MythicTotem extends JavaPlugin {
 
     // 方块ID，方块所在图腾信息
     public static Map<String, List<PlacedBlockCheckManager>> getTotemMaterial = new HashMap<>();
+
+    public static List<Item> getDroppedItems = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -82,6 +86,10 @@ public final class MythicTotem extends JavaPlugin {
         if(GeneralSettingConfigs.GetBlockRedstoneEventEnabled()) {
             Bukkit.getPluginManager().registerEvents(new TotemRedstoneEvent(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockRedstoneEvent trigger.");
+        }
+        if(GeneralSettingConfigs.GetPlayerDropEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new PlayerDropEvent(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerDropItemEvent trigger.");
         }
     }
 

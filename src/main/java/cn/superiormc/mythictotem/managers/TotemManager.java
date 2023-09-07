@@ -76,7 +76,11 @@ public class TotemManager {
                         // 放置到方块表中
                         // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
                         if (MythicTotem.getTotemMaterial.containsKey(realString)) {
-                            MythicTotem.getTotemMaterial.get(realString).add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
+                            MythicTotem.getTotemMaterial.get(realString).add(
+                                    new PlacedBlockCheckManager(this,
+                                            totemRow,
+                                            totemColumn,
+                                            i));
                         } else {
                             List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
                             placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
@@ -156,5 +160,9 @@ public class TotemManager {
 
     public ConfigurationSection GetSection() {
         return this.totemSection;
+    }
+
+    public boolean GetKeyMode() {
+        return totemSection.getBoolean("prices-as-key", false);
     }
 }

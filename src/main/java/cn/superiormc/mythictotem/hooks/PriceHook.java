@@ -95,7 +95,7 @@ public class PriceHook {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into UltraEconomy plugin!");
                     return false;
                 }
-                if (UltraEconomy.getAPI().getCurrencies().name(currencyName) == null) {
+                if (!UltraEconomy.getAPI().getCurrencies().name(currencyName).isPresent()) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                             currencyName + " in UltraEconomy plugin!");
                     return false;
@@ -128,7 +128,10 @@ public class PriceHook {
         return false;
     }
 
-    public static boolean getPrice(String vanillaType, Player player, int value, boolean take) {
+    public static boolean getPrice(String vanillaType,
+                                   Player player,
+                                   int value,
+                                   boolean take) {
         vanillaType = vanillaType.toLowerCase();
         if (vanillaType.equals("exp")) {
             if (player.getExp() >= value) {
@@ -157,7 +160,12 @@ public class PriceHook {
         return false;
     }
 
-    public static boolean getPrice(String pluginName, String item, Player player, int value, boolean take) {
+    public static boolean getPrice(String pluginName,
+                                   String item,
+                                   Player player,
+                                   int value,
+                                   boolean take,
+                                   ItemStack keyItems) {
         if (MythicTotem.freeVersion) {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You are using free version, " +
                     "hook item price can not be used in this version!");
@@ -166,96 +174,124 @@ public class PriceHook {
         if (value < 0) {
             return false;
         }
-        ItemStack[] storage = player.getInventory().getStorageContents();
         if (item == null) {
             return false;
         }
         int amount = 0;
-        for (ItemStack tempVal1 : storage) {
-            if (tempVal1 == null || tempVal1.getType().isAir()) {
-                continue;
+        if (keyItems == null) {
+            ItemStack[] storage = player.getInventory().getStorageContents();
+            for (ItemStack tempVal1 : storage) {
+                if (tempVal1 == null || tempVal1.getType().isAir()) {
+                    continue;
+                }
+                ItemStack temItem = tempVal1.clone();
+                temItem.setAmount(1);
+                String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
+                if (tempVal10 != null && tempVal10.equals(item)) {
+                    amount += tempVal1.getAmount();
+                } else if (temItem == ItemsHook.getHookItem(pluginName, item)) {
+                    amount += tempVal1.getAmount();
+                }
             }
-            ItemStack temItem = tempVal1.clone();
-            temItem.setAmount(1);
-            String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
-            if (tempVal10 != null && tempVal10.equals(item)) {
-                amount += tempVal1.getAmount();
-            }
-            else if (temItem == ItemsHook.getHookItem(pluginName, item)) {
-                amount += tempVal1.getAmount();
-            }
-        }
-        if (amount >= value) {
-            if (take) {
-                for (int i = 0 ; i < storage.length ; i++) {
-                    if (storage[i] == null || storage[i].getType().isAir()) {
-                        continue;
-                    }
-                    ItemStack temItem = storage[i].clone();
-                    temItem.setAmount(1);
-                    String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
-                    if (tempVal10 != null && tempVal10.equals(item)) {
-                        if (storage[i].getAmount() >= value) {
-                            storage[i].setAmount(storage[i].getAmount() - value);
-                            break;
-                        } else {
-                            value -= storage[i].getAmount();
-                            storage[i].setAmount(0);
+            if (amount >= value) {
+                if (take) {
+                    for (int i = 0 ; i < storage.length ; i++) {
+                        if (storage[i] == null || storage[i].getType().isAir()) {
+                            continue;
+                        }
+                        ItemStack temItem = storage[i].clone();
+                        temItem.setAmount(1);
+                        String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
+                        if (tempVal10 != null && tempVal10.equals(item)) {
+                            if (storage[i].getAmount() >= value) {
+                                storage[i].setAmount(storage[i].getAmount() - value);
+                                break;
+                            } else {
+                                value -= storage[i].getAmount();
+                                storage[i].setAmount(0);
+                            }
                         }
                     }
+                    player.getInventory().setStorageContents(storage);
                 }
-                player.getInventory().setStorageContents(storage);
+                return true;
             }
-            return true;
         }
         else {
-            return false;
+            ItemStack temItem = keyItems.clone();
+            String tempVal3 = CheckValidHook.checkValid(pluginName, temItem);
+            if (tempVal3 != null && tempVal3.equals(item)) {
+                amount = temItem.getAmount();
+            }
+            if (amount >= value) {
+                if (take) {
+                    keyItems.setAmount(amount - value);
+                }
+                return true;
+            }
         }
+        return false;
     }
 
-    public static boolean getPrice(Player player, ItemStack item, int value, boolean take) {
+    public static boolean getPrice(Player player,
+                                   ItemStack item,
+                                   int value,
+                                   boolean take,
+                                   ItemStack keyItems) {
         if (value < 0) {
             return false;
         }
-        ItemStack[] storage = player.getInventory().getStorageContents();
         if (item == null) {
             return false;
         }
+        ItemStack[] storage = player.getInventory().getStorageContents();
         int amount = 0;
-        for (ItemStack tempVal1 : storage) {
-            if (tempVal1 == null || tempVal1.getType().isAir()) {
-                continue;
+        if (keyItems == null) {
+            for (ItemStack tempVal1 : storage) {
+                if (tempVal1 == null || tempVal1.getType().isAir()) {
+                    continue;
+                }
+                ItemStack temItem = tempVal1.clone();
+                temItem.setAmount(1);
+                if (temItem.equals(item)) {
+                    amount += tempVal1.getAmount();
+                }
             }
-            ItemStack temItem = tempVal1.clone();
-            temItem.setAmount(1);
-            if (temItem.equals(item)) {
-                amount += tempVal1.getAmount();
-            }
-        }
-        if (amount >= value) {
-            if (take) {
-                for (int i = 0 ; i < storage.length ; i++) {
-                    if (storage[i] == null || storage[i].getType().isAir()) {
-                        continue;
-                    }
-                    ItemStack temItem = storage[i].clone();
-                    temItem.setAmount(1);
-                    if (temItem.equals(item)) {
-                        if (storage[i].getAmount() >= value) {
-                            storage[i].setAmount(storage[i].getAmount() - value);
-                            break;
-                        } else {
-                            value -= storage[i].getAmount();
-                            storage[i].setAmount(0);
+            if (amount >= value) {
+                if (take) {
+                    for (int i = 0; i < storage.length; i++) {
+                        if (storage[i] == null || storage[i].getType().isAir()) {
+                            continue;
+                        }
+                        ItemStack temItem = storage[i].clone();
+                        temItem.setAmount(1);
+                        if (temItem.equals(item)) {
+                            if (storage[i].getAmount() >= value) {
+                                storage[i].setAmount(storage[i].getAmount() - value);
+                                break;
+                            } else {
+                                value -= storage[i].getAmount();
+                                storage[i].setAmount(0);
+                            }
                         }
                     }
+                    player.getInventory().setStorageContents(storage);
                 }
-                player.getInventory().setStorageContents(storage);
+                return true;
             }
-            return true;
         }
         else {
-            return false;
+            ItemStack temItem = keyItems.clone();
+            if (temItem.equals(item)) {
+                amount = temItem.getAmount();
+            }
+            if (amount >= value) {
+                if (take) {
+                    keyItems.setAmount(amount - value);
+                }
+                return true;
+            }
         }
+        return false;
     }
 }
