@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.managers;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
 import cn.superiormc.mythictotem.utils.ColorParser;
 import cn.superiormc.mythictotem.utils.SavedItem;
@@ -33,7 +34,7 @@ public class PriceManager {
         this.player = player;
         this.block = block;
         if (section == null) {
-            type = "free";
+            type = "unknown";
         } else if (section.contains("hook-plugin") && section.contains("hook-item")) {
             type = "hook";
         } else if (section.contains("material")) {
@@ -45,8 +46,14 @@ public class PriceManager {
         } else {
             type = "free";
         }
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aPrice Type: " + type + "!");
+        }
     }
     public boolean CheckPrice(boolean take, ItemStack keyItems) {
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
+        }
         boolean priceBoolean = false;
         if (type.equals("free")) {
             priceBoolean = true;

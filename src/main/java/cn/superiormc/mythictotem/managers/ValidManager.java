@@ -109,7 +109,7 @@ public class ValidManager {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info---------");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
             // 条件
@@ -120,7 +120,7 @@ public class ValidManager {
                     singleTotem);
             if (!conditionManager.CheckCondition()) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Skipped " + singleTotem.GetTotemManager().GetSection().getName() +
                             " because conditions not meet!");
                 }
                 continue;
@@ -139,6 +139,12 @@ public class ValidManager {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!singleTotem.GetTotemManager().GetKeyMode()) {
                         item = null;
+                        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSet item to null!");
+                        }
+                    }
+                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eItem: " + item + "!");
                     }
                     if (!priceManager.CheckPrice(false, item)) {
                         i++;
@@ -544,7 +550,7 @@ public class ValidManager {
                             List<Location> validTotemBlockLocation) {
         MythicTotem.getCheckingBlock.remove(block);
         if (!MythicTotem.freeVersion &&
-                MythicTotem.instance.getConfig().getBoolean("settings.check-prices.enabled", true) &&
+                MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
                 singleTotem.GetTotemManager().GetSection().contains("prices")) {
             for (String singleSection : singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices").getKeys(false)) {
                 PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection),

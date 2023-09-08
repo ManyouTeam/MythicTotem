@@ -238,6 +238,10 @@ public class PriceHook {
                                    int value,
                                    boolean take,
                                    ItemStack keyItems) {
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aRequired Price Item: " + item + "!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aConfirmed Key Item: " + keyItems + "!");
+        }
         if (value < 0) {
             return false;
         }
@@ -284,12 +288,12 @@ public class PriceHook {
             ItemStack temItem = keyItems.clone();
             if (temItem.equals(item)) {
                 amount = temItem.getAmount();
-            }
-            if (amount >= value) {
-                if (take) {
-                    keyItems.setAmount(amount - value);
+                if (amount >= value) {
+                    if (take) {
+                        keyItems.setAmount(amount - value);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;

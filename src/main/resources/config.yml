@@ -4,7 +4,7 @@
 
 # Totem Configs
 totems:
-  test:
+  2d-totem-example:
     mode: 'VERTICAL'
     layout:
       - 'AAA'
@@ -19,7 +19,7 @@ totems:
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
-  3d-totem:
+  3d-totem-example:
     mode: 'HORIZONTAL'
     layouts:
       1:
@@ -40,30 +40,36 @@ totems:
     conditions:
       - 'none'
     disappear: true
-  3d-totem-with-price:
+  3d-totem-with-key-required-example:
     mode: 'HORIZONTAL'
     layouts:
       1:
-        - 'AAAA'
-        - 'BBBB'
-        - 'CCCC'
+        - 'AAAAA'
+        - 'AAAAA'
+        - 'AABAA'
+        - 'AAAAA'
+        - 'AAAAA'
       2:
-        - 'CCCC'
-        - 'BBBB'
-        - 'AAAA'
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
     explains:
       A: 'minecraft:stone'
-      B: 'minecraft:end_stone'
+      B: 'minecraft:dirt'
       C: 'minecraft:netherrack'
     actions:
       - 'message: Hello World!'
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
-      - 'none'
-    prices-as-key: true
+      - 'trigger: PlayerDropItemEvent'
+    core-blocks:
+      - B
     prices:
       1:
         material: APPLE
+    prices-as-key: true
     disappear: true
 
 # General Setting Configs
