@@ -109,6 +109,8 @@ public class ValidManager {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + MythicTotem.getTotemMaterial);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eGet material: " + block.getType().toString().toLowerCase() + " - " + placedBlockCheckManagers);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
@@ -421,6 +423,9 @@ public class ValidManager {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
+                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
+                    }
                     //1
                     MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                     MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());

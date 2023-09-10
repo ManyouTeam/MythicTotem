@@ -30,7 +30,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = false;
+    public static boolean freeVersion = true;
 
     public static int threeDtotemAmount = 0;
 
@@ -65,6 +65,9 @@ public final class MythicTotem extends JavaPlugin {
         if (freeVersion) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cYou are using free version, " +
                     "you can only create 3 3D totem with this version.");
+        }
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }

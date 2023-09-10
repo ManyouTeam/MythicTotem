@@ -87,7 +87,7 @@ public class TotemManager {
                                                 i));
                             } else {
                                 List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
-                                placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
+                                placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn, i));
                                 MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
                             }
                         }
