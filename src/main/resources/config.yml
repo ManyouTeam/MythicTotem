@@ -79,9 +79,7 @@ settings:
   cooldown-tick: 5
   check-math: false
   # Premium version only.
-  check-prices:
-    enabled: false
-    only-check-mainhand: true
+  check-prices: true
   check-protection:
     can-build: false
     can-break: false

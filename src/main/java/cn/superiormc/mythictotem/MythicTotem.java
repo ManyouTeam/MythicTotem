@@ -30,7 +30,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = true;
+    public static boolean freeVersion = false;
 
     public static int threeDtotemAmount = 0;
 
