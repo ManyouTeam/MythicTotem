@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.managers;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
 import cn.superiormc.mythictotem.utils.ColorParser;
 import cn.superiormc.mythictotem.utils.SavedItem;
@@ -33,7 +34,7 @@ public class PriceManager {
         this.player = player;
         this.block = block;
         if (section == null) {
-            type = "free";
+            type = "unknown";
         } else if (section.contains("hook-plugin") && section.contains("hook-item")) {
             type = "hook";
         } else if (section.contains("material")) {
@@ -45,8 +46,14 @@ public class PriceManager {
         } else {
             type = "free";
         }
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aPrice Type: " + type + "!");
+        }
     }
-    public boolean CheckPrice(boolean take) {
+    public boolean CheckPrice(boolean take, ItemStack keyItems) {
+        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
+        }
         boolean priceBoolean = false;
         if (type.equals("free")) {
             priceBoolean = true;
@@ -55,7 +62,7 @@ public class PriceManager {
             priceBoolean = PriceHook.getPrice(section.getString("hook-plugin"),
                     section.getString("hook-item"),
                     player,
-                    section.getInt("amount", 0), take);
+                    section.getInt("amount", 0), take, keyItems);
         }
         else if (type.equals("vanilla")) {
             ItemStack itemStack = null;
@@ -79,15 +86,20 @@ public class PriceManager {
                     if (material == null) {
                         itemStack = SavedItem.GetItemByKey(section.getString("material", ""));
                         if (itemStack == null) {
-                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not get material: " + str + "!");
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not get material: " + str + "!");
                         }
                     } else {
                         itemStack = new ItemStack(material);
                     }
                 }
+                if (itemStack == null) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not get material: " + str + "!");
+                    return false;
+                }
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (itemMeta == null) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[FlipCard] §cCan not get material: " + str + "!");
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not get material: " + str + "!");
+                    return false;
                 }
                 String display = section.getString("display", "");
                 if (!display.equals("")) {
@@ -95,7 +107,7 @@ public class PriceManager {
                     itemMeta.setDisplayName(display);
                 }
                 List<String> lore = section.getStringList("lore");
-                if (Objects.nonNull(lore)) {
+                if (!lore.isEmpty()) {
                     for (int i = 0; i < lore.size(); i++) {
                         String str1 = lore.get(i);
                         str1 = ColorParser.parse("&f" + str);
@@ -109,7 +121,11 @@ public class PriceManager {
                 }
                 itemStack.setItemMeta(itemMeta);
             }
-            priceBoolean = PriceHook.getPrice(player, itemStack, section.getInt("amount", 0), take);
+            priceBoolean = PriceHook.getPrice(player,
+                    itemStack,
+                    section.getInt("amount", 0),
+                    take,
+                    keyItems);
         }
         else if (type.equals("economy")) {
             priceBoolean = PriceHook.getPrice(section.getString("economy-plugin"),

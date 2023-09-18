@@ -22,6 +22,8 @@ public class TotemManager {
 
     private final List<String> totemCondition;
 
+    private final List<String> totemCoreBlocks;
+
     private final boolean totemDisappear;
 
     private final String totemCheckMode;
@@ -33,6 +35,7 @@ public class TotemManager {
         this.totemAction = section.getStringList("actions");
         this.totemCondition = section.getStringList("conditions");
         this.totemCheckMode = section.getString("mode", "VERTICAL").toUpperCase();
+        this.totemCoreBlocks = section.getStringList("core-blocks");
         this.totemSection = section;
         ConfigurationSection totemLayoutsExplainConfig = section.getConfigurationSection("explains");
         if (totemLayoutsExplainConfig == null) {
@@ -75,12 +78,18 @@ public class TotemManager {
                         String realString = totemLayoutsExplain.get(String.valueOf(realChar));
                         // 放置到方块表中
                         // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
-                        if (MythicTotem.getTotemMaterial.containsKey(realString)) {
-                            MythicTotem.getTotemMaterial.get(realString).add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
-                        } else {
-                            List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
-                            placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
-                            MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
+                        if (totemCoreBlocks.isEmpty() || totemCoreBlocks.contains(String.valueOf(realChar))) {
+                            if (MythicTotem.getTotemMaterial.containsKey(realString)) {
+                                MythicTotem.getTotemMaterial.get(realString).add(
+                                        new PlacedBlockCheckManager(this,
+                                                totemRow,
+                                                totemColumn,
+                                                i));
+                            } else {
+                                List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
+                                placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn, i));
+                                MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
+                            }
                         }
                         this.totemLocationMaterial.put(GenerateID(i, totemRow, totemColumn), realString);
                     }
@@ -156,5 +165,9 @@ public class TotemManager {
 
     public ConfigurationSection GetSection() {
         return this.totemSection;
+    }
+
+    public boolean GetKeyMode() {
+        return totemSection.getBoolean("prices-as-key", false);
     }
 }

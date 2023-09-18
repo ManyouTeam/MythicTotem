@@ -2,13 +2,11 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
-import io.lumine.mythic.bukkit.compatibility.WorldGuardSupport;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import su.nexmedia.engine.hooks.external.WorldGuardHook;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConditionManager {
@@ -21,11 +19,19 @@ public class ConditionManager {
 
     private String event;
 
-    public ConditionManager(List<String> condition, String event, Player player, Block block) {
+    private PlacedBlockCheckManager singleTotem;
+
+
+    public ConditionManager(List<String> condition,
+                            String event,
+                            Player player,
+                            Block block,
+                            PlacedBlockCheckManager singleTotem) {
         this.condition = condition;
         this.event = event;
         this.player = player;
         this.block = block;
+        this.singleTotem = singleTotem;
     }
 
     public boolean CheckCondition() {

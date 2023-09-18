@@ -4,7 +4,7 @@
 
 # Totem Configs
 totems:
-  test:
+  2d-totem-example:
     mode: 'VERTICAL'
     layout:
       - 'AAA'
@@ -19,24 +19,7 @@ totems:
       - 'mythicmobs_spawn: SkeletalKnight'
     conditions:
       - 'none'
-  test2:
-    mode: 'VERTICAL'
-    layout:
-      - 'AAAAA'
-      - 'BBBBB'
-      - 'CCCCD'
-    explains:
-      A: 'minecraft:stone'
-      B: 'minecraft:end_stone'
-      C: 'minecraft:netherrack'
-      D: 'none'
-    actions:
-      - 'message: Hello!'
-      - 'console_command: mm m spawn SkeletalKnight:1 1 %world%, %block_x%, %block_y%, %block_z%'
-    conditions:
-      - 'world: world'
-    disappear: true
-  3d-totem:
+  3d-totem-example:
     mode: 'HORIZONTAL'
     layouts:
       1:
@@ -57,6 +40,37 @@ totems:
     conditions:
       - 'none'
     disappear: true
+  3d-totem-with-key-required-example:
+    mode: 'HORIZONTAL'
+    layouts:
+      1:
+        - 'AAAAA'
+        - 'AAAAA'
+        - 'AABAA'
+        - 'AAAAA'
+        - 'AAAAA'
+      2:
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
+        - 'CCCCC'
+    explains:
+      A: 'minecraft:stone'
+      B: 'minecraft:dirt'
+      C: 'minecraft:netherrack'
+    actions:
+      - 'message: Hello World!'
+      - 'mythicmobs_spawn: SkeletalKnight'
+    conditions:
+      - 'trigger: PlayerDropItemEvent'
+    core-blocks:
+      - B
+    prices:
+      1:
+        material: APPLE
+    prices-as-key: true
+    disappear: true
 
 # General Setting Configs
 settings:
@@ -65,7 +79,7 @@ settings:
   cooldown-tick: 5
   check-math: false
   # Premium version only.
-  check-prices: false
+  check-prices: true
   check-protection:
     can-build: false
     can-break: false
@@ -86,11 +100,15 @@ settings:
     BlockPlaceEvent:
       enabled: true
       require-shift: false
-      black-creative-mode: true
+      black-creative-mode: false
     PlayerInteractEvent:
       enabled: false
       require-shift: true
-      black-creative-mode: true
+      black-creative-mode: false
+    PlayerDropItemEvent:
+      enabled: false
+      require-shift: false
+      black-creative-mode: false
     # This event does not support get the player object, so cooldown-tick option does not effect this trigger.
     # And all actions and conditions that related to player is can not be used.
     # And all placeholders that related to player also can not be used.
