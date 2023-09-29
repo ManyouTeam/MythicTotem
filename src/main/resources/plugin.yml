@@ -3,16 +3,27 @@ version: '${project.version}'
 main: cn.superiormc.mythictotem.MythicTotem
 api-version: 1.13
 softdepend:
-  - ItemsAdder
-  - Oraxen
-  - PlaceholderAPI
-  - MythicMobs
   - WorldGuard
   - Towny
   - Factions
   - Lands
   - PlotSquared
   - CrashClaim
+  - MMOItems
+  - MythicLib
+  - ItemsAdder
+  - Vault
+  - PlayerPoints
+  - GamePoints
+  - Oraxen
+  - EcoItems
+  - EcoArmor
+  - PlaceholderAPI
+  - UltraEconomy
+  - CoinsEngine
+  - RedisEconomy
+  - EcoBits
+  - MythicMobs
 
 commands:
   mythictotem:
