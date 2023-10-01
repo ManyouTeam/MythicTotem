@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
 import com.willfp.ecobits.currencies.Currencies;
 import com.willfp.ecobits.currencies.CurrencyUtils;
+import dev.unnm3d.rediseconomy.api.RedisEconomyAPI;
 import me.TechsCode.UltraEconomy.UltraEconomy;
 import me.TechsCode.UltraEconomy.UltraEconomyAPI;
 import net.milkbowl.vault.economy.Economy;
@@ -12,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import ru.soknight.peconomy.api.PEconomyAPI;
+import ru.soknight.peconomy.database.model.WalletModel;
 import su.nightexpress.coinsengine.api.CoinsEngineAPI;
 import su.nightexpress.coinsengine.api.currency.Currency;
 import su.nightexpress.gamepoints.api.GamePointsAPI;
@@ -114,6 +117,11 @@ public class PriceHook {
                             currencyName + " in EcoBits plugin!");
                     return false;
                 }
+                if (Currencies.getByID(currencyName) == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
+                            currencyName + " in EcoBits plugin!");
+                    return false;
+                }
                 if (CurrencyUtils.getBalance(player, Currencies.getByID(currencyName)).doubleValue() >= value) {
                     if (take) {
                         CurrencyUtils.adjustBalance(player, Currencies.getByID(currencyName), BigDecimal.valueOf(-value));
@@ -121,6 +129,41 @@ public class PriceHook {
                     return true;
                 } else {
                     return false;
+                }
+            case "peconomy":
+                PEconomyAPI peAPI = PEconomyAPI.get();
+                if (peAPI == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into PEconomy plugin!");
+                    return false;
+                }
+                if (peAPI.hasAmount(player.getName(), currencyName, (int) value)) {
+                    if (take) {
+                        WalletModel wallet = peAPI.getWallet(player.getName());
+                        wallet.takeAmount(currencyName, (int) value);
+                        peAPI.updateWallet(wallet);
+                    }
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            case "rediseconomy":
+                RedisEconomyAPI api = RedisEconomyAPI.getAPI();
+                if (api == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into RedisEconomy plugin!");
+                    return false;
+                }
+                dev.unnm3d.rediseconomy.currency.Currency redisCurrency = api.getCurrencyByName("vault");
+                if (redisCurrency == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
+                            currencyName + " in RedisEconomy plugin!");
+                    return false;
+                }
+                if (redisCurrency.getBalance(player) >= value) {
+                    if (take) {
+                        redisCurrency.withdrawPlayer(player, value);
+                    }
+                    return true;
                 }
         }
         MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "

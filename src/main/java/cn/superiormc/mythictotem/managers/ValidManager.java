@@ -7,6 +7,7 @@ import cn.superiormc.mythictotem.utils.CheckProtection;
 import cn.superiormc.mythictotem.utils.RemoveBlock;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -102,6 +103,15 @@ public class ValidManager {
             else if((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getStringMechanic(block).getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID());
+            }
+        }
+        // 处理 MMOItems 方块
+        if (placedBlockCheckManagers.size() == 0 && CheckPluginLoad.DoIt("MMOItems")) {
+            if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
+                    (MythicTotem.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
+                            getFromBlock(block.getBlockData()).get().getId()))) {
+                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("mmoitems:" + MMOItems.plugin.getCustomBlocks().
+                        getFromBlock(block.getBlockData()).get().getId());
             }
         }
         // 处理原版方块
