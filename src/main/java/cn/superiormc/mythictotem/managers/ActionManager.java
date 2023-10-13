@@ -39,6 +39,33 @@ public class ActionManager {
         for(String singleAction : action) {
             if (singleAction.startsWith("none")) {
                 return;
+            } else if (singleAction.startsWith("sound: ") && player != null) {
+                // By: iKiwo
+                String soundData = singleAction.substring(7); // "sound: LEVEL_UP;volume;pitch"
+                String[] soundParts = soundData.split(";;");
+                if (soundParts.length >= 1) {
+                    String soundName = soundParts[0];
+                    float volume = 1.0f;
+                    float pitch = 1.0f;
+                    if (soundParts.length >= 2) {
+                        try {
+                            volume = Float.parseFloat(soundParts[1]);
+                        } catch (NumberFormatException e) {
+                            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid volume value in sound action.");
+                        }
+                    }
+                    if (soundParts.length >= 3) {
+                        try {
+                            pitch = Float.parseFloat(soundParts[2]);
+                        } catch (NumberFormatException e) {
+                            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid pitch value in sound action.");
+                        }
+                    }
+                    Location location = player.getLocation();
+                    player.playSound(location, soundName, volume, pitch);
+                } else {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid sound action format.");
+                }
             } else if (singleAction.startsWith("message: ") && player != null) {
                 player.sendMessage(ReplacePlaceholder(ColorParser.parse(singleAction.substring(9))));
             } else if (singleAction.startsWith("announcement: ")) {
