@@ -12,6 +12,7 @@ import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
 import cn.superiormc.mythictotem.managers.TotemManager;
 import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.SavedItem;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -30,7 +31,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = true;
+    public static boolean freeVersion = false;
 
     public static int threeDtotemAmount = 0;
 
@@ -69,6 +70,7 @@ public final class MythicTotem extends JavaPlugin {
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
         }
+        SavedItem.ReadSavedItems();
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }
 
