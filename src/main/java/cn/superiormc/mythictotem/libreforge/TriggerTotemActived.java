@@ -1,9 +1,7 @@
 package cn.superiormc.mythictotem.libreforge;
 
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
-import com.willfp.libreforge.Holder;
-import com.willfp.libreforge.ProvidedHolder;
-import com.willfp.libreforge.SimpleProvidedHolder;
+import com.willfp.libreforge.*;
 import com.willfp.libreforge.triggers.Trigger;
 import com.willfp.libreforge.triggers.TriggerData;
 import com.willfp.libreforge.triggers.TriggerParameter;
@@ -16,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TriggerTotemActived extends Trigger {
@@ -47,6 +46,28 @@ public class TriggerTotemActived extends Trigger {
         Block block = location.getBlock();
         String text = event.GetTotemID();
         ProvidedHolder holder = new ProvidedHolder() {
+            @Override
+            public boolean isShowingAnyNotMet(@NotNull Player player) {
+                return false;
+            }
+
+            @Override
+            public boolean isShowingAnyNotMet(@NotNull Dispatcher<?> dispatcher) {
+                return false;
+            }
+
+            @NotNull
+            @Override
+            public List<String> getNotMetLines(@NotNull Player player) {
+                return null;
+            }
+
+            @NotNull
+            @Override
+            public List<String> getNotMetLines(@NotNull Dispatcher<?> dispatcher) {
+                return null;
+            }
+
             @NotNull
             @Override
             public Holder getHolder() {
@@ -72,6 +93,7 @@ public class TriggerTotemActived extends Trigger {
             }
         };
         TriggerData data = new TriggerData(holder,
+                DispatcherKt.toDispatcher(player),
                 player,
                 null,
                 block,
@@ -83,6 +105,6 @@ public class TriggerTotemActived extends Trigger {
                 text,
                 1,
                 player);
-        this.dispatch(player, data, null);
+        this.dispatch(DispatcherKt.toDispatcher(player), data, null);
     }
 }
