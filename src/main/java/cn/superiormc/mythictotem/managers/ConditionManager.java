@@ -84,51 +84,65 @@ public class ConditionManager {
                         String placeholder = conditionString[0];
                         String conditionValue = conditionString[1];
                         String value = conditionString[2];
-                        if (conditionValue.equals("==")) {
+                        if (conditionValue.equals("!=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!placeholder.equals(value)) {
+                            if (placeholder.equals(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals("*=")) {
+                        if (conditionValue.equals("==")){
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!placeholder.contains(value)) {
+                            if(!placeholder.equals(value)){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals(">=")) {
+                        if (conditionValue.equals("!*=")) {
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!(Integer.parseInt(placeholder) >= Integer.parseInt(value))) {
+                            if (placeholder.contains(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals(">")) {
+                        if (conditionValue.equals("*=")){
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!(Integer.parseInt(placeholder) > Integer.parseInt(value))) {
+                            if(!placeholder.contains(value)){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals("<=")) {
+                        if (conditionValue.equals(">=")){
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!(Integer.parseInt(placeholder) <= Integer.parseInt(value))) {
+                            if(!(Double.parseDouble(placeholder) >= Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals("<")) {
+                        if (conditionValue.equals(">")){
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!(Integer.parseInt(placeholder) < Integer.parseInt(value))) {
+                            if (!(Double.parseDouble(placeholder) > Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
-                        if (conditionValue.equals("=")) {
+                        if (conditionValue.equals("<=")){
                             placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if (!(Integer.parseInt(placeholder) == Integer.parseInt(value))) {
+                            if (!(Double.parseDouble(placeholder) <= Double.parseDouble(value))){
+                                conditionTrueOrFasle = false;
+                                break;
+                            }
+                        }
+                        if(conditionValue.equals("<")){
+                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            if (!(Double.parseDouble(placeholder) < Double.parseDouble(value))){
+                                conditionTrueOrFasle = false;
+                                break;
+                            }
+                        }
+                        if (conditionValue.equals("=")){
+                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                            if (!(Double.parseDouble(placeholder) == Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
