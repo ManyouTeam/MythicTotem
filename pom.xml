@@ -267,12 +267,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>world.bentobox</groupId>
-            <artifactId>bentobox</artifactId>
-            <version>1.24.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.Auxilor</groupId>
             <artifactId>EcoBits</artifactId>
             <version>master-a55b59745f-1</version>
