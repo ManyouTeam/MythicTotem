@@ -148,8 +148,8 @@
         </dependency>
         <dependency>
             <groupId>net.Indyuce</groupId>
-            <artifactId>MMOItems</artifactId>
-            <version>6.6.1</version>
+            <artifactId>MMOItems-API</artifactId>
+            <version>6.9.5-20231202.120258-16</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -264,7 +264,7 @@
             <groupId>io.th0rgal</groupId>
             <artifactId>protectionlib</artifactId>
             <version>1.3.6</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>world.bentobox</groupId>
