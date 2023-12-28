@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -89,6 +90,22 @@ public class ActionManager {
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your effect action in totem configs can not being correctly load.");
+                }
+            } else if (singleAction.startsWith("entity_spawn: ")) {
+                if (singleAction.split(";;").length == 1) {
+                    EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
+                    player.getLocation().getWorld().spawnEntity(player.getLocation(), entity);
+                } else if (singleAction.split(";;").length == 5) {
+                    World world = Bukkit.getWorld(singleAction.substring(18).split(";;")[1]);
+                    Location location = new Location(world,
+                            Double.parseDouble(singleAction.substring(18).split(";;")[2]),
+                            Double.parseDouble(singleAction.substring(18).split(";;")[3]),
+                            Double.parseDouble(singleAction.substring(18).split(";;")[4]));
+                    EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
+                    if (location.getWorld() == null) {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your entity_spawn action in shop configs can not being correctly load.");
+                    }
+                    location.getWorld().spawnEntity(location, entity);
                 }
             } else if (singleAction.startsWith("teleport: ") && player != null) {
                 try {
