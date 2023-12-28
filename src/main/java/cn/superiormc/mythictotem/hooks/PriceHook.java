@@ -17,8 +17,6 @@ import ru.soknight.peconomy.api.PEconomyAPI;
 import ru.soknight.peconomy.database.model.WalletModel;
 import su.nightexpress.coinsengine.api.CoinsEngineAPI;
 import su.nightexpress.coinsengine.api.currency.Currency;
-import su.nightexpress.gamepoints.api.GamePointsAPI;
-import su.nightexpress.gamepoints.data.PointUser;
 
 import java.math.BigDecimal;
 
@@ -35,16 +33,6 @@ public class PriceHook {
         }
         pluginName = pluginName.toLowerCase();
         switch (pluginName) {
-            case "gamepoints":
-                PointUser user = GamePointsAPI.getUserData(player);
-                if (user.getBalance() >= value) {
-                    if (take) {
-                        user.takePoints((int) value);
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
             case "playerpoints":
                 PlayerPoints playerPoints = PlayerPoints.getInstance();
                 if (playerPoints == null) {
