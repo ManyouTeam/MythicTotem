@@ -119,18 +119,6 @@
             <id>bs-repo-releases</id>
             <url>https://repo.bsdevelopment.org/releases</url>
         </repository>
-        <repository>
-            <id>triumphteam</id>
-            <url>https://repo.triumphteam.dev/snapshots</url>
-        </repository>
-        <repository>
-            <id>jeff</id>
-            <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
-        </repository>
-        <repository>
-            <id>mineinabyss</id>
-            <url>https://repo.mineinabyss.com/releases</url>
-        </repository>
     </repositories>
 
     <dependencies>
