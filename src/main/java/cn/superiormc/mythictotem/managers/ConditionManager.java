@@ -1,9 +1,8 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -76,7 +75,7 @@ public class ConditionManager {
                         break;
                     }
                 }
-            } else if (CheckPluginLoad.DoIt("PlaceholderAPI") && singleCondition.startsWith("placeholder: ") &&
+            } else if (CommonUtil.checkPluginLoad("PlaceholderAPI") && singleCondition.startsWith("placeholder: ") &&
             player != null) {
                 try {
                     if (singleCondition.split(";;").length == 3) {

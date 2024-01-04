@@ -68,7 +68,7 @@ public class ActionManager {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid sound action format.");
                 }
             } else if (singleAction.startsWith("message: ") && player != null) {
-                player.sendMessage(ReplacePlaceholder(ColorParser.parse(singleAction.substring(9))));
+                player.sendMessage(ReplacePlaceholder(TextUtil.parse(singleAction.substring(9))));
             } else if (singleAction.startsWith("announcement: ")) {
                 Collection<? extends Player> players = Bukkit.getOnlinePlayers();
                 for (Player p : players) {
@@ -134,16 +134,16 @@ public class ActionManager {
                 catch (ArrayIndexOutOfBoundsException e) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
                 }
-            } else if (CheckPluginLoad.DoIt("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
+            } else if (CommonUtil.checkPluginLoad("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     try {
                         if (singleAction.substring(18).split(";;").length == 1) {
-                            MythicMobsSpawn.DoIt(block.getLocation(),
+                            CommonUtil.summonMythicMobs(block.getLocation(),
                                     singleAction.substring(18).split(";;")[0],
                                     1);
                         }
                         else if (singleAction.substring(18).split(";;").length == 2) {
-                            MythicMobsSpawn.DoIt(block.getLocation(),
+                            CommonUtil.summonMythicMobs(block.getLocation(),
                                     singleAction.substring(18).split(";;")[0],
                                     Integer.parseInt(singleAction.substring(18).split(";;")[1]));
                         }
@@ -154,7 +154,7 @@ public class ActionManager {
                                     Double.parseDouble(singleAction.substring(18).split(";;")[3]),
                                     Double.parseDouble(singleAction.substring(18).split(";;")[4])
                                     );
-                            MythicMobsSpawn.DoIt(location,
+                            CommonUtil.summonMythicMobs(location,
                                     singleAction.substring(18).split(";;")[0],
                                     1);
                         }
@@ -165,7 +165,7 @@ public class ActionManager {
                                     Double.parseDouble(singleAction.substring(18).split(";;")[4]),
                                     Double.parseDouble(singleAction.substring(18).split(";;")[5])
                             );
-                            MythicMobsSpawn.DoIt(location,
+                            CommonUtil.summonMythicMobs(location,
                                     singleAction.substring(18).split(";;")[0],
                                     Integer.parseInt(singleAction.substring(18).split(";;")[1]));
                         }
@@ -179,20 +179,15 @@ public class ActionManager {
                 });
             } else if (singleAction.startsWith("console_command: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                    DispatchCommand.DoIt(ReplacePlaceholder(singleAction.substring(17)));
+                    CommonUtil.dispatchCommand(ReplacePlaceholder(singleAction.substring(17)));
                 });
             } else if (singleAction.startsWith("player_command: ") && player != null) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                    DispatchCommand.DoIt(player, ReplacePlaceholder(singleAction.substring(16)));
+                    CommonUtil.dispatchCommand(player, ReplacePlaceholder(singleAction.substring(16)));
                 });
             } else if (singleAction.startsWith("op_command: ")) {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                    try {
-                        player.setOp(true);
-                        Bukkit.dispatchCommand(player, singleAction.substring(12));
-                    } finally {
-                        player.setOp(false);
-                    }
+                    CommonUtil.dispatchOpCommand(player, ReplacePlaceholder(singleAction.substring(12)));
                 });
             }
         }
@@ -214,7 +209,7 @@ public class ActionManager {
                         .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
                         .replace("%totem_column%", String.valueOf(totem.GetColumn()))
                         .replace("%totem_raw%", String.valueOf(totem.GetRow()));
-            if (CheckPluginLoad.DoIt("PlaceholderAPI")) {
+            if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
                 str = PlaceholderAPI.setPlaceholders(player, str);
             }
             return str;

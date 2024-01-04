@@ -1,0 +1,27 @@
+mode: 'HORIZONTAL'
+layouts:
+  1:
+    - 'AAAAA'
+    - 'AAAAA'
+    - 'AABAA'
+    - 'AAAAA'
+    - 'AAAAA'
+  2:
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+explains:
+  A: 'minecraft:end_stone'
+  B: 'minecraft:obsidian'
+  C: 'minecraft:diamond_block'
+actions:
+  - 'message: Hello World!'
+  - 'entity_spawn: ENDER_DRAGON'
+conditions:
+  - 'trigger: EntityPlaceEvent'
+# Core block means what block player should place ender crystal on.
+core-blocks:
+  - B
+disappear: true

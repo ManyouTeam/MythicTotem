@@ -1,7 +1,7 @@
 package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.willfp.ecoarmor.sets.ArmorSet;
 import com.willfp.ecoarmor.sets.ArmorSets;
 import com.willfp.ecoarmor.sets.ArmorSlot;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemsHook {
     public static ItemStack getHookItem(String pluginName, String itemID) {
-        if (!CheckPluginLoad.DoIt(pluginName)) {
+        if (!CommonUtil.checkPluginLoad(pluginName)) {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem config try use its hook!");
             return null;

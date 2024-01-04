@@ -18,7 +18,7 @@ public class SubReload {
             MythicTotem.getCheckingBlock.clear();
             MythicTotem.threeDtotemAmount = 0;
             MythicTotem.instance.reloadConfig();
-            TotemConfigs.GetTotemConfigs();
+            TotemConfigs.initTotemConfigs();
             SavedItem.ReadSavedItems();
             if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cYou are using free version, " +

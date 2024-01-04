@@ -1,0 +1,20 @@
+mode: 'HORIZONTAL'
+layouts:
+  1:
+    - 'AAAA'
+    - 'BBBB'
+    - 'CCCC'
+  2:
+    - 'CCCC'
+    - 'BBBB'
+    - 'AAAA'
+explains:
+  A: 'minecraft:stone'
+  B: 'minecraft:dirt'
+  C: 'minecraft:netherrack'
+actions:
+  - 'message: Hello World!'
+  - 'mythicmobs_spawn: SkeletalKnight'
+conditions:
+  - 'none'
+disappear: true

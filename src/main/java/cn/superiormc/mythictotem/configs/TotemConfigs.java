@@ -5,22 +5,28 @@ import cn.superiormc.mythictotem.managers.TotemManager;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.util.*;
 
 public class TotemConfigs {
-    public static Set<String> totemList = new HashSet<>();
 
-    public static void GetTotemConfigs(){
-        try {
-            totemList = MythicTotem.instance.getConfig().getConfigurationSection("totems").getKeys(false);
-        }
-        catch (NullPointerException exception){
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: We can not find any totem configs, you must provide at least 1 totem config to use this plugin.");
-        }
-        for (String totemID : totemList){
-            ConfigurationSection section = MythicTotem.instance.getConfig().getConfigurationSection("totems." + totemID);
-            MythicTotem.getTotemMap.put(totemID, new TotemManager(section));
-        }
+    public static void initTotemConfigs(){
+       File dir = new File(MythicTotem.instance.getDataFolder(), "totems");
+       if (!dir.exists()) {
+           dir.mkdir();
+       }
+       File[] files = dir.listFiles();
+       if (!Objects.nonNull(files) && files.length != 0) {
+           return;
+       }
+       for (File file : files) {
+           String fileName = file.getName();
+           if (fileName.endsWith(".yml")) {
+               String substring = fileName.substring(0, fileName.length() - 4);
+               MythicTotem.getTotemMap.put(substring, new TotemManager(substring, YamlConfiguration.loadConfiguration(file)));
+           }
+       }
     }
 }

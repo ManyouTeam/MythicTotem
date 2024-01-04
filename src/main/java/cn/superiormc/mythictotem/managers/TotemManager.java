@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.managers;
 import cn.superiormc.mythictotem.MythicTotem;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
 public class TotemManager {
@@ -30,7 +31,7 @@ public class TotemManager {
 
     private ConfigurationSection totemSection;
 
-    public TotemManager(ConfigurationSection section){
+    public TotemManager(String id, YamlConfiguration section){
         this.totemDisappear = section.getBoolean("disappear", true);
         this.totemAction = section.getStringList("actions");
         this.totemCondition = section.getStringList("conditions");
@@ -96,7 +97,7 @@ public class TotemManager {
                     this.totemRow++;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: §e" + section.getName() +
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: §e" + id +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
         else {
@@ -122,7 +123,7 @@ public class TotemManager {
                 this.totemRow++;
             }
             this.totemLayer = 1;
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: §e" + section.getName() +
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: §e" + id +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
     }

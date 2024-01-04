@@ -2,9 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
-import cn.superiormc.mythictotem.utils.CheckProtection;
-import cn.superiormc.mythictotem.utils.RemoveBlock;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import net.Indyuce.mmoitems.MMOItems;
@@ -15,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +33,13 @@ public class ValidManager {
 
     private ItemStack item;
 
-    private boolean removed = false;
+    public ValidManager(EntityPlaceEvent event){
+        this.event = event;
+        this.block = event.getBlock();
+        this.player = event.getPlayer();
+        this.item = event.getPlayer().getInventory().getItemInMainHand();
+        CheckTotem();
+    }
 
     public ValidManager(BlockPlaceEvent event){
         this.event = event;
@@ -88,14 +93,14 @@ public class ValidManager {
         List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
         MythicTotem.getCheckingBlock.add(block);
         // 处理 ItemsAdder 方块
-        if (CheckPluginLoad.DoIt("ItemsAdder")) {
+        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
             if (CustomBlock.byAlreadyPlaced(block) != null &&
                     MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID());
             }
         }
         // 处理 Oraxen 方块
-        if (placedBlockCheckManagers.size() == 0 && CheckPluginLoad.DoIt("Oraxen")) {
+        if (placedBlockCheckManagers.size() == 0 && CommonUtil.checkPluginLoad("Oraxen")) {
             if ((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
@@ -106,7 +111,7 @@ public class ValidManager {
             }
         }
         // 处理 MMOItems 方块
-        if (placedBlockCheckManagers.size() == 0 && CheckPluginLoad.DoIt("MMOItems")) {
+        if (placedBlockCheckManagers.size() == 0 && CommonUtil.checkPluginLoad("MMOItems")) {
             if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
                     (MythicTotem.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
                             getFromBlock(block.getBlockData()).get().getId()))) {
@@ -237,19 +242,19 @@ public class ValidManager {
         for (int i = 0; i < base_row; i++) {
             for (int b = 0; b < base_column; b++) {
                 Location nowLocation_1 = startLocation_1.clone().add(0, -i, b);
-                if (!CheckProtection.DoIt(player, nowLocation_1)) {
+                if (!CommonUtil.checkProtection(player, nowLocation_1)) {
                     checkXTrueOrFalse1 = false;
                 }
                 Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
-                if (!CheckProtection.DoIt(player, nowLocation_2)) {
+                if (!CommonUtil.checkProtection(player, nowLocation_2)) {
                     checkXTrueOrFalse2 = false;
                 }
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
-                if (!CheckProtection.DoIt(player, nowLocation_3)) {
+                if (!CommonUtil.checkProtection(player, nowLocation_3)) {
                     checkZTrueOrFalse1 = false;
                 }
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
-                if (!CheckProtection.DoIt(player, nowLocation_4)) {
+                if (!CommonUtil.checkProtection(player, nowLocation_4)) {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.GetTotemManager().GetRealMaterial(1, i, b);
@@ -401,35 +406,35 @@ public class ValidManager {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
-                    if (!CheckProtection.DoIt(player, nowLocation_1)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_1)) {
                         checkTrueOrFalse1 = false;
                     }
                     Location nowLocation_2 = startLocation_2.clone().add(-i, 1 - a, b);
-                    if (!CheckProtection.DoIt(player, nowLocation_2)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_2)) {
                         checkTrueOrFalse2 = false;
                     }
                     Location nowLocation_3 = startLocation_3.clone().add(i, 1 - a, -b);
-                    if (!CheckProtection.DoIt(player, nowLocation_3)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_3)) {
                         checkTrueOrFalse3 = false;
                     }
                     Location nowLocation_4 = startLocation_4.clone().add(i, 1 - a, b);
-                    if (!CheckProtection.DoIt(player, nowLocation_4)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_4)) {
                         checkTrueOrFalse4 = false;
                     }
                     Location nowLocation_5 = startLocation_5.clone().add(-b, 1 - a, -i);
-                    if (!CheckProtection.DoIt(player, nowLocation_5)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_5)) {
                         checkTrueOrFalse5 = false;
                     }
                     Location nowLocation_6 = startLocation_6.clone().add(-b, 1 - a, i);
-                    if (!CheckProtection.DoIt(player, nowLocation_6)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_6)) {
                         checkTrueOrFalse6 = false;
                     }
                     Location nowLocation_7 = startLocation_7.clone().add(b, 1 - a, -i);
-                    if (!CheckProtection.DoIt(player, nowLocation_7)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_7)) {
                         checkTrueOrFalse7 = false;
                     }
                     Location nowLocation_8 = startLocation_8.clone().add(b, 1 - a, i);
-                    if (!CheckProtection.DoIt(player, nowLocation_8)) {
+                    if (!CommonUtil.checkProtection(player, nowLocation_8)) {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
@@ -580,7 +585,13 @@ public class ValidManager {
         if (singleTotem.GetTotemManager().GetTotemDisappear()) {
             for (Location loc : validTotemBlockLocation) {
                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                    RemoveBlock.DoIt(player, loc);
+                    CommonUtil.removeBlock(player, loc);
+                    return null;
+                });
+            }
+            if (event instanceof EntityPlaceEvent) {
+                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+                    ((EntityPlaceEvent) event).getEntity().remove();
                     return null;
                 });
             }

@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
-public class PlayerDropEvent implements Listener {
+public class PlayerDropListener implements Listener {
 
     @EventHandler
     public void DropEvent(PlayerDropItemEvent event) {

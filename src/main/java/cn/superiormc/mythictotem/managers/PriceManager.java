@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
 import cn.superiormc.mythictotem.utils.ColorParser;
 import cn.superiormc.mythictotem.utils.SavedItem;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
@@ -108,11 +109,7 @@ public class PriceManager {
                 }
                 List<String> lore = section.getStringList("lore");
                 if (!lore.isEmpty()) {
-                    for (int i = 0; i < lore.size(); i++) {
-                        String str1 = lore.get(i);
-                        str1 = ColorParser.parse("&f" + str);
-                        lore.set(i, str1);
-                    }
+                    lore = TextUtil.getListWithColor(lore);
                     itemMeta.setLore(lore);
                 }
                 int cmd = section.getInt("cmd", 0);

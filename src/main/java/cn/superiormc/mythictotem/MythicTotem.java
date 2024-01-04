@@ -3,15 +3,14 @@ package cn.superiormc.mythictotem;
 import cn.superiormc.mythictotem.commands.MainTotem;
 import cn.superiormc.mythictotem.commands.MainTotemTab;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
+import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
-import cn.superiormc.mythictotem.events.PlayerClickEvent;
-import cn.superiormc.mythictotem.events.PlayerDropEvent;
-import cn.superiormc.mythictotem.events.PlayerPlaceEvent;
-import cn.superiormc.mythictotem.events.TotemRedstoneEvent;
+import cn.superiormc.mythictotem.events.*;
 import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
+import cn.superiormc.mythictotem.managers.InitManager;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
 import cn.superiormc.mythictotem.managers.TotemManager;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SavedItem;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
@@ -50,6 +49,7 @@ public final class MythicTotem extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        Init();
         ProtectionLib.init(this);
         this.saveDefaultConfig();
         if (GeneralSettingConfigs.GetRegisterLibreforge()) {
@@ -62,15 +62,12 @@ public final class MythicTotem extends JavaPlugin {
 
             }
         }
-        TotemConfigs.GetTotemConfigs();
+        TotemConfigs.initTotemConfigs();
+        Messages.initLanguage();
         Events();
         Commands();
-        if ((CheckPluginLoad.DoIt("MythicMobs"))) {
+        if ((CommonUtil.checkPluginLoad("MythicMobs"))) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFound MythicMobs in server, try hooking into it...");
-        }
-        if (freeVersion) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cYou are using free version, " +
-                    "you can only create 3 3D totem with this version.");
         }
         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
@@ -84,22 +81,31 @@ public final class MythicTotem extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is disabled. Author: PQguanfang.");
     }
 
+    public void Init() {
+        InitManager manager = new InitManager();
+        manager.init();
+    }
+
     public void Events() {
-        if(GeneralSettingConfigs.GetBlockPlaceEventEnabled()) {
-            Bukkit.getPluginManager().registerEvents(new PlayerPlaceEvent(), this);
+        if (GeneralSettingConfigs.GetBlockPlaceEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new PlayerPlaceListener(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockPlaceEvent trigger.");
         }
-        if(GeneralSettingConfigs.GetPlayerInteractEventEnabled()) {
-            Bukkit.getPluginManager().registerEvents(new PlayerClickEvent(), this);
+        if (GeneralSettingConfigs.GetPlayerInteractEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerInteractEvent trigger.");
         }
-        if(GeneralSettingConfigs.GetBlockRedstoneEventEnabled()) {
-            Bukkit.getPluginManager().registerEvents(new TotemRedstoneEvent(), this);
+        if (GeneralSettingConfigs.GetBlockRedstoneEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new TotemRedstoneListener(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockRedstoneEvent trigger.");
         }
-        if(GeneralSettingConfigs.GetPlayerDropEventEnabled()) {
-            Bukkit.getPluginManager().registerEvents(new PlayerDropEvent(), this);
+        if (GeneralSettingConfigs.GetPlayerDropEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new PlayerDropListener(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerDropItemEvent trigger.");
+        }
+        if (GeneralSettingConfigs.GetEntityPlaceEventEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new EntityPlaceListener(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled EntityPlaceEvent trigger.");
         }
     }
 

@@ -1,16 +1,13 @@
 package cn.superiormc.mythictotem.events;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.managers.ValidManager;
-import dev.lone.itemsadder.api.CustomBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.inventory.EquipmentSlot;
 
-public class TotemRedstoneEvent implements Listener {
+public class TotemRedstoneListener implements Listener {
 
     @EventHandler
     public void RedstoneEvent(BlockRedstoneEvent event) {

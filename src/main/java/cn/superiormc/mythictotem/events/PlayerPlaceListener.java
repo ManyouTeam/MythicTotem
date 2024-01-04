@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class PlayerPlaceEvent implements Listener {
+public class PlayerPlaceListener implements Listener {
 
     @EventHandler
     public void PlaceEvent(BlockPlaceEvent event){

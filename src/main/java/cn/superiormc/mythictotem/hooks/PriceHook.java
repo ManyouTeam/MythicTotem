@@ -1,7 +1,7 @@
 package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.utils.CheckPluginLoad;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.willfp.ecobits.currencies.Currencies;
 import com.willfp.ecobits.currencies.CurrencyUtils;
 import dev.unnm3d.rediseconomy.api.RedisEconomyAPI;
@@ -26,7 +26,7 @@ public class PriceHook {
         if (value < 0) {
             return false;
         }
-        if (!CheckPluginLoad.DoIt(pluginName)) {
+        if (!CommonUtil.checkPluginLoad(pluginName)) {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem config try use its hook!");
             return false;

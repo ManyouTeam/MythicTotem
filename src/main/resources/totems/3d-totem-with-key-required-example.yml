@@ -1,0 +1,31 @@
+mode: 'HORIZONTAL'
+layouts:
+  1:
+    - 'AAAAA'
+    - 'AAAAA'
+    - 'AABAA'
+    - 'AAAAA'
+    - 'AAAAA'
+  2:
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+explains:
+  A: 'minecraft:stone'
+  B: 'minecraft:dirt'
+  C: 'minecraft:netherrack'
+actions:
+  - 'message: Hello World!'
+  - 'mythicmobs_spawn: SkeletalKnight'
+conditions:
+  - 'trigger: PlayerDropItemEvent'
+# Core block means what block player should drop item on.
+core-blocks:
+  - B
+prices:
+  1:
+    material: APPLE
+prices-as-key: true
+disappear: true

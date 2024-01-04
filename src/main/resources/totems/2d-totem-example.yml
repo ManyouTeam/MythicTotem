@@ -1,0 +1,14 @@
+mode: 'VERTICAL'
+layout:
+  - 'AAA'
+  - 'BBB'
+  - 'CCC'
+explains:
+  A: 'minecraft:stone'
+  B: 'minecraft:end_stone'
+  C: 'minecraft:netherrack'
+actions:
+  - 'message: Hello!'
+  - 'mythicmobs_spawn: SkeletalKnight'
+conditions:
+  - 'none'
