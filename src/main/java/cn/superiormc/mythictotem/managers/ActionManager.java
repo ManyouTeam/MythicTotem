@@ -185,6 +185,15 @@ public class ActionManager {
                 Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
                     DispatchCommand.DoIt(player, ReplacePlaceholder(singleAction.substring(16)));
                 });
+            } else if (singleAction.startsWith("op_command: ")) {
+                Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
+                    try {
+                        player.setOp(true);
+                        Bukkit.dispatchCommand(player, singleAction.substring(12));
+                    } finally {
+                        player.setOp(false);
+                    }
+                });
             }
         }
     }
