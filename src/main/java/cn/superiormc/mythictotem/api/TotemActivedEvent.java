@@ -1,6 +1,5 @@
 package cn.superiormc.mythictotem.api;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

@@ -130,14 +130,14 @@ public class ValidManager {
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
             // 条件
-            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().GetTotemCondition(),
+            ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().getTotemCondition(),
                     event.getEventName(),
                     player,
                     block,
                     singleTotem);
             if (!conditionManager.CheckCondition()) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Skipped " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Skipped " + singleTotem.GetTotemManager().getTotemID() +
                             " because conditions not meet!");
                 }
                 continue;
@@ -145,16 +145,16 @@ public class ValidManager {
             // 价格
             boolean usePrice = !MythicTotem.freeVersion &&
                     MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
-                    singleTotem.GetTotemManager().GetSection().contains("prices");
+                    singleTotem.GetTotemManager().getSection().contains("prices");
             if (usePrice) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.GetTotemManager().getTotemID() +
                             " prices...");
                 }
                 int i = 0;
-                for (String singleSection : singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices").getKeys(false)) {
-                    PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection), player, block);
-                    if (!singleTotem.GetTotemManager().GetKeyMode()) {
+                for (String singleSection : singleTotem.GetTotemManager().getSection().getConfigurationSection("prices").getKeys(false)) {
+                    PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().getSection().getConfigurationSection("prices." + singleSection), player, block);
+                    if (!singleTotem.GetTotemManager().getKeyMode()) {
                         item = null;
                         if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
                             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSet item to null!");
@@ -169,15 +169,15 @@ public class ValidManager {
                 }
                 if (i > 0) {
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().GetSection().getName() +
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().getTotemID() +
                                 " because prices not meet!");
                     }
                     continue;
                 }
             }
-            if (singleTotem.GetTotemManager().GetCheckMode().equals("VERTICAL")) {
+            if (singleTotem.GetTotemManager().getCheckMode().equals("VERTICAL")) {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
                             " type A totem check!");
                 }
                 if (VerticalTotem(singleTotem)) {
@@ -190,7 +190,7 @@ public class ValidManager {
                 }
             } else {
                 if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().GetSection().getName() +
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
                             " type B totem check!");
                 }
                 if (HorizontalTotem(singleTotem)) {
@@ -221,8 +221,8 @@ public class ValidManager {
         Location startLocation_3 = new Location(block.getWorld(), block.getLocation().getX() - offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
         Location startLocation_4 = new Location(block.getWorld(), block.getLocation().getX() + offset_x_or_z, block.getLocation().getY() + offset_y, block.getLocation().getZ());
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
-        int base_row = singleTotem.GetTotemManager().GetRealRow();
-        int base_column = singleTotem.GetTotemManager().GetRealColumn();
+        int base_row = singleTotem.GetTotemManager().getRealRow();
+        int base_column = singleTotem.GetTotemManager().getRealColumn();
         // 这种带 None 的是空白方块数量
         // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
         int validXNoneBlockAmount1 = 0;
@@ -257,7 +257,7 @@ public class ValidManager {
                 if (!CommonUtil.checkProtection(player, nowLocation_4)) {
                     checkZTrueOrFalse2 = false;
                 }
-                String material = singleTotem.GetTotemManager().GetRealMaterial(1, i, b);
+                String material = singleTotem.GetTotemManager().getRealMaterial(1, i, b);
                 MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
                 MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
                 MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
@@ -371,9 +371,9 @@ public class ValidManager {
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
-        int base_row = singleTotem.GetTotemManager().GetRealRow();
-        int base_column = singleTotem.GetTotemManager().GetRealColumn();
-        int base_layer = singleTotem.GetTotemManager().GetTotemLayer();
+        int base_row = singleTotem.GetTotemManager().getRealRow();
+        int base_column = singleTotem.GetTotemManager().getRealColumn();
+        int base_layer = singleTotem.GetTotemManager().getTotemLayer();
         // 这种带 None 的是空白方块数量
         // 可以通过这种空白方块配置不是矩形的图腾，空白方块所在位置不视为图腾的一部分
         int validNoneBlockAmount1 = 0;
@@ -437,7 +437,7 @@ public class ValidManager {
                     if (!CommonUtil.checkProtection(player, nowLocation_8)) {
                         checkTrueOrFalse8 = false;
                     }
-                    String material = singleTotem.GetTotemManager().GetRealMaterial(a, i, b);
+                    String material = singleTotem.GetTotemManager().getRealMaterial(a, i, b);
                     if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
                     }
@@ -571,18 +571,18 @@ public class ValidManager {
         MythicTotem.getCheckingBlock.remove(block);
         if (!MythicTotem.freeVersion &&
                 MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
-                singleTotem.GetTotemManager().GetSection().contains("prices")) {
-            for (String singleSection : singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices").getKeys(false)) {
-                PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().GetSection().getConfigurationSection("prices." + singleSection),
+                singleTotem.GetTotemManager().getSection().contains("prices")) {
+            for (String singleSection : singleTotem.GetTotemManager().getSection().getConfigurationSection("prices").getKeys(false)) {
+                PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().getSection().getConfigurationSection("prices." + singleSection),
                         player,
                         block);
-                if (!singleTotem.GetTotemManager().GetKeyMode()) {
+                if (!singleTotem.GetTotemManager().getKeyMode()) {
                     item = null;
                 }
                 priceManager.CheckPrice(true, item);
             }
         }
-        if (singleTotem.GetTotemManager().GetTotemDisappear()) {
+        if (singleTotem.GetTotemManager().getTotemDisappear()) {
             for (Location loc : validTotemBlockLocation) {
                 Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                     CommonUtil.removeBlock(player, loc);
@@ -597,10 +597,10 @@ public class ValidManager {
             }
         }
         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-            ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().GetTotemAction(), player, block);
+            ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().getTotemAction(), player, block);
             actionManager.CheckAction();
             TotemActivedEvent totemActivedEvent = new TotemActivedEvent(
-                    singleTotem.GetTotemManager().GetSection().getName(),
+                    singleTotem.GetTotemManager().getTotemID(),
                     this.player,
                     this.block.getLocation());
             Bukkit.getPluginManager().callEvent(totemActivedEvent);

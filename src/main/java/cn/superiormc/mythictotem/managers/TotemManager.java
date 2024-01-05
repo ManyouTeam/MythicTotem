@@ -30,8 +30,11 @@ public class TotemManager {
     private final String totemCheckMode;
 
     private ConfigurationSection totemSection;
+    
+    private final String totemID;
 
-    public TotemManager(String id, YamlConfiguration section){
+    public TotemManager(String id, YamlConfiguration section) {
+        this.totemID = id;
         this.totemDisappear = section.getBoolean("disappear", true);
         this.totemAction = section.getStringList("actions");
         this.totemCondition = section.getStringList("conditions");
@@ -92,12 +95,12 @@ public class TotemManager {
                                 MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
                             }
                         }
-                        this.totemLocationMaterial.put(GenerateID(i, totemRow, totemColumn), realString);
+                        this.totemLocationMaterial.put(generateID(i, totemRow, totemColumn), realString);
                     }
                     this.totemRow++;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: §e" + id +
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
         else {
@@ -118,57 +121,61 @@ public class TotemManager {
                         placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
                         MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
                     }
-                    this.totemLocationMaterial.put(GenerateID(1, totemRow, totemColumn), realString);
+                    this.totemLocationMaterial.put(generateID(1, totemRow, totemColumn), realString);
                 }
                 this.totemRow++;
             }
             this.totemLayer = 1;
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: §e" + id +
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
     }
 
-    private String GenerateID(int layer, int raw, int column){
+    private String generateID(int layer, int raw, int column){
         return layer + ";;" + raw + ";;" + column;
     }
 
-    public int GetRealRow(){
+    public int getRealRow(){
         return this.totemRow;
     }
 
-    public int GetRealColumn(){
+    public int getRealColumn(){
         return this.totemColumn;
     }
 
-    public String GetRealMaterial(int layer, int raw, int column){
+    public String getRealMaterial(int layer, int raw, int column){
         return totemLocationMaterial.get(layer + ";;" + raw + ";;" + column);
     }
 
-    public List<String> GetTotemAction(){
+    public List<String> getTotemAction(){
         return this.totemAction;
     }
 
-    public List<String> GetTotemCondition(){
+    public List<String> getTotemCondition(){
         return this.totemCondition;
     }
 
-    public boolean GetTotemDisappear(){
+    public boolean getTotemDisappear(){
         return this.totemDisappear;
     }
 
-    public String GetCheckMode() {
+    public String getCheckMode() {
         return this.totemCheckMode;
     }
 
-    public int GetTotemLayer() {
+    public int getTotemLayer() {
         return this.totemLayer;
     }
 
-    public ConfigurationSection GetSection() {
+    public ConfigurationSection getSection() {
         return this.totemSection;
     }
 
-    public boolean GetKeyMode() {
+    public boolean getKeyMode() {
         return totemSection.getBoolean("prices-as-key", false);
+    }
+    
+    public String getTotemID() {
+        return totemID;
     }
 }
