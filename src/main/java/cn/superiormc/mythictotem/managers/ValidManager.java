@@ -72,7 +72,7 @@ public class ValidManager {
         this.event = event;
         this.block = event.getItemDrop().getLocation().subtract(new Vector(0, 2, 0)).getBlock();
         if (block == null || block.isEmpty()) {
-            if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cSkipped becuase block is air!");
             }
             return;
@@ -85,7 +85,7 @@ public class ValidManager {
 
     public void CheckTotem() {
         if (MythicTotem.getCheckingBlock.contains(block)) {
-            if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+            if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped checking block!");
             }
             return;
@@ -123,8 +123,7 @@ public class ValidManager {
         if (placedBlockCheckManagers.size() == 0 && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + MythicTotem.getTotemMaterial);
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eGet material: " + block.getType().toString().toLowerCase() + " - " + placedBlockCheckManagers);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
         }
@@ -136,18 +135,18 @@ public class ValidManager {
                     block,
                     singleTotem);
             if (!conditionManager.CheckCondition()) {
-                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Skipped " + singleTotem.GetTotemManager().getTotemID() +
+                if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().getTotemID() +
                             " because conditions not meet!");
                 }
                 continue;
             }
             // 价格
             boolean usePrice = !MythicTotem.freeVersion &&
-                    MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                    MythicTotem.instance.getConfig().getBoolean("check-prices", true) &&
                     singleTotem.GetTotemManager().getSection().contains("prices");
             if (usePrice) {
-                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.GetTotemManager().getTotemID() +
                             " prices...");
                 }
@@ -156,11 +155,11 @@ public class ValidManager {
                     PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().getSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!singleTotem.GetTotemManager().getKeyMode()) {
                         item = null;
-                        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSet item to null!");
                         }
                     }
-                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                    if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eItem: " + item + "!");
                     }
                     if (!priceManager.CheckPrice(false, item)) {
@@ -168,7 +167,7 @@ public class ValidManager {
                     }
                 }
                 if (i > 0) {
-                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                    if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().getTotemID() +
                                 " because prices not meet!");
                     }
@@ -176,7 +175,7 @@ public class ValidManager {
                 }
             }
             if (singleTotem.GetTotemManager().getCheckMode().equals("VERTICAL")) {
-                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
                             " type A totem check!");
                 }
@@ -189,7 +188,7 @@ public class ValidManager {
                     break;
                 }
             } else {
-                if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+                if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
                             " type B totem check!");
                 }
@@ -258,10 +257,10 @@ public class ValidManager {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.GetTotemManager().getRealMaterial(1, i, b);
-                MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
-                MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
-                MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
-                MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
+                MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1);
+                MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2);
+                MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3);
+                MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4);
                 if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && !checkZTrueOrFalse1 && !checkZTrueOrFalse2) {
                     return false;
                 }
@@ -329,7 +328,7 @@ public class ValidManager {
         int offset_row = singleTotem.GetRow();
         int offset_column = singleTotem.GetColumn();
         int offset_layer = singleTotem.GetLayer();
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug")) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cChecking: " + offset_row
                     + " - " +  offset_column
                     + " - " +  offset_layer + "!");
@@ -438,18 +437,18 @@ public class ValidManager {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.GetTotemManager().getRealMaterial(a, i, b);
-                    if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
+                    if (MythicTotem.instance.getConfig().getBoolean("debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
                     }
                     //1
-                    MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1.getBlock());
-                    MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2.getBlock());
-                    MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3.getBlock());
-                    MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4.getBlock());
-                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_5.getBlock());
-                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_6.getBlock());
-                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_7.getBlock());
-                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8.getBlock());
+                    MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1);
+                    MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2);
+                    MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3);
+                    MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4);
+                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_5);
+                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_6);
+                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_7);
+                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8);
                     if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
                             !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
                         return false;
@@ -570,7 +569,7 @@ public class ValidManager {
                             List<Location> validTotemBlockLocation) {
         MythicTotem.getCheckingBlock.remove(block);
         if (!MythicTotem.freeVersion &&
-                MythicTotem.instance.getConfig().getBoolean("settings.check-prices", true) &&
+                MythicTotem.instance.getConfig().getBoolean("check-prices", true) &&
                 singleTotem.GetTotemManager().getSection().contains("prices")) {
             for (String singleSection : singleTotem.GetTotemManager().getSection().getConfigurationSection("prices").getKeys(false)) {
                 PriceManager priceManager = new PriceManager(singleTotem.GetTotemManager().getSection().getConfigurationSection("prices." + singleSection),

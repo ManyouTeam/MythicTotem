@@ -32,12 +32,12 @@ public class PlayerDropListener implements Listener {
                 new ValidManager(event);
             }
         });
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eDrop trigger!");
         }
         Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
             MythicTotem.getCheckingPlayer.remove(event.getPlayer());
-        }, MythicTotem.instance.getConfig().getLong("settings.cooldown-tick", 5L));
+        }, MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
     }
 
     @EventHandler

@@ -36,8 +36,8 @@ public class PlayerClickListener implements Listener {
         });
         Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
             MythicTotem.getCheckingPlayer.remove(event.getPlayer());
-        }, MythicTotem.instance.getConfig().getLong("settings.cooldown-tick", 5L));
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        }, MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getClickedBlock().getLocation());
             //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cBiome: " + event.getClickedBlock().getBiome().name());

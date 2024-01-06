@@ -69,7 +69,7 @@ public final class MythicTotem extends JavaPlugin {
         if ((CommonUtil.checkPluginLoad("MythicMobs"))) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFound MythicMobs in server, try hooking into it...");
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
         }
         SavedItem.ReadSavedItems();

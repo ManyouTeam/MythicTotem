@@ -11,11 +11,14 @@ import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 
 import java.io.File;
+import java.util.Collection;
 
 public class CommonUtil {
 
@@ -80,19 +83,19 @@ public class CommonUtil {
             return true;
         }
         int i = 0;
-        if (MythicTotem.instance.getConfig().getBoolean("settings.check-protection.can-build") &&
+        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-build") &&
                 !ProtectionLib.canBuild(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.check-protection.can-break") &&
+        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-break") &&
                 !ProtectionLib.canBreak(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.check-protection.can-interact") &&
+        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-interact") &&
                 !ProtectionLib.canInteract(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.check-protection.can-use") &&
+        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-use") &&
                 !ProtectionLib.canUse(player, loc)) {
             i ++;
         }

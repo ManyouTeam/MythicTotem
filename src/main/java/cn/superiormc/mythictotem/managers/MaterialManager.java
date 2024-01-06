@@ -5,54 +5,106 @@ import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class MaterialManager {
 
-    private String material;
+    private String materialString;
+
+    private Location location;
 
     private Block block;
 
-    public MaterialManager(String material, Block block) {
-        this.material = material;
-        this.block = block;
+    public MaterialManager(@NotNull String materialString, @NotNull Location location) {
+        this.materialString = materialString;
+        this.location = location;
     }
     public boolean CheckMaterial(){
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aReal block: " + block + ".");
-        }
-        if (material.equals("none")) {
+        if (materialString.equals("none")) {
+            if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fSkipped none block.");
+            }
             return true;
-        } else if (material.startsWith("minecraft:")) {
+        } else if (materialString.startsWith("minecraft:")) {
             try {
-                return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
+                Material material = Material.getMaterial(materialString.split(":")[1].toUpperCase());
+                EntityType entityType = EntityType.fromName(materialString.split(":")[1].toUpperCase());
+                if (material != null) {
+                    this.block = location.getBlock();
+                    if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                                materialString + ", real block: " + block.getType() + ".");
+                    }
+                    return material == block.getType();
+                } else if (entityType != null) {
+                    Future<Boolean> result = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+                        World world = location.getWorld();
+                        Location tempLocation = location.clone().add(0.5, 0, 0.5);
+                        Collection<Entity> entities = world.getNearbyEntities(tempLocation, 1, 1, 1);
+                        if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                                    materialString + ", find entities amount: " + entities.size() + ".");
+                        }
+                        for (Entity singleEntity: entities) {
+                            if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+                                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                                        materialString + ", find entity: " + singleEntity.getType() + ".");
+                            }
+                            if (singleEntity.getType() == entityType) {
+                                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aReturn true.");
+                                return true;
+                            }
+                        }
+                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cReturn false.");
+                        return false;
+                    });
+                    try {
+                        return result.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        return false;
+                    }
+                }
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Return false.");
+                return false;
             } catch (IllegalArgumentException | NullPointerException ignored) {
             }
-        } else if (material.startsWith("itemsadder:")) {
+        } else if (materialString.startsWith("itemsadder:")) {
             try {
-                return (material.split(":")[1] + ":" + material.split(":")[2]).equals(CustomBlock.byAlreadyPlaced(block).getNamespacedID());
+                this.block = location.getBlock();
+                return (materialString.split(":")[1] + ":" + materialString.split(":")[2]).equals(CustomBlock.byAlreadyPlaced(block).getNamespacedID());
             } catch (NullPointerException ignored) {
             }
-        } else if (material.startsWith("oraxen:")) {
+        } else if (materialString.startsWith("oraxen:")) {
             try {
+                this.block = location.getBlock();
                 if (OraxenBlocks.getNoteBlockMechanic(block).getItemID() == null){
-                    return (material.split(":")[1]).equals(OraxenBlocks.getStringMechanic(block).getItemID());
+                    return (materialString.split(":")[1]).equals(OraxenBlocks.getStringMechanic(block).getItemID());
                 }
                 else if (OraxenBlocks.getStringMechanic(block).getItemID() == null) {
-                    return (material.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID());
+                    return (materialString.split(":")[1]).equals(OraxenBlocks.getNoteBlockMechanic(block).getItemID());
                 }
             } catch (NullPointerException ignored) {
             }
-        } else if (material.startsWith("mmoitems:")) {
+        } else if (materialString.startsWith("mmoitems:")) {
+            this.block = location.getBlock();
             Optional<net.Indyuce.mmoitems.api.block.CustomBlock> opt = MMOItems.plugin.getCustomBlocks().
                     getFromBlock(block.getBlockData());
-            return opt.filter(customBlock -> customBlock.getId() == Integer.parseInt(material.split(":")[1])).isPresent();
+            return opt.filter(customBlock -> customBlock.getId() == Integer.parseInt(materialString.split(":")[1])).isPresent();
         } else {
+            this.block = location.getBlock();
             try {
-                return (Material.valueOf(material.split(":")[1].toUpperCase()) == block.getType());
+                return (Material.getMaterial(materialString.split(":")[1].toUpperCase()) == block.getType());
             } catch (IllegalArgumentException | NullPointerException ignored) {
             }
         }

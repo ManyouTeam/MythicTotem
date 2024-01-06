@@ -16,7 +16,7 @@ public class TotemRedstoneListener implements Listener {
                 new ValidManager(event);
             }
         });
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getBlock().getLocation());
             //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
         }

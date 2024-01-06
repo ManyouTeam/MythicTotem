@@ -47,12 +47,12 @@ public class PriceManager {
         } else {
             type = "free";
         }
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aPrice Type: " + type + "!");
         }
     }
     public boolean CheckPrice(boolean take, ItemStack keyItems) {
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
         }
         boolean priceBoolean = false;

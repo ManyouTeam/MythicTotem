@@ -269,7 +269,7 @@ public class PriceHook {
                                    int value,
                                    boolean take,
                                    ItemStack keyItems) {
-        if (MythicTotem.instance.getConfig().getBoolean("settings.debug", false)) {
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aRequired Price Item: " + item + "!");
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aConfirmed Key Item: " + keyItems + "!");
         }
