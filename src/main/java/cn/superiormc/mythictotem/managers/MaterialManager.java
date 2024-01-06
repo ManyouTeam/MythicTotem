@@ -47,7 +47,7 @@ public class MaterialManager {
                                 materialString + ", real block: " + block.getType() + ".");
                     }
                     return material == block.getType();
-                } else if (entityType != null) {
+                } else if (!MythicTotem.freeVersion && entityType != null) {
                     Future<Boolean> result = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
                         World world = location.getWorld();
                         Location tempLocation = location.clone().add(0.5, 0, 0.5);

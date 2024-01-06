@@ -25,3 +25,29 @@ conditions:
 core-blocks:
   - B
 disappear: true
+
+# Can also be:
+#mode: 'HORIZONTAL'
+#layouts:
+#  1:
+#    - 'CCDCC'
+#    - 'CCCCC'
+#    - 'DCCCD'
+#    - 'CCCCC'
+#    - 'CCDCC'
+#  2:
+#    - 'CCBCC'
+#    - 'CCCCC'
+#    - 'BCCCB'
+#    - 'CCCCC'
+#    - 'CCBCC'
+#explains:
+#  A: 'none'
+#  B: 'minecraft:obsidian'
+#  C: 'none'
+#  D: 'minecraft:ENDER_CRYSTAL'
+#
+#actions:
+#  - 'message: Hello World!'
+#  - 'entity_spawn: ENDER_DRAGON'
+#disappear: true
