@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.CustomFurniture;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
@@ -62,6 +63,7 @@ public class MaterialManager {
                                         materialString + ", find entity: " + singleEntity.getType() + ".");
                             }
                             if (singleEntity.getType() == entityType) {
+                                singleEntity.remove();
                                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aReturn true.");
                                 return true;
                             }

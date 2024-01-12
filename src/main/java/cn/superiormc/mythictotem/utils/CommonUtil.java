@@ -34,12 +34,13 @@ public class CommonUtil {
         Bukkit.dispatchCommand(player, command);
     }
 
-    public static void dispatchOpCommand(Player player, String command){
+    public static void dispatchOpCommand(Player player, String command) {
+        boolean playerIsOp = player.isOp();
         try {
             player.setOp(true);
             Bukkit.dispatchCommand(player, command);
         } finally {
-            player.setOp(false);
+            player.setOp(playerIsOp);
         }
     }
 
