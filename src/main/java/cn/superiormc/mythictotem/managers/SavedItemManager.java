@@ -1,4 +1,4 @@
-package cn.superiormc.mythictotem.utils;
+package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SavedItem {
+public class SavedItemManager {
 
     private static Map<String, ItemStack> savedItemMap = new HashMap<>();
 

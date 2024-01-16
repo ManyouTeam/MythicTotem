@@ -15,13 +15,12 @@ import org.bukkit.inventory.ItemStack;
 public class CheckValidHook {
 
     public static String checkValid(String pluginName, ItemStack itemStack) {
-        pluginName = pluginName.toLowerCase();
         if (!MythicTotem.instance.getServer().getPluginManager().isPluginEnabled(pluginName)) {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem prices config try use its hook!");
             return null;
         }
-        else if (pluginName.equals("itemsadder")) {
+        else if (pluginName.equals("ItemsAdder")) {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack != null) {
                 return customStack.getNamespacedID();
@@ -30,7 +29,7 @@ public class CheckValidHook {
                 return null;
             }
         }
-        else if (pluginName.equals("oraxen")) {
+        else if (pluginName.equals("Oraxen")) {
             String tempVal1 = OraxenItems.getIdByItem(itemStack);
             if (tempVal1 == null) {
                 return null;
@@ -39,17 +38,17 @@ public class CheckValidHook {
                 return tempVal1;
             }
         }
-        else if (pluginName.equals("mmoitems")) {
+        else if (pluginName.equals("MMOItems")) {
             String tempVal1 = MMOItems.getID(itemStack);
             String tempVal2 = MMOItems.getTypeName(itemStack);
-            if (tempVal1 == null || tempVal2 == null) {
+            if (tempVal1 == null || tempVal2 == null || tempVal1.isEmpty() || tempVal2.isEmpty()) {
                 return null;
             }
             else {
                 return tempVal2 + ";;" + tempVal1;
             }
         }
-        else if (pluginName.equals("ecoitems")) {
+        else if (pluginName.equals("EcoItems")) {
             EcoItem tempVal1 = ItemUtilsKt.getEcoItem(itemStack);
             if (tempVal1 == null) {
                 return null;
@@ -58,7 +57,7 @@ public class CheckValidHook {
                 return tempVal1.getID();
             }
         }
-        else if (pluginName.equals("ecoarmor")) {
+        else if (pluginName.equals("EcoArmor")) {
             ArmorSet tempVal1 = ArmorUtils.getSetOnItem(itemStack);
             if (tempVal1 == null) {
                 return null;
@@ -72,7 +71,7 @@ public class CheckValidHook {
                 return tempVal2 + ";;" + tempVal3.toString();
             }
         }
-        else if (pluginName.equals("mythicmobs")) {
+        else if (pluginName.equals("MythicMobs")) {
             String tempVal1 = MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
             if (tempVal1 == null) {
                 return null;

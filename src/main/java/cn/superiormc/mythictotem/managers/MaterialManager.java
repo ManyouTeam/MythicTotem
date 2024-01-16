@@ -64,11 +64,9 @@ public class MaterialManager {
                             }
                             if (singleEntity.getType() == entityType) {
                                 singleEntity.remove();
-                                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aReturn true.");
                                 return true;
                             }
                         }
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cReturn false.");
                         return false;
                     });
                     try {
@@ -77,7 +75,6 @@ public class MaterialManager {
                         return false;
                     }
                 }
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Return false.");
                 return false;
             } catch (IllegalArgumentException | NullPointerException ignored) {
             }

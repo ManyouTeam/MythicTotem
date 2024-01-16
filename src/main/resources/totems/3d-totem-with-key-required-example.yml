@@ -27,5 +27,6 @@ core-blocks:
 prices:
   1:
     material: APPLE
+    amount: 1
 prices-as-key: true
 disappear: true

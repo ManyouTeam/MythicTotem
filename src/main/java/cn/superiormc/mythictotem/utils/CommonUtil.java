@@ -19,11 +19,22 @@ import org.bukkit.event.block.BlockDamageEvent;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommonUtil {
 
     public static boolean checkPluginLoad(String pluginName){
         return MythicTotem.instance.getServer().getPluginManager().isPluginEnabled(pluginName);
+    }
+
+    public static int getMajorVersion() {
+        String version = Bukkit.getVersion();
+        Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(version);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return 20;
     }
 
     public static void dispatchCommand(String command){
@@ -43,6 +54,7 @@ public class CommonUtil {
             player.setOp(playerIsOp);
         }
     }
+
 
     public static void summonMythicMobs(Location location, String mobID, int level) {
         try {
