@@ -6,6 +6,8 @@ import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.events.*;
+import cn.superiormc.mythictotem.hooks.MMOItemsHook;
+import cn.superiormc.mythictotem.hooks.MMOItemsReloadListener;
 import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.InitManager;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
@@ -66,13 +68,16 @@ public final class MythicTotem extends JavaPlugin {
         Messages.initLanguage();
         Events();
         Commands();
-        if ((CommonUtil.checkPluginLoad("MythicMobs"))) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFound MythicMobs in server, try hooking into it...");
-        }
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
         }
         SavedItemManager.ReadSavedItems();
+        if (CommonUtil.checkPluginLoad("MMOItems")) {
+            MMOItemsHook.generateNewCache();
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistering special item register manager" +
+                    " for MMOItems because it does not support async...");
+            Bukkit.getPluginManager().registerEvents(new MMOItemsReloadListener(), MythicTotem.instance);
+        }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }
 
