@@ -1,10 +1,12 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.hooks.CheckValidHook;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -18,29 +20,28 @@ public class ConditionManager {
 
     private String event;
 
-    private PlacedBlockCheckManager singleTotem;
-
+    private ItemStack item;
 
     public ConditionManager(List<String> condition,
-                            String event,
-                            Player player,
-                            Block block,
-                            PlacedBlockCheckManager singleTotem) {
+                            ValidManager manager) {
         this.condition = condition;
-        this.event = event;
-        this.player = player;
-        this.block = block;
-        this.singleTotem = singleTotem;
+        this.event = manager.getEvent();
+        this.player = manager.getPlayer();
+        this.block = manager.getBlock();
+        this.item = manager.getItem();
     }
 
     public boolean CheckCondition() {
         boolean conditionTrueOrFasle = true;
-        for (String singleCondition : condition){
+        for (String singleCondition : condition) {
             if (singleCondition.startsWith("none")){
                 return true;
             } else if (singleCondition.startsWith("trigger: "))
             {
                 return singleCondition.substring(9).equals(event);
+            } else if (singleCondition.startsWith("trigger-item: "))
+            {
+                return item != null && singleCondition.substring(14).equals(CheckValidHook.checkValid(item));
             } else if (singleCondition.startsWith("world: "))
             {
                 int i = 0;
@@ -69,7 +70,7 @@ public class ConditionManager {
                 }
             } else if (singleCondition.startsWith("permission: ") && player != null)
             {
-                for(String str : singleCondition.substring(12).split(";;")){
+                for (String str : singleCondition.substring(12).split(";;")){
                     if(!player.hasPermission(str)){
                         conditionTrueOrFasle = false;
                         break;

@@ -1,6 +1,8 @@
 package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.utils.CommonUtil;
+import com.willfp.eco.core.items.Items;
 import com.willfp.ecoarmor.sets.ArmorSet;
 import com.willfp.ecoarmor.sets.ArmorSlot;
 import com.willfp.ecoarmor.sets.ArmorUtils;
@@ -30,13 +32,7 @@ public class CheckValidHook {
             }
         }
         else if (pluginName.equals("Oraxen")) {
-            String tempVal1 = OraxenItems.getIdByItem(itemStack);
-            if (tempVal1 == null) {
-                return null;
-            }
-            else {
-                return tempVal1;
-            }
+            return OraxenItems.getIdByItem(itemStack);
         }
         else if (pluginName.equals("MMOItems")) {
             String tempVal1 = MMOItems.getID(itemStack);
@@ -72,18 +68,60 @@ public class CheckValidHook {
             }
         }
         else if (pluginName.equals("MythicMobs")) {
-            String tempVal1 = MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
-            if (tempVal1 == null) {
-                return null;
-            }
-            else {
-                return tempVal1;
-            }
+            return MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
         }
         else {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                     + pluginName + " in totem prices config, however for now MythicTotem is not support it!");
             return null;
         }
+    }
+
+    public static String checkValid(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType().isAir()) {
+            return "";
+        }
+        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
+            CustomStack customStack = CustomStack.byItemStack(itemStack);
+            if (customStack != null) {
+                return customStack.getId();
+            }
+        }
+        if (CommonUtil.checkPluginLoad("Oraxen")) {
+            String tempVal1 = OraxenItems.getIdByItem(itemStack);
+            if (tempVal1 != null) {
+                return tempVal1;
+            }
+        }
+        if (CommonUtil.checkPluginLoad("MMOItems")) {
+            String tempVal1 = MMOItems.getID(itemStack);
+            if (tempVal1 != null && !tempVal1.isEmpty()) {
+                return tempVal1;
+            }
+        }
+        if (CommonUtil.checkPluginLoad("EcoItems")) {
+            EcoItem tempVal1 = ItemUtilsKt.getEcoItem(itemStack);
+            if (tempVal1 != null) {
+                return tempVal1.getID();
+            }
+        }
+        if (CommonUtil.checkPluginLoad("EcoArmor")) {
+            ArmorSet tempVal1 = ArmorUtils.getSetOnItem(itemStack);
+            if (tempVal1 != null) {
+                return tempVal1.getId();
+            }
+        }
+        if (CommonUtil.checkPluginLoad("eco")) {
+            if (Items.getCustomItem(itemStack) != null) {
+                return Items.getCustomItem(itemStack).getKey().getKey();
+            }
+        }
+        if (CommonUtil.checkPluginLoad("MythicMobs")) {
+            String tempVal1 = MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
+            if (tempVal1 != null) {
+                return tempVal1;
+            }
+        }
+        return itemStack.getType().getKey().getKey().toLowerCase();
     }
 }

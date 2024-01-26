@@ -28,10 +28,10 @@ public class ActionManager {
 
     private final Location startLocation;
 
-    public ActionManager(Location startLocation, PlacedBlockCheckManager totem, List<String> action, Player player, Block block) {
+    public ActionManager(Location startLocation, PlacedBlockCheckManager totem, List<String> action, ValidManager manager) {
         this.action = action;
-        this.player = player;
-        this.block = block;
+        this.player = manager.getPlayer();
+        this.block = manager.getBlock();
         this.totem = totem;
         this.startLocation = startLocation;
     }

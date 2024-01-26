@@ -130,10 +130,7 @@ public class ValidManager {
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
             // 条件
             ConditionManager conditionManager = new ConditionManager(singleTotem.GetTotemManager().getTotemCondition(),
-                    event.getEventName(),
-                    player,
-                    block,
-                    singleTotem);
+                    this);
             if (!conditionManager.CheckCondition()) {
                 if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.GetTotemManager().getTotemID() +
@@ -596,7 +593,7 @@ public class ValidManager {
             }
         }
         Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-            ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().getTotemAction(), player, block);
+            ActionManager actionManager = new ActionManager(startLocation, singleTotem, singleTotem.GetTotemManager().getTotemAction(), this);
             actionManager.CheckAction();
             TotemActivedEvent totemActivedEvent = new TotemActivedEvent(
                     singleTotem.GetTotemManager().getTotemID(),
@@ -605,6 +602,22 @@ public class ValidManager {
             Bukkit.getPluginManager().callEvent(totemActivedEvent);
             return null;
         });
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public String getEvent() {
+        return event.getEventName();
+    }
+
+    public ItemStack getItem() {
+        return item;
+    }
+
+    public Block getBlock() {
+        return block;
     }
 
 }
