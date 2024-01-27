@@ -2,7 +2,6 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import dev.lone.itemsadder.api.CustomBlock;
-import dev.lone.itemsadder.api.CustomFurniture;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
@@ -15,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,11 +27,13 @@ public class MaterialManager {
 
     private Block block;
 
+    private Entity entity;
+
     public MaterialManager(@NotNull String materialString, @NotNull Location location) {
         this.materialString = materialString;
         this.location = location;
     }
-    public boolean CheckMaterial(){
+    public boolean checkMaterial(){
         if (materialString.equals("none")) {
             if (MythicTotem.instance.getConfig().getBoolean("debug")) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fSkipped none block.");
@@ -63,7 +65,7 @@ public class MaterialManager {
                                         materialString + ", find entity: " + singleEntity.getType() + ".");
                             }
                             if (singleEntity.getType() == entityType) {
-                                singleEntity.remove();
+                                this.entity = singleEntity;
                                 return true;
                             }
                         }
@@ -108,5 +110,9 @@ public class MaterialManager {
             }
         }
         return false;
+    }
+
+    public Entity getEntityNeedRemove() {
+        return entity;
     }
 }
