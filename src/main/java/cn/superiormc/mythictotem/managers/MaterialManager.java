@@ -193,7 +193,7 @@ public class MaterialManager {
         } else if (materialString.startsWith("oraxen_furniture:") && !MythicTotem.freeVersion) {
             try {
                 this.block = location.getBlock();
-                if (materialString.split(":").length != 3) {
+                if (materialString.split(":").length != 2) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your oraxen_furniture material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
