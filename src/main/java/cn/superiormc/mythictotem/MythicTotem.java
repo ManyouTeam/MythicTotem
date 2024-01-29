@@ -72,10 +72,14 @@ public final class MythicTotem extends JavaPlugin {
         }
         SavedItemManager.ReadSavedItems();
         if (CommonUtil.checkPluginLoad("MMOItems")) {
-            MMOItemsHook.generateNewCache();
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistering special item register manager" +
-                    " for MMOItems because it does not support async...");
-            Bukkit.getPluginManager().registerEvents(new MMOItemsReloadListener(), MythicTotem.instance);
+            try {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistering special item register manager" +
+                        " for MMOItems because it does not support async...");
+                MMOItemsHook.generateNewCache();
+                Bukkit.getPluginManager().registerEvents(new MMOItemsReloadListener(), MythicTotem.instance);
+            } catch (Exception ep) {
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFalied to register MMOItems hook!");
+            }
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }

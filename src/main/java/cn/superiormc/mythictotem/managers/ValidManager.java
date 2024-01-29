@@ -632,21 +632,15 @@ public class ValidManager {
                 priceManager.CheckPrice(true, item);
             }
         }
-        if (singleTotem.GetTotemManager().getTotemDisappear()) {
-            for (Location loc : validTotemBlockLocation) {
-                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
+        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
+            if (singleTotem.GetTotemManager().getTotemDisappear()) {
+                for (Location loc : validTotemBlockLocation) {
                     CommonUtil.removeBlock(player, loc);
-                    return null;
-                });
+                }
             }
             if (event instanceof EntityPlaceEvent) {
-                Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
-                    ((EntityPlaceEvent) event).getEntity().remove();
-                    return null;
-                });
+                ((EntityPlaceEvent) event).getEntity().remove();
             }
-        }
-        Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> {
             for (Entity singleEntity : needRemoveEntities) {
                 singleEntity.remove();
             }
@@ -657,7 +651,6 @@ public class ValidManager {
                     this.player,
                     this.block.getLocation());
             Bukkit.getPluginManager().callEvent(totemActivedEvent);
-            return null;
         });
     }
 

@@ -11,14 +11,11 @@ import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,9 +69,10 @@ public class CommonUtil {
     }
 
     public static void removeBlock(Player player, Location loc){
-        loc.getBlock().setType(Material.AIR);
-        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
+        if (CommonUtil.checkPluginLoad("ItemsAdder") && CustomBlock.byAlreadyPlaced(loc.getBlock()) != null) {
             CustomBlock.remove(loc);
+        } else {
+            loc.getBlock().setType(Material.AIR);
         }
         if (GeneralSettingConfigs.GetBlockBreakEventCancel() && !loc.getBlock().getType().isAir()) {
             BlockBreakEvent bbe = new BlockBreakEvent(loc.getBlock(), player);

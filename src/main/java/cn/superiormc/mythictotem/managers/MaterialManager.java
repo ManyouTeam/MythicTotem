@@ -124,16 +124,14 @@ public class MaterialManager {
                             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                     materialString + ", find entity: " + singleEntity.getType() + ".");
                         }
-                        if (singleEntity instanceof ArmorStand) {
-                            this.entity = singleEntity;
-                            CustomFurniture iaEntity = CustomFurniture.byAlreadySpawned(singleEntity);
-                            if (iaEntity == null) {
-                                continue;
-                            }
-                            if ((materialString.split(":")[1] + ":" + materialString.split(":")[2]).
-                                    equals(iaEntity.getNamespacedID())) {
-                                return true;
-                            }
+                        this.entity = singleEntity;
+                        CustomFurniture iaEntity = CustomFurniture.byAlreadySpawned(singleEntity);
+                        if (iaEntity == null) {
+                            continue;
+                        }
+                        if ((materialString.split(":")[1] + ":" + materialString.split(":")[2]).
+                                equals(iaEntity.getNamespacedID())) {
+                            return true;
                         }
                     }
                     return false;
@@ -225,15 +223,13 @@ public class MaterialManager {
                             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                     materialString + ", find entity: " + singleEntity.getType() + ".");
                         }
-                        if (singleEntity instanceof ArmorStand) {
-                            this.entity = singleEntity;
-                            FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(singleEntity);
-                            if (furnitureMechanic == null) {
-                                continue;
-                            }
-                            if (materialString.split(":")[1].equals(furnitureMechanic.getItemID())) {
-                                return true;
-                            }
+                        this.entity = singleEntity;
+                        FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(singleEntity);
+                        if (furnitureMechanic == null) {
+                            continue;
+                        }
+                        if (materialString.split(":")[1].equals(furnitureMechanic.getItemID())) {
+                            return true;
                         }
                     }
                     return false;
