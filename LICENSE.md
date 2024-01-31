@@ -1,3 +1,8 @@
+I am the copyright owner of this project, and the prerequisite for granting you a GPL v3 free license is that you have followed the following actions:
+
+Anyone is free to share a complete copy of this plugin, provided that you do not share it in any inappropriate places, such as pirated websites, leaked websites, etc., unless such websites are not profitable. As long as the website has advertising, paid membership, and other content, I consider it profitable.
+The author of MythicTotem is PQguanfang. When distributing copies, you must prominently display THIS copyright information.
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
