@@ -3,24 +3,30 @@ package cn.superiormc.mythictotem.managers;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.CheckValidHook;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ConditionManager {
 
-    private List<String> condition;
+    private final List<String> condition;
 
-    private Player player;
+    private final Player player;
 
-    private Block block;
+    private final Block block;
 
-    private String event;
+    private final String event;
 
-    private ItemStack item;
+    private final ItemStack item;
 
     public ConditionManager(List<String> condition,
                             ValidManager manager) {
@@ -39,10 +45,10 @@ public class ConditionManager {
             } else if (singleCondition.startsWith("trigger: "))
             {
                 return singleCondition.substring(9).equals(event);
-            } else if (singleCondition.startsWith("trigger-item: "))
+            } else if (singleCondition.startsWith("trigger_item: ") || singleCondition.startsWith("trigger-item: "))
             {
                 return item != null && singleCondition.substring(14).equals(CheckValidHook.checkValid(item));
-            } else if (singleCondition.startsWith("world: "))
+            } else if (singleCondition.startsWith("world: ") && block != null)
             {
                 int i = 0;
                 for (String str : singleCondition.substring(7).split(";;")){
@@ -55,7 +61,7 @@ public class ConditionManager {
                     conditionTrueOrFasle = false;
                     break;
                 }
-            } else if (singleCondition.startsWith("biome: "))
+            } else if (singleCondition.startsWith("biome: ") && block != null)
             {
                 int i = 0;
                 for (String str : singleCondition.substring(7).toUpperCase().split(";;")){
@@ -71,7 +77,7 @@ public class ConditionManager {
             } else if (singleCondition.startsWith("permission: ") && player != null)
             {
                 for (String str : singleCondition.substring(12).split(";;")){
-                    if(!player.hasPermission(str)){
+                    if (!player.hasPermission(str)){
                         conditionTrueOrFasle = false;
                         break;
                     }
@@ -156,6 +162,26 @@ public class ConditionManager {
                 catch (ArrayIndexOutOfBoundsException e) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your placeholder condition in totem configs can not being correctly load.");
                     return false;
+                }
+            } else if (!MythicTotem.freeVersion && singleCondition.startsWith("mobs_near: ") && block != null) {
+                String[] tempVal1 = singleCondition.substring(11).split(";;");
+                if (tempVal1.length != 2) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mobs_near condition in totem configs can not being correctly load.");
+                    return false;
+                }
+                for (Entity tempVal3 : CommonUtil.getNearbyEntity(block.getLocation(), Double.parseDouble(tempVal1[1]))) {
+                    if (CommonUtil.checkPluginLoad("MythicMobs")) {
+                        ActiveMob tempVal4 = MythicBukkit.inst().getMobManager().getMythicMobInstance(tempVal3);
+                        if (tempVal4 != null && tempVal1[0].equals(tempVal4.getType().getInternalName())) {
+                            return false;
+                        }
+                    }
+                    String customName = tempVal3.getCustomName();
+                    if (customName == null && tempVal1[0].equalsIgnoreCase(tempVal3.getType().name())) {
+                        return false;
+                    } else if (customName != null && customName.contains(tempVal1[0])) {
+                        return false;
+                    }
                 }
             }
         }

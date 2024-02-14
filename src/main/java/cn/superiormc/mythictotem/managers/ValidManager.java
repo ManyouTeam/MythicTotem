@@ -4,9 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomBlock;
-import dev.lone.itemsadder.api.Events.FurniturePlaceEvent;
 import io.th0rgal.oraxen.api.OraxenBlocks;
-import io.th0rgal.oraxen.api.events.furniture.OraxenFurniturePlaceEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -105,7 +102,7 @@ public class ValidManager {
             }
         }
         // 处理 Oraxen 方块
-        if (placedBlockCheckManagers.size() == 0 && CommonUtil.checkPluginLoad("Oraxen")) {
+        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("Oraxen")) {
             if ((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
@@ -116,7 +113,7 @@ public class ValidManager {
             }
         }
         // 处理 MMOItems 方块
-        if (placedBlockCheckManagers.size() == 0 && CommonUtil.checkPluginLoad("MMOItems")) {
+        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("MMOItems")) {
             if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
                     (MythicTotem.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
                             getFromBlock(block.getBlockData()).get().getId()))) {
@@ -125,7 +122,7 @@ public class ValidManager {
             }
         }
         // 处理原版方块
-        if (placedBlockCheckManagers.size() == 0 && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
+        if (placedBlockCheckManagers.isEmpty() && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
             placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
         }
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
@@ -179,7 +176,7 @@ public class ValidManager {
             if (singleTotem.GetTotemManager().getCheckMode().equals("VERTICAL")) {
                 if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
-                            " type A totem check!");
+                            " VERTICAL totem check!");
                 }
                 if (VerticalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
@@ -192,7 +189,7 @@ public class ValidManager {
             } else {
                 if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.GetTotemManager().getTotemID() +
-                            " type B totem check!");
+                            " HORIZONTAL totem check!");
                 }
                 if (HorizontalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
@@ -263,10 +260,10 @@ public class ValidManager {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.GetTotemManager().getRealMaterial(1, i, b);
-                MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1);
-                MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2);
-                MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3);
-                MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4);
+                MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1, 1);
+                MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2, 2);
+                MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3, 3);
+                MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4, 4);
                 if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && !checkZTrueOrFalse1 && !checkZTrueOrFalse2) {
                     return false;
                 }
@@ -387,6 +384,8 @@ public class ValidManager {
                 block.getLocation().getX() - offset_row,
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
+        Bukkit.getConsoleSender().sendMessage(startLocation_1 + " - " + startLocation_2 + " - " + startLocation_3 + " - " + startLocation_4
+                + " - " + startLocation_5  + " - " + startLocation_6 + " - " + startLocation_7  + " - " + startLocation_8);
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.GetTotemManager().getRealRow();
         int base_column = singleTotem.GetTotemManager().getRealColumn();
@@ -430,35 +429,35 @@ public class ValidManager {
         for (int a = 1; a <= base_layer ; a++) {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
-                    Location nowLocation_1 = startLocation_1.clone().add(-i, 1 - a, -b);
+                    Location nowLocation_1 = startLocation_1.clone().add(-b, 1 - a, -i);
                     if (!CommonUtil.checkProtection(player, nowLocation_1)) {
                         checkTrueOrFalse1 = false;
                     }
-                    Location nowLocation_2 = startLocation_2.clone().add(-i, 1 - a, b);
+                    Location nowLocation_2 = startLocation_2.clone().add(-b, 1 - a, i);
                     if (!CommonUtil.checkProtection(player, nowLocation_2)) {
                         checkTrueOrFalse2 = false;
                     }
-                    Location nowLocation_3 = startLocation_3.clone().add(i, 1 - a, -b);
+                    Location nowLocation_3 = startLocation_3.clone().add(b, 1 - a, -i);
                     if (!CommonUtil.checkProtection(player, nowLocation_3)) {
                         checkTrueOrFalse3 = false;
                     }
-                    Location nowLocation_4 = startLocation_4.clone().add(i, 1 - a, b);
+                    Location nowLocation_4 = startLocation_4.clone().add(b, 1 - a, i);
                     if (!CommonUtil.checkProtection(player, nowLocation_4)) {
                         checkTrueOrFalse4 = false;
                     }
-                    Location nowLocation_5 = startLocation_5.clone().add(-b, 1 - a, -i);
+                    Location nowLocation_5 = startLocation_5.clone().add(-i, 1 - a, -b);
                     if (!CommonUtil.checkProtection(player, nowLocation_5)) {
                         checkTrueOrFalse5 = false;
                     }
-                    Location nowLocation_6 = startLocation_6.clone().add(-b, 1 - a, i);
+                    Location nowLocation_6 = startLocation_6.clone().add(-i, 1 - a, b);
                     if (!CommonUtil.checkProtection(player, nowLocation_6)) {
                         checkTrueOrFalse6 = false;
                     }
-                    Location nowLocation_7 = startLocation_7.clone().add(b, 1 - a, -i);
+                    Location nowLocation_7 = startLocation_7.clone().add(i, 1 - a, -b);
                     if (!CommonUtil.checkProtection(player, nowLocation_7)) {
                         checkTrueOrFalse7 = false;
                     }
-                    Location nowLocation_8 = startLocation_8.clone().add(b, 1 - a, i);
+                    Location nowLocation_8 = startLocation_8.clone().add(i, 1 - a, b);
                     if (!CommonUtil.checkProtection(player, nowLocation_8)) {
                         checkTrueOrFalse8 = false;
                     }
@@ -467,14 +466,14 @@ public class ValidManager {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
                     }
                     //1
-                    MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1);
-                    MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2);
-                    MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3);
-                    MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4);
-                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_5);
-                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_6);
-                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_7);
-                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8);
+                    MaterialManager materialManager_1 = new MaterialManager(material, nowLocation_1, 1);
+                    MaterialManager materialManager_2 = new MaterialManager(material, nowLocation_2, 2);
+                    MaterialManager materialManager_3 = new MaterialManager(material, nowLocation_3, 3);
+                    MaterialManager materialManager_4 = new MaterialManager(material, nowLocation_4, 4);
+                    MaterialManager materialManager_5 = new MaterialManager(material, nowLocation_5, 5);
+                    MaterialManager materialManager_6 = new MaterialManager(material, nowLocation_6, 6);
+                    MaterialManager materialManager_7 = new MaterialManager(material, nowLocation_7, 7);
+                    MaterialManager materialManager_8 = new MaterialManager(material, nowLocation_8, 8);
                     if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
                             !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
                         return false;

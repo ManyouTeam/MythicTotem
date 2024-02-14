@@ -131,8 +131,8 @@ public class TotemManager {
         }
     }
 
-    private String generateID(int layer, int raw, int column){
-        return layer + ";;" + raw + ";;" + column;
+    private String generateID(int layer, int row, int column){
+        return layer + ";;" + row + ";;" + column;
     }
 
     public int getRealRow(){
@@ -143,8 +143,8 @@ public class TotemManager {
         return this.totemColumn;
     }
 
-    public String getRealMaterial(int layer, int raw, int column){
-        return totemLocationMaterial.get(layer + ";;" + raw + ";;" + column);
+    public String getRealMaterial(int layer, int row, int column){
+        return totemLocationMaterial.get(layer + ";;" + row + ";;" + column);
     }
 
     public List<String> getTotemAction(){

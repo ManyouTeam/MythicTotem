@@ -11,11 +11,15 @@ import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +56,17 @@ public class CommonUtil {
         }
     }
 
+    public static Collection<Entity> getNearbyEntity(Location location, double distance) {
+        Collection<Entity> tempVal2;
+        try {
+            tempVal2 = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> location.getWorld().getNearbyEntities(location, distance,
+                    distance, distance)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong when get nearby entities.");
+            return new HashSet<>();
+        }
+        return tempVal2;
+    }
 
     public static void summonMythicMobs(Location location, String mobID, int level) {
         try {

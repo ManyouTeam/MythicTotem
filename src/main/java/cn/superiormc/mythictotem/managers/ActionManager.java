@@ -92,7 +92,7 @@ public class ActionManager {
                     catch (ArrayIndexOutOfBoundsException e) {
                         MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your effect action in totem configs can not being correctly load.");
                     }
-                } else if (singleAction.startsWith("entity_spawn: ")) {
+                } else if (singleAction.startsWith("entity_spawn: ") && player != null) {
                     if (singleAction.split(";;").length == 1) {
                         EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
                         player.getLocation().getWorld().spawnEntity(player.getLocation(), entity);
@@ -176,7 +176,7 @@ public class ActionManager {
                 } else if (singleAction.startsWith("player_command: ") && player != null) {
                     CommonUtil.dispatchCommand(player, ReplacePlaceholder(singleAction.substring(16)));
 
-                } else if (singleAction.startsWith("op_command: ")) {
+                } else if (singleAction.startsWith("op_command: ") && player != null) {
                     CommonUtil.dispatchOpCommand(player, ReplacePlaceholder(singleAction.substring(12)));
                 }
             }
