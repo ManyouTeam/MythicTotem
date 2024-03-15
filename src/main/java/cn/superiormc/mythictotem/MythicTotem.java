@@ -5,7 +5,7 @@ import cn.superiormc.mythictotem.commands.MainTotemTab;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
-import cn.superiormc.mythictotem.events.*;
+import cn.superiormc.mythictotem.listeners.*;
 import cn.superiormc.mythictotem.hooks.MMOItemsHook;
 import cn.superiormc.mythictotem.hooks.MMOItemsReloadListener;
 import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
@@ -78,7 +78,7 @@ public final class MythicTotem extends JavaPlugin {
                 MMOItemsHook.generateNewCache();
                 Bukkit.getPluginManager().registerEvents(new MMOItemsReloadListener(), MythicTotem.instance);
             } catch (Exception ep) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFalied to register MMOItems hook!");
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register MMOItems hook!");
             }
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
@@ -118,6 +118,7 @@ public final class MythicTotem extends JavaPlugin {
     }
 
     public void Commands() {
+        freeVersion = true;
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setExecutor(new MainTotem());
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setTabCompleter(new MainTotemTab());
     }

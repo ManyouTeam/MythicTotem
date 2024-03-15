@@ -1,4 +1,4 @@
-package cn.superiormc.mythictotem.events;
+package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ValidManager;

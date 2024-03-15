@@ -2,7 +2,6 @@
 #
 # READ THE WIKI: mythictotem.superiormc.cn
 debug: false
-# If you are facing double action issue, please bump this value to 20+.
 cooldown-tick: 5
 # Premium version only.
 check-prices: true

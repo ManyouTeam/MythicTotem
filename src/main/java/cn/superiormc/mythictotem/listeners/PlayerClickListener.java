@@ -1,31 +1,31 @@
-package cn.superiormc.mythictotem.events;
+package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.managers.ValidManager;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
-public class EntityPlaceListener implements Listener {
+public class PlayerClickListener implements Listener {
 
     @EventHandler
-    public void EntityPlace(EntityPlaceEvent event){
-        if (event.isCancelled() || event.getPlayer() == null) {
+    public void InteractEvent(PlayerInteractEvent event) {
+        if (event.isCancelled()) {
             return;
         }
-        if (GeneralSettingConfigs.GetEntityPlaceEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
+        if (GeneralSettingConfigs.GetPlayerInteractEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
             return;
         }
-        if (GeneralSettingConfigs.GetEntityPlaceEventRequireShift() && (!event.getPlayer().isSneaking())) {
+        if (GeneralSettingConfigs.GetPlayerInteractEventRequireShift() && (!event.getPlayer().isSneaking())) {
             return;
         }
         if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
             return;
         }
-        if (event.getEntity().getType() != EntityType.ENDER_CRYSTAL) {
+        if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
         MythicTotem.getCheckingPlayer.add(event.getPlayer());
@@ -38,7 +38,9 @@ public class EntityPlaceListener implements Listener {
             MythicTotem.getCheckingPlayer.remove(event.getPlayer());
         }, MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eEntity place trigger!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getClickedBlock().getLocation());
+            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cBiome: " + event.getClickedBlock().getBiome().name());
         }
     }
 }

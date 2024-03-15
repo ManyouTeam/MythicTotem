@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>3.4.0</version>
+    <version>3.5.1</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -123,9 +123,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19.1-R0.1-SNAPSHOT</version>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -258,6 +258,12 @@
             <groupId>com.github.Auxilor</groupId>
             <artifactId>EcoBits</artifactId>
             <version>master-a55b59745f-1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ankhorg</groupId>
+            <artifactId>NeigeItems-Kotlin</artifactId>
+            <version>1.16.8</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

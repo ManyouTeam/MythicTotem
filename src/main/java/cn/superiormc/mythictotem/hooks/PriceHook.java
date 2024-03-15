@@ -220,8 +220,6 @@ public class PriceHook {
                 String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
                 if (tempVal10 != null && tempVal10.equals(item)) {
                     amount += tempVal1.getAmount();
-                } else if (temItem.equals(ItemsHook.getHookItem(pluginName, item))) {
-                    amount += tempVal1.getAmount();
                 }
             }
             if (amount >= value) {

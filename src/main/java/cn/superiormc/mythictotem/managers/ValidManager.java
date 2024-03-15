@@ -384,8 +384,6 @@ public class ValidManager {
                 block.getLocation().getX() - offset_row,
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
-        Bukkit.getConsoleSender().sendMessage(startLocation_1 + " - " + startLocation_2 + " - " + startLocation_3 + " - " + startLocation_4
-                + " - " + startLocation_5  + " - " + startLocation_6 + " - " + startLocation_7  + " - " + startLocation_8);
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.GetTotemManager().getRealRow();
         int base_column = singleTotem.GetTotemManager().getRealColumn();

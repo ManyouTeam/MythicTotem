@@ -16,10 +16,12 @@ import io.th0rgal.oraxen.items.ItemBuilder;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import pers.neige.neigeitems.manager.ItemManager;
 
 public class ItemsHook {
+    public static int mythicMobsVersion = 0;
+
     public static ItemStack getHookItem(String pluginName, String itemID) {
         if (!CommonUtil.checkPluginLoad(pluginName)) {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
@@ -28,22 +30,22 @@ public class ItemsHook {
         }
         switch (pluginName) {
             case "ItemsAdder":
-                if (CustomStack.getInstance(itemID) == null) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotemd] §cError: Can not get "
-                            + pluginName + " item: " + itemID + "!");
-                    return null;
-                } else {
-                    CustomStack customStack = CustomStack.getInstance(itemID);
-                    return customStack.getItemStack();
-                }
-            case "Oraxen":
-                if (OraxenItems.getItemById(itemID) == null) {
+                CustomStack customStack = CustomStack.getInstance(itemID);
+                if (customStack == null) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " item: " + itemID + "!");
                     return null;
                 } else {
-                    ItemBuilder builder = OraxenItems.getItemById(itemID);
-                    return builder.build();
+                    return customStack.getItemStack();
+                }
+            case "Oraxen":
+                ItemBuilder itemBuilder = OraxenItems.getItemById(itemID);
+                if (itemBuilder == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                            + pluginName + " item: " + itemID + "!");
+                    return null;
+                } else {
+                    return itemBuilder.build();
                 }
             case "MMOItems":
                 Type type = MMOItems.plugin.getTypes().get(itemID.split(";;")[0]);
@@ -61,40 +63,31 @@ public class ItemsHook {
                     return MMOItemsHook.getItem(template);
                 }
             case "EcoItems":
-                EcoItems ecoItems = EcoItems.INSTANCE;
-                if (ecoItems.getByID(itemID) == null) {
+                EcoItem ecoItems = EcoItems.INSTANCE.getByID(itemID);
+                if (ecoItems == null) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " item: " + itemID + "!");
                     return null;
                 } else {
-                    EcoItem ecoItem = ecoItems.getByID(itemID);
-                    return ecoItem.getItemStack();
+                    return ecoItems.getItemStack();
                 }
-            case "eco":
-                return Items.lookup(itemID).getItem();
             case "EcoArmor":
                 if (ArmorSets.getByID(itemID.split(";;")[0]) == null) {
                     return null;
                 }
                 ArmorSet armorSet = ArmorSets.getByID(itemID);
-                ItemStack itemStack = null;
-                switch (itemID.split(";;")[1].toUpperCase()) {
-                    case "BOOTS":
-                        itemStack = armorSet.getItemStack(ArmorSlot.BOOTS);
-                        break;
-                    case "CHESTPLATE":
-                        itemStack = armorSet.getItemStack(ArmorSlot.CHESTPLATE);
-                        break;
-                    case "ELYTRA":
-                        itemStack = armorSet.getItemStack(ArmorSlot.ELYTRA);
-                        break;
-                    case "HELMET":
-                        itemStack = armorSet.getItemStack(ArmorSlot.HELMET);
-                        break;
-                    case "LEGGINGS":
-                        itemStack = armorSet.getItemStack(ArmorSlot.LEGGINGS);
-                        break;
+                if (armorSet == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                            + pluginName + " item: " + itemID + "!");
+                    return null;
                 }
+                ArmorSlot armorSlot = ArmorSlot.getSlot(itemID.split(";;")[1].toUpperCase());
+                if (armorSlot == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                            + pluginName + " item: " + itemID + "!");
+                    return null;
+                }
+                ItemStack itemStack = armorSet.getItemStack(armorSlot);
                 if (itemStack == null) {
                     MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
                             + pluginName + " item: " + itemID + "!");
@@ -103,26 +96,41 @@ public class ItemsHook {
                     return itemStack;
                 }
             case "MythicMobs":
-                try {
-                    if (MythicBukkit.inst().getItemManager().getItemStack(itemID) == null) {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
-                                + pluginName + " v5 item: " + itemID + "!");
+                if (mythicMobsVersion == 0) {
+                    if (CommonUtil.getClass("io.lumine.mythic.bukkit.MythicBukkit")) {
+                        mythicMobsVersion = 5;
+                    } else if (CommonUtil.getClass("io.lumine.xikage.mythicmobs.MythicMobs")) {
+                        mythicMobsVersion = 4;
+                    }
+                }
+                if (mythicMobsVersion == 5) {
+                    ItemStack mmItem = MythicBukkit.inst().getItemManager().getItemStack(itemID);
+                    if (mmItem == null) {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[SpinToWin] §cError: Can not get "
+                                + pluginName + " item: " + itemID + "!");
                         return null;
                     } else {
-                        return MythicBukkit.inst().getItemManager().getItemStack(itemID);
+                        return mmItem;
                     }
-                } catch (NoClassDefFoundError ep) {
-                    if (MythicMobs.inst().getItemManager().getItemStack(itemID) == null) {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get "
+                } else if (mythicMobsVersion == 4) {
+                    ItemStack mmItem = MythicMobs.inst().getItemManager().getItemStack(itemID);
+                    if (mmItem == null) {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[SpinToWin] §cError: Can not get "
                                 + pluginName + " v4 item: " + itemID + "!");
                         return null;
                     } else {
-                        return MythicMobs.inst().getItemManager().getItemStack(itemID);
+                        return mmItem;
                     }
+                } else {
+                    return null;
                 }
+            case "eco":
+                return Items.lookup(itemID).getItem();
+            case "NeigeItems":
+                return ItemManager.INSTANCE.getItemStack(itemID);
         }
         MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
-                + pluginName + " in totem config, however for now MythicTotem does not support it!");
+                + pluginName + " in totem config, however for now MythicTotem is not support it!");
         return null;
     }
 }
