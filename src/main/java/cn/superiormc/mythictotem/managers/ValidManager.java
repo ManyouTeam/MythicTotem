@@ -39,7 +39,11 @@ public class ValidManager {
         this.event = event;
         this.block = event.getBlock();
         this.player = event.getPlayer();
-        this.item = event.getPlayer().getInventory().getItemInMainHand();
+        if (this.player != null) {
+            this.item = this.player.getInventory().getItemInMainHand();
+        } else {
+            this.item = null;
+        }
         CheckTotem();
     }
 
@@ -72,8 +76,11 @@ public class ValidManager {
 
     public ValidManager(PlayerDropItemEvent event){
         this.event = event;
-        this.block = event.getItemDrop().getLocation().subtract(new Vector(0, 2, 0)).getBlock();
-        if (block == null || block.isEmpty()) {
+        this.block = event.getItemDrop().getLocation().subtract(new Vector(0, 1, 0)).getBlock();
+        if (block.isEmpty() || block.getBoundingBox().getHeight() >= 1) {
+            this.block = event.getItemDrop().getLocation().subtract(new Vector(0, 2, 0)).getBlock();
+        }
+        if (block.isEmpty()) {
             if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cSkipped becuase block is air!");
             }

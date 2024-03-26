@@ -118,7 +118,6 @@ public final class MythicTotem extends JavaPlugin {
     }
 
     public void Commands() {
-        freeVersion = true;
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setExecutor(new MainTotem());
         Objects.requireNonNull(Bukkit.getPluginCommand("mythictotem")).setTabCompleter(new MainTotemTab());
     }
