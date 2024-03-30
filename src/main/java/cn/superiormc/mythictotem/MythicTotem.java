@@ -60,7 +60,7 @@ public final class MythicTotem extends JavaPlugin {
                 TriggerTotemActived.load();
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered totem_actived trigger for libreforge!");
             } catch (Exception ep) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFalied to register totem_actived trigger!");
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register totem_actived trigger!");
             }
         }
         TotemConfigs.initTotemConfigs();

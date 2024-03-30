@@ -29,7 +29,7 @@ public class TotemManager {
 
     private final String totemCheckMode;
 
-    private ConfigurationSection totemSection;
+    private final ConfigurationSection totemSection;
     
     private final String totemID;
 
@@ -43,20 +43,26 @@ public class TotemManager {
         this.totemSection = section;
         ConfigurationSection totemLayoutsExplainConfig = section.getConfigurationSection("explains");
         if (totemLayoutsExplainConfig == null) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found any explains option in totem: " + section.getName() + ".");
+            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found any explains option in totem: " + id + ".");
             return;
         }
         Set<String> totemLayoutsExplainList = totemLayoutsExplainConfig.getKeys(false);
         Map<String, String> totemLayoutsExplain = new HashMap<>();
         for (String totemLayoutsChar : totemLayoutsExplainList) {
             if (totemLayoutsChar.length() > 1) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem " + section.getName() + "'s layout explain config keys must be a char, like A.");
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem " + id + "'s layout explain config keys must be a char, like A.");
                 return;
             }
-            String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar).toLowerCase();
+            String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar);
+            if (totemLayoutsMaterial == null) {
+                totemLayoutsMaterial = "none";
+            } else {
+                totemLayoutsMaterial = totemLayoutsMaterial.toLowerCase();
+            }
             totemLayoutsExplain.put(totemLayoutsChar, totemLayoutsMaterial);
         }
-        if (!(section.getConfigurationSection("layouts") == null)) {
+        ConfigurationSection layoutsSection = section.getConfigurationSection("layouts");
+        if (layoutsSection != null) {
             MythicTotem.threeDtotemAmount++;
             if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
                 MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
@@ -65,7 +71,7 @@ public class TotemManager {
                 return;
             }
             Map<Integer, List<String>> totemLayouts = new HashMap<>();
-            for (int i = 1 ; i <= section.getConfigurationSection("layouts").getKeys(false).size() ; i++) {
+            for (int i = 1 ; i <= layoutsSection.getKeys(false).size() ; i++) {
                 if (!section.getStringList("layouts." + i).isEmpty()) {
                     totemLayouts.put(i, section.getStringList("layouts." + i));
                     this.totemLayer = i;
