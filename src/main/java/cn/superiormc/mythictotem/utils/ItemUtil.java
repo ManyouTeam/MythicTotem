@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.utils;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.ItemsHook;
 import cn.superiormc.mythictotem.managers.SavedItemManager;
 import com.google.common.base.Enums;
@@ -93,14 +94,14 @@ public class ItemUtil {
             SkullMeta skullMeta = (SkullMeta) meta;
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
-                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+                GameProfile profile = new GameProfile(UUID.randomUUID(), "");
                 profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
                 try {
                     Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                     mtd.setAccessible(true);
                     mtd.invoke(skullMeta, profile);
                 } catch (Exception exception) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[EnchantmentSlots] §cError: Can not parse skull texture in a item!");
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not parse skull texture in a item!");
                 }
             }
             item.setItemMeta(skullMeta);
