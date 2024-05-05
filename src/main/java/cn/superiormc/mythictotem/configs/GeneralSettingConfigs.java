@@ -4,6 +4,10 @@ import cn.superiormc.mythictotem.MythicTotem;
 
 public class GeneralSettingConfigs {
 
+    public static String GetLanguage(){
+        return MythicTotem.instance.getConfig().getString("language", "en_US");
+    }
+
     public static boolean GetEntityPlaceEventEnabled(){
         return MythicTotem.instance.getConfig().getBoolean("trigger.EntityPlaceEvent.enabled", true);
     }

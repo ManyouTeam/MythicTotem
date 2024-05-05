@@ -19,7 +19,7 @@ public class InitManager {
     }
 
     public void init() {
-        resourceOutput("message.yml", true);
+        resourceOutput("languages/en_US.yml", true);
         resourceOutput("totems/2d-totem-example.yml", false);
         resourceOutput("totems/3d-totem-example.yml", false);
         resourceOutput("totems/3d-totem-with-ender-crystal-required-example.yml", false);

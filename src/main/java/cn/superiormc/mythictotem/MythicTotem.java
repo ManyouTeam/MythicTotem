@@ -59,8 +59,8 @@ public final class MythicTotem extends JavaPlugin {
             try {
                 TriggerTotemActived.load();
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered totem_actived trigger for libreforge!");
-            } catch (Exception ep) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register totem_actived trigger!");
+            } catch (Throwable throwable) {
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register totem_actived trigger!");
             }
         }
         TotemConfigs.initTotemConfigs();
@@ -77,8 +77,8 @@ public final class MythicTotem extends JavaPlugin {
                         " for MMOItems because it does not support async...");
                 MMOItemsHook.generateNewCache();
                 Bukkit.getPluginManager().registerEvents(new MMOItemsReloadListener(), MythicTotem.instance);
-            } catch (Exception ep) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register MMOItems hook!");
+            } catch (Throwable throwable) {
+                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register MMOItems hook, consider update your MMOItems to latest dev version!!");
             }
         }
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
