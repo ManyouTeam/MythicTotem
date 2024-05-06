@@ -1,8 +1,13 @@
 # MythicTotem by @PQguanfang
 #
 # READ THE WIKI: mythictotem.superiormc.cn
+
 debug: false
+
+language: en_US
+
 cooldown-tick: 5
+
 # Premium version only.
 check-prices: true
 check-protection:
@@ -10,7 +15,9 @@ check-protection:
   can-break: false
   can-interact: false
   can-use: false
+
 register-libreforge: false
+
 disappear:
   BukkitAPI:
     # This BukkitAPI option can not be disabled!
@@ -21,6 +28,7 @@ disappear:
     enabled: false
   BlockBreakEvent:
     enabled: false
+
 trigger:
   BlockPlaceEvent:
     enabled: true
