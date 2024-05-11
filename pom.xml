@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>3.5.7</version>
+    <version>3.5.8</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
