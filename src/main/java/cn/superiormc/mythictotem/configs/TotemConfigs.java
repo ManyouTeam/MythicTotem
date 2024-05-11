@@ -29,6 +29,11 @@ public class TotemConfigs {
                 String fileName = file.getName();
                 if (fileName.endsWith(".yml")) {
                     String substring = fileName.substring(0, fileName.length() - 4);
+                    if (MythicTotem.getTotemMap.containsKey(substring)) {
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Already loaded a totem config called: " +
+                                fileName + "!");
+                        continue;
+                    }
                     MythicTotem.getTotemMap.put(substring, new TotemManager(substring, YamlConfiguration.loadConfiguration(file)));
                 }
             }
