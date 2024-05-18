@@ -5,6 +5,8 @@ import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
+import io.th0rgal.oraxen.mechanics.provided.gameplay.noteblock.NoteBlockMechanic;
+import io.th0rgal.oraxen.mechanics.provided.gameplay.stringblock.StringBlockMechanic;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -109,12 +111,14 @@ public class ValidManager {
             }
         }
         // 处理 Oraxen 方块
-        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("Oraxen")) {
-            if ((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getNoteBlockMechanic(block).getItemID() != null &&
+        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("Oraxen") && OraxenBlocks.isOraxenBlock(block)) {
+            NoteBlockMechanic noteBlockMechanic = OraxenBlocks.getNoteBlockMechanic(block);
+            StringBlockMechanic stringBlockMechanic = OraxenBlocks.getStringMechanic(block);
+            if (noteBlockMechanic != null && noteBlockMechanic.getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
             }
-            else if((OraxenBlocks.isOraxenBlock(block)) && OraxenBlocks.getStringMechanic(block).getItemID() != null &&
+            else if (stringBlockMechanic != null && stringBlockMechanic.getItemID() != null &&
                 (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
                 placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID());
             }
