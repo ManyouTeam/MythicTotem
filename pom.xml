@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>3.5.9</version>
+    <version>3.5.10</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -265,6 +265,20 @@
             <artifactId>NeigeItems-Kotlin</artifactId>
             <version>1.16.8</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ssomar.score</groupId>
+            <artifactId>SCore</artifactId>
+            <version>5.24.7.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/SCore-5.24.7.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.ssomar.score</groupId>
+            <artifactId>ExecutableItems</artifactId>
+            <version>7.24.7.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ExecutableItems-7.24.7.9.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

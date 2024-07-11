@@ -24,6 +24,8 @@ softdepend:
   - RedisEconomy
   - EcoBits
   - MythicMobs
+  - VotingPlugin
+  - ExecutableItems
 
 commands:
   mythictotem:

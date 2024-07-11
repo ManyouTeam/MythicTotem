@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import com.ssomar.executableitems.executableitems.manager.ExecutableItemsManager;
 import com.willfp.eco.core.items.Items;
 import com.willfp.ecoarmor.sets.ArmorSet;
 import com.willfp.ecoarmor.sets.ArmorSlot;
@@ -120,6 +121,11 @@ public class CheckValidHook {
             String tempVal1 = MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
             if (tempVal1 != null) {
                 return tempVal1;
+            }
+        }
+        if (CommonUtil.checkPluginLoad("ExecutableItems")) {
+            if (ExecutableItemsManager.getInstance().getObject(itemStack).isPresent()) {
+                return ExecutableItemsManager.getInstance().getObject(itemStack).get().getId();
             }
         }
         return itemStack.getType().getKey().getKey().toLowerCase();
