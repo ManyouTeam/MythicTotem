@@ -2,6 +2,8 @@ package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import com.bencodez.votingplugin.VotingPluginMain;
+import com.bencodez.votingplugin.user.VotingPluginUser;
 import com.willfp.ecobits.currencies.Currencies;
 import com.willfp.ecobits.currencies.CurrencyUtils;
 import dev.unnm3d.rediseconomy.api.RedisEconomyAPI;
@@ -153,6 +155,20 @@ public class PriceHook {
                     }
                     return true;
                 }
+            case "votingplugin":
+                VotingPluginUser user = VotingPluginMain.getPlugin().getVotingPluginUserManager().getVotingPluginUser(player);
+                if (user == null) {
+                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find find user data " +
+                            player.getName() + " in VotingPlugin plugin!");
+                    return false;
+                }
+                if (user.getPoints() >= (int) value) {
+                    if (take) {
+                        user.removePoints((int) value);
+                    }
+                    return true;
+                }
+                return false;
         }
         MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                 + pluginName + " in UI config, however for now MythicTotem does not support it!");
@@ -224,20 +240,20 @@ public class PriceHook {
             }
             if (amount >= value) {
                 if (take) {
-                    for (int i = 0 ; i < storage.length ; i++) {
-                        if (storage[i] == null || storage[i].getType().isAir()) {
+                    for (ItemStack itemStack : storage) {
+                        if (itemStack == null || itemStack.getType().isAir()) {
                             continue;
                         }
-                        ItemStack temItem = storage[i].clone();
+                        ItemStack temItem = itemStack.clone();
                         temItem.setAmount(1);
                         String tempVal10 = CheckValidHook.checkValid(pluginName, temItem);
                         if (tempVal10 != null && tempVal10.equals(item)) {
-                            if (storage[i].getAmount() >= value) {
-                                storage[i].setAmount(storage[i].getAmount() - value);
+                            if (itemStack.getAmount() >= value) {
+                                itemStack.setAmount(itemStack.getAmount() - value);
                                 break;
                             } else {
-                                value -= storage[i].getAmount();
-                                storage[i].setAmount(0);
+                                value -= itemStack.getAmount();
+                                itemStack.setAmount(0);
                             }
                         }
                     }
@@ -292,19 +308,19 @@ public class PriceHook {
             }
             if (amount >= value) {
                 if (take) {
-                    for (int i = 0; i < storage.length; i++) {
-                        if (storage[i] == null || storage[i].getType().isAir()) {
+                    for (ItemStack itemStack : storage) {
+                        if (itemStack == null || itemStack.getType().isAir()) {
                             continue;
                         }
-                        ItemStack temItem = storage[i].clone();
+                        ItemStack temItem = itemStack.clone();
                         temItem.setAmount(1);
                         if (temItem.equals(item)) {
-                            if (storage[i].getAmount() >= value) {
-                                storage[i].setAmount(storage[i].getAmount() - value);
+                            if (itemStack.getAmount() >= value) {
+                                itemStack.setAmount(itemStack.getAmount() - value);
                                 break;
                             } else {
-                                value -= storage[i].getAmount();
-                                storage[i].setAmount(0);
+                                value -= itemStack.getAmount();
+                                itemStack.setAmount(0);
                             }
                         }
                     }

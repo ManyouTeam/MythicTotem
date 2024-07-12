@@ -65,11 +65,17 @@ public class CheckValidHook {
                 if (tempVal3 == null) {
                     return null;
                 }
-                return tempVal2 + ";;" + tempVal3.toString();
+                return tempVal2 + ";;" + tempVal3;
             }
         }
         else if (pluginName.equals("MythicMobs")) {
             return MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
+        }
+        else if (pluginName.equals("ExecutableItems")) {
+            if (ExecutableItemsManager.getInstance().getObject(itemStack).isPresent()) {
+                return ExecutableItemsManager.getInstance().getObject(itemStack).get().getId();
+            }
+            return null;
         }
         else {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
