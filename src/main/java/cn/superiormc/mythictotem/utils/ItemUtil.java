@@ -1,7 +1,6 @@
 package cn.superiormc.mythictotem.utils;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.hooks.ItemsHook;
 import cn.superiormc.mythictotem.managers.SavedItemManager;
 import com.google.common.base.Enums;
 import com.mojang.authlib.GameProfile;
@@ -32,20 +31,6 @@ public class ItemUtil {
                 ItemStack savedItem = SavedItemManager.GetItemByKey(section.getString("material", ""));
                 if (savedItem != null) {
                     item = savedItem;
-                }
-            }
-        } else {
-            String pluginName = section.getString("hook-plugin");
-            String itemID = section.getString("hook-item");
-            if (pluginName != null && itemID != null) {
-                if (pluginName.equals("MMOItems") && !itemID.contains(";;")) {
-                    itemID = section.getString("hook-item-type") + ";;" + itemID;
-                } else if (pluginName.equals("EcoArmor") && !itemID.contains(";;")) {
-                    itemID = itemID + ";;" + section.getString("hook-item-type");
-                }
-                ItemStack hookItem = ItemsHook.getHookItem(pluginName, itemID);
-                if (hookItem != null) {
-                    item = hookItem;
                 }
             }
         }
