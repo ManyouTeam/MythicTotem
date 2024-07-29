@@ -42,14 +42,14 @@ trigger:
     enabled: false
     require-shift: false
     black-creative-mode: false
+  # Will check end crystal only.
+  EntityPlaceEvent:
+    enabled: true
+    require-shift: false
+    black-creative-mode: false
   # This event does not support get the player object, so cooldown-tick option does not effect this trigger.
   # And all actions and conditions that related to player is can not be used.
   # And all placeholders that related to player also can not be used.
   # Otherwise you will get tons of errors on console!!!
   BlockRedstoneEvent:
     enabled: true
-  # Will check end crystal only.
-  EntityPlaceEvent:
-    enabled: true
-    require-shift: false
-    black-creative-mode: false

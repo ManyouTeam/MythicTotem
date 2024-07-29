@@ -26,12 +26,6 @@ public class EntityPlaceListener implements Listener {
         if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
             return;
         }
-        if (CommonUtil.getMajorVersion(21) && event.getEntity().getType() != EntityType.END_CRYSTAL) {
-            return;
-        }
-        if (!CommonUtil.getMajorVersion(21) && event.getEntity().getType() != EntityType.ENDER_CRYSTAL) {
-            return;
-        }
         MythicTotem.getCheckingPlayer.add(event.getPlayer());
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
             synchronized(event) {

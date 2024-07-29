@@ -20,6 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MythicTotem extends JavaPlugin {
 
@@ -29,11 +31,11 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = false;
+    public static boolean freeVersion = true;
 
     public static int threeDtotemAmount = 0;
 
-    public static List<Block> getCheckingBlock = new ArrayList<>();
+    public static List<Block> getCheckingBlock = Collections.synchronizedList(new ArrayList<>());
 
     public static List<Player> getCheckingPlayer = new ArrayList<>();
 
@@ -41,7 +43,7 @@ public final class MythicTotem extends JavaPlugin {
     public static Map<String, TotemManager> getTotemMap = new HashMap<>();
 
     // 方块ID，方块所在图腾信息
-    public static Map<String, List<PlacedBlockCheckManager>> getTotemMaterial = new HashMap<>();
+    public static Map<String, List<PlacedBlockCheckManager>> getTotemMaterial = new ConcurrentHashMap<>();
 
     public static List<Item> getDroppedItems = new ArrayList<>();
 

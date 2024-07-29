@@ -33,6 +33,6 @@ public class SubGenerateItemFormat {
                 e.printStackTrace();
             }
         });
-        Messages.GetMessages("generated");
+        sender.sendMessage(Messages.GetMessages("generated"));
     }
 }

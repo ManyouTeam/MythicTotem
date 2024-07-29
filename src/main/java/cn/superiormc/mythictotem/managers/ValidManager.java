@@ -10,11 +10,12 @@ import io.th0rgal.oraxen.mechanics.provided.gameplay.stringblock.StringBlockMech
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
@@ -69,7 +70,7 @@ public class ValidManager {
         CheckTotem();
     }
 
-    public ValidManager(BlockEvent event){
+    public ValidManager(BlockRedstoneEvent event){
         this.event = event;
         this.block = event.getBlock();
         this.player = null;
@@ -85,7 +86,7 @@ public class ValidManager {
         }
         if (block.isEmpty()) {
             if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cSkipped becuase block is air!");
+                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cSkipped because block is air!");
             }
             return;
         }
