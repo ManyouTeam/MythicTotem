@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>3.6.1</version>
+    <version>3.7.0</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -127,9 +127,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>cn.superiormc</groupId>
+            <artifactId>ManyouItems</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ManyouItems-1.0.0.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <version>1.21-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

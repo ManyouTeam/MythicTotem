@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import com.google.common.base.Enums;
 import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomFurniture;
 import dev.lone.itemsadder.api.CustomMob;
@@ -34,9 +35,9 @@ public class MaterialManager {
 
     private Entity entity;
 
-    private int id;
+    private final int id;
 
-    public MaterialManager(@NotNull String materialString, @NotNull Location location, @NotNull int id) {
+    public MaterialManager(@NotNull String materialString, @NotNull Location location, int id) {
         this.materialString = materialString;
         this.location = location;
         this.id = id;
@@ -50,7 +51,7 @@ public class MaterialManager {
         } else if (materialString.startsWith("minecraft:")) {
             try {
                 Material material = Material.getMaterial(materialString.split(":")[1].toUpperCase());
-                EntityType entityType = EntityType.fromName(materialString.split(":")[1].toUpperCase());
+                EntityType entityType = Enums.getIfPresent(EntityType.class, "ZOMBIE").orNull();
                 if (material != null) {
                     this.block = location.getBlock();
                     if (MythicTotem.instance.getConfig().getBoolean("debug")) {

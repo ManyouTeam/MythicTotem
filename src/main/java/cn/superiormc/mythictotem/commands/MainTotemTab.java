@@ -19,10 +19,11 @@ public class MainTotemTab implements TabCompleter {
                 strings.add("list");
                 if (!MythicTotem.freeVersion) {
                     strings.add("save");
+                    strings.add("generateitemformat");
                 }
                 return strings;
             }
-            else{
+            else {
                 List<String> strings = new ArrayList();
                 strings.add("help");
                 return strings;

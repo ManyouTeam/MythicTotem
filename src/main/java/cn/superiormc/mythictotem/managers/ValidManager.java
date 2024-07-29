@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
@@ -68,7 +69,7 @@ public class ValidManager {
         CheckTotem();
     }
 
-    public ValidManager(BlockRedstoneEvent event){
+    public ValidManager(BlockEvent event){
         this.event = event;
         this.block = event.getBlock();
         this.player = null;

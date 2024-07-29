@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.listeners;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.managers.ValidManager;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,10 @@ public class EntityPlaceListener implements Listener {
         if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
             return;
         }
-        if (event.getEntity().getType() != EntityType.ENDER_CRYSTAL) {
+        if (CommonUtil.getMajorVersion(21) && event.getEntity().getType() != EntityType.END_CRYSTAL) {
+            return;
+        }
+        if (!CommonUtil.getMajorVersion(21) && event.getEntity().getType() != EntityType.ENDER_CRYSTAL) {
             return;
         }
         MythicTotem.getCheckingPlayer.add(event.getPlayer());
@@ -34,9 +38,7 @@ public class EntityPlaceListener implements Listener {
                 new ValidManager(event);
             }
         });
-        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
-            MythicTotem.getCheckingPlayer.remove(event.getPlayer());
-        }, MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
+        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> MythicTotem.getCheckingPlayer.remove(event.getPlayer()), MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eEntity place trigger!");
         }

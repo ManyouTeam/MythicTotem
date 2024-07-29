@@ -14,6 +14,7 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.th0rgal.oraxen.api.OraxenItems;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.inventory.ItemStack;
+import pers.neige.neigeitems.manager.ItemManager;
 
 public class CheckValidHook {
 
@@ -84,56 +85,60 @@ public class CheckValidHook {
         }
     }
 
-    public static String checkValid(ItemStack itemStack) {
-        if (itemStack == null || itemStack.getType().isAir()) {
-            return "";
-        }
+    public static String[] checkValid(ItemStack itemStack) {
         if (CommonUtil.checkPluginLoad("ItemsAdder")) {
             CustomStack customStack = CustomStack.byItemStack(itemStack);
             if (customStack != null) {
-                return customStack.getId();
+                return new String[]{"ItemsAdder", customStack.getId()};
             }
         }
         if (CommonUtil.checkPluginLoad("Oraxen")) {
             String tempVal1 = OraxenItems.getIdByItem(itemStack);
             if (tempVal1 != null) {
-                return tempVal1;
+                return new String[]{"Oraxen", tempVal1};
             }
         }
         if (CommonUtil.checkPluginLoad("MMOItems")) {
             String tempVal1 = MMOItems.getID(itemStack);
-            if (tempVal1 != null && !tempVal1.isEmpty()) {
-                return tempVal1;
+            String tempVal2 = MMOItems.getTypeName(itemStack);
+            if (tempVal1 != null && !tempVal1.isEmpty() && tempVal2 != null && !tempVal2.isEmpty()) {
+                return new String[]{"MMOItems", tempVal2 + ";;" + tempVal1};
             }
         }
         if (CommonUtil.checkPluginLoad("EcoItems")) {
             EcoItem tempVal1 = ItemUtilsKt.getEcoItem(itemStack);
             if (tempVal1 != null) {
-                return tempVal1.getID();
+                return new String[]{"EcoItems", tempVal1.getID()};
             }
         }
         if (CommonUtil.checkPluginLoad("EcoArmor")) {
             ArmorSet tempVal1 = ArmorUtils.getSetOnItem(itemStack);
-            if (tempVal1 != null) {
-                return tempVal1.getId();
+            ArmorSlot tempVal2 = ArmorSlot.getSlot(itemStack);
+            if (tempVal1 != null && tempVal2 != null) {
+                return new String[]{"EcoArmor", tempVal1.getId() + tempVal2.toString()};
             }
         }
         if (CommonUtil.checkPluginLoad("eco")) {
             if (Items.getCustomItem(itemStack) != null) {
-                return Items.getCustomItem(itemStack).getKey().getKey();
+                return new String[]{"eco", Items.getCustomItem(itemStack).getKey().getKey()};
             }
         }
         if (CommonUtil.checkPluginLoad("MythicMobs")) {
             String tempVal1 = MythicBukkit.inst().getItemManager().getMythicTypeFromItem(itemStack);
             if (tempVal1 != null) {
-                return tempVal1;
+                return new String[]{"MythicMobs", tempVal1};
+            }
+        }
+        if (CommonUtil.checkPluginLoad("NeigeItems")) {
+            if (ItemManager.INSTANCE.isNiItem(itemStack) != null) {
+                return new String[]{"NeigeItems", ItemManager.INSTANCE.isNiItem(itemStack).getId()};
             }
         }
         if (CommonUtil.checkPluginLoad("ExecutableItems")) {
             if (ExecutableItemsManager.getInstance().getObject(itemStack).isPresent()) {
-                return ExecutableItemsManager.getInstance().getObject(itemStack).get().getId();
+                return new String[]{"ExecutableItems", ExecutableItemsManager.getInstance().getObject(itemStack).get().getId()};
             }
         }
-        return itemStack.getType().getKey().getKey().toLowerCase();
+        return new String[]{"vanilla", itemStack.getType().name()};
     }
 }

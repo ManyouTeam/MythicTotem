@@ -10,7 +10,6 @@ import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.InitManager;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
 import cn.superiormc.mythictotem.managers.TotemManager;
-import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.managers.SavedItemManager;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
@@ -46,9 +45,20 @@ public final class MythicTotem extends JavaPlugin {
 
     public static List<Item> getDroppedItems = new ArrayList<>();
 
+    public static int majorVersion;
+
+    public static int miniorVersion;
+
     @Override
     public void onEnable() {
         instance = this;
+        try {
+            String[] versionParts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+            majorVersion = versionParts.length > 1 ? Integer.parseInt(versionParts[1]) : 0;
+            miniorVersion = versionParts.length > 2 ? Integer.parseInt(versionParts[2]) : 0;
+        } catch (Throwable throwable) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicChanger] §cError: Can not get your Minecraft version! Default set to 1.0.0.");
+        }
         Init();
         ProtectionLib.init(this);
         this.saveDefaultConfig();
@@ -69,6 +79,7 @@ public final class MythicTotem extends JavaPlugin {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §4Loaded material map: " + getTotemMaterial);
         }
         SavedItemManager.ReadSavedItems();
+        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fYour Minecraft version is: 1." + majorVersion + "." + miniorVersion + "!");
         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPlugin is loaded. Author: PQguanfang.");
     }
 

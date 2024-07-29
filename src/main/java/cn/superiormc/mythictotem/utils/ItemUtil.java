@@ -49,7 +49,7 @@ public class ItemUtil {
         if (!loreKey.isEmpty()) {
             meta.setLore(TextUtil.getListWithColor(loreKey));
         }
-        if (CommonUtil.getMajorVersion() >= 14) {
+        if (CommonUtil.getMajorVersion(14)) {
             int customModelDataKey = section.getInt("custom-model-data", section.getInt("cmd", -1));
             if (customModelDataKey > 0) {
                 meta.setCustomModelData(customModelDataKey);

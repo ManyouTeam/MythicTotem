@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
+import cn.superiormc.mythictotem.methods.BuildItem;
 import cn.superiormc.mythictotem.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -56,7 +57,7 @@ public class PriceManager {
         }
         else if (type.equals("vanilla")) {
             priceBoolean = PriceHook.getPrice(player,
-                    ItemUtil.buildItemStack(section, 1),
+                    BuildItem.buildItemStack(section),
                     section.getInt("amount", 1),
                     take,
                     keyItems);

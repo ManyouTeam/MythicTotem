@@ -22,18 +22,15 @@ public class MainTotem implements CommandExecutor {
     public void SendCommandArg(CommandSender sender, Command command, String label, String[] args){
         if (args[0].equals("help")) {
             SubHelp.SubHelpCommand(sender);
-        }
-        else if (args[0].equals("list")) {
+        } else if (args[0].equals("list")) {
             SubList.SubListCommand(sender);
-        }
-        else if (args[0].equals("reload")) {
+        } else if (args[0].equals("reload")) {
             SubReload.SubReloadCommand(sender);
-        }
-        else if (args[0].equals("save") && !MythicTotem.freeVersion) {
+        } else if (args[0].equals("save") && !MythicTotem.freeVersion) {
             SubSave.SubSaveCommand(sender, args);
-        }
-        else
-        {
+        } else if (args[0].equals("generateitemformat") && !MythicTotem.freeVersion) {
+            SubGenerateItemFormat.SubGenerateItemFormatCommand(sender);
+        } else {
             sender.sendMessage(Messages.GetMessages("error-args"));
         }
     }

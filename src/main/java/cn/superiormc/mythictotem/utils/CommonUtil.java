@@ -8,9 +8,7 @@ import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.th0rgal.protectionlib.ProtectionLib;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -39,13 +37,13 @@ public class CommonUtil {
         }
     }
 
-    public static int getMajorVersion() {
-        String version = Bukkit.getVersion();
-        Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(version);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return 20;
+    public static boolean getMajorVersion(int version) {
+        return MythicTotem.majorVersion >= version;
+    }
+
+    public static boolean getMinorVersion(int majorVersion, int minorVersion) {
+        return MythicTotem.majorVersion > majorVersion || (MythicTotem.majorVersion == majorVersion &&
+                MythicTotem.miniorVersion >= minorVersion);
     }
 
     public static void dispatchCommand(String command){
@@ -148,5 +146,21 @@ public class CommonUtil {
             mkDir(new File(parentPath));
             dir.mkdir();
         }
+    }
+
+    public static NamespacedKey parseNamespacedKey(String key) {
+        String[] keySplit = key.split(":");
+        if (keySplit.length == 1) {
+            return NamespacedKey.minecraft(key.toLowerCase());
+        }
+        return NamespacedKey.fromString(key);
+    }
+
+    public static Color parseColor(String color) {
+        String[] keySplit = color.replace(" ", "").split(",");
+        if (keySplit.length == 3) {
+            return Color.fromRGB(Integer.parseInt(keySplit[0]), Integer.parseInt(keySplit[1]), Integer.parseInt(keySplit[2]));
+        }
+        return Color.fromRGB(Integer.parseInt(color));
     }
 }

@@ -6,15 +6,12 @@ import cn.superiormc.mythictotem.utils.CommonUtil;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ConditionManager {
 
@@ -47,7 +44,7 @@ public class ConditionManager {
                 return singleCondition.substring(9).equals(event);
             } else if (singleCondition.startsWith("trigger_item: ") || singleCondition.startsWith("trigger-item: "))
             {
-                return item != null && singleCondition.substring(14).equals(CheckValidHook.checkValid(item));
+                return item != null && singleCondition.substring(14).equals(CheckValidHook.checkValid(item)[1]);
             } else if (singleCondition.startsWith("world: ") && block != null)
             {
                 int i = 0;
