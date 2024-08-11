@@ -21,7 +21,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MythicTotem extends JavaPlugin {
 
@@ -31,7 +30,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static String lastErrorMessage = "";
 
-    public static boolean freeVersion = true;
+    public static final boolean freeVersion = true;
 
     public static int threeDtotemAmount = 0;
 
@@ -111,6 +110,10 @@ public final class MythicTotem extends JavaPlugin {
         if (GeneralSettingConfigs.GetPlayerDropEventEnabled()) {
             Bukkit.getPluginManager().registerEvents(new PlayerDropListener(), this);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled PlayerDropItemEvent trigger.");
+        }
+        if (GeneralSettingConfigs.GetBlockPistonEventEnabled() && !MythicTotem.freeVersion) {
+            Bukkit.getPluginManager().registerEvents(new TotemPistonListener(), this);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fEnabled BlockPistonEvent trigger.");
         }
         if (GeneralSettingConfigs.GetEntityPlaceEventEnabled()) {
             Bukkit.getPluginManager().registerEvents(new EntityPlaceListener(), this);

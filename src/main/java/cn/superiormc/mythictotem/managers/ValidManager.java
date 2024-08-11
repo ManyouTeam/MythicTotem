@@ -10,7 +10,6 @@ import io.th0rgal.oraxen.mechanics.provided.gameplay.stringblock.StringBlockMech
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,13 +32,15 @@ public class ValidManager {
 
     private Block block;
 
+    private String parsedID;
+
     private Player player;
 
     private Event event;
 
     private ItemStack item;
 
-    public ValidManager(EntityPlaceEvent event){
+    public ValidManager(EntityPlaceEvent event) {
         this.event = event;
         this.block = event.getBlock();
         this.player = event.getPlayer();
@@ -51,7 +52,7 @@ public class ValidManager {
         CheckTotem();
     }
 
-    public ValidManager(BlockPlaceEvent event){
+    public ValidManager(BlockPlaceEvent event) {
         this.event = event;
         this.block = event.getBlockPlaced();
         this.player = event.getPlayer();
@@ -59,7 +60,7 @@ public class ValidManager {
         CheckTotem();
     }
 
-    public ValidManager(PlayerInteractEvent event){
+    public ValidManager(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) {
             return;
         }
@@ -70,9 +71,25 @@ public class ValidManager {
         CheckTotem();
     }
 
-    public ValidManager(BlockRedstoneEvent event){
+    public ValidManager(BlockRedstoneEvent event) {
         this.event = event;
         this.block = event.getBlock();
+        this.player = null;
+        this.item = null;
+        CheckTotem();
+    }
+
+    public ValidManager(BlockPistonExtendEvent event) {
+        this.event = event;
+        if (event.getBlocks().isEmpty()) {
+            return;
+        }
+        this.block = event.getBlocks().getLast().getRelative(event.getDirection()).getLocation().getBlock();
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + block.getLocation());
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLength: " + event.getBlocks().size());
+            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
+        }
         this.player = null;
         this.item = null;
         CheckTotem();
@@ -103,43 +120,17 @@ public class ValidManager {
             }
             return;
         }
-        List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
-        MythicTotem.getCheckingBlock.add(block);
-        // 处理 ItemsAdder 方块
-        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
-            if (CustomBlock.byAlreadyPlaced(block) != null &&
-                    MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
-                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID());
-            }
-        }
-        // 处理 Oraxen 方块
-        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("Oraxen") && OraxenBlocks.isOraxenBlock(block)) {
-            NoteBlockMechanic noteBlockMechanic = OraxenBlocks.getNoteBlockMechanic(block);
-            StringBlockMechanic stringBlockMechanic = OraxenBlocks.getStringMechanic(block);
-            if (noteBlockMechanic != null && noteBlockMechanic.getItemID() != null &&
-                (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
-                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID());
-            }
-            else if (stringBlockMechanic != null && stringBlockMechanic.getItemID() != null &&
-                (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
-                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID());
-            }
-        }
-        // 处理 MMOItems 方块
-        if (placedBlockCheckManagers.isEmpty() && CommonUtil.checkPluginLoad("MMOItems")) {
-            if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
-                    (MythicTotem.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
-                            getFromBlock(block.getBlockData()).get().getId()))) {
-                placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("mmoitems:" + MMOItems.plugin.getCustomBlocks().
-                        getFromBlock(block.getBlockData()).get().getId());
-            }
-        }
-        // 处理原版方块
-        if (placedBlockCheckManagers.isEmpty() && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
-            placedBlockCheckManagers = MythicTotem.getTotemMaterial.get("minecraft:" + block.getType().toString().toLowerCase());
-        }
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eGet material: " + block.getType().toString().toLowerCase() + " - " + placedBlockCheckManagers);
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eBlock Type: " + block.getType().name());
+        }
+        initParsedID();
+        if (parsedID == null) {
+            return;
+        }
+        List<PlacedBlockCheckManager> placedBlockCheckManagers = MythicTotem.getTotemMaterial.get(parsedID);
+        MythicTotem.getCheckingBlock.add(block);
+        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eParsed Block ID: " + parsedID);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
         }
         for (PlacedBlockCheckManager singleTotem : placedBlockCheckManagers) {
@@ -193,9 +184,7 @@ public class ValidManager {
                 }
                 if (VerticalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                            ((PlayerDropItemEvent) event).getItemDrop().remove();
-                        });
+                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 }
@@ -206,9 +195,7 @@ public class ValidManager {
                 }
                 if (HorizontalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
-                            ((PlayerDropItemEvent) event).getItemDrop().remove();
-                        });
+                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 }
@@ -397,6 +384,9 @@ public class ValidManager {
                 block.getLocation().getX() - offset_row,
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
+        if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cStart Location: " + startLocation_1);
+        }
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.GetTotemManager().getRealRow();
         int base_column = singleTotem.GetTotemManager().getRealColumn();
@@ -473,7 +463,7 @@ public class ValidManager {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.GetTotemManager().getRealMaterial(a, i, b);
-                    if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
                     }
                     //1
@@ -510,6 +500,9 @@ public class ValidManager {
                             if (materialManager_2.getEntityNeedRemove() != null) {
                                 validTotemEntity2.add(materialManager_2.getEntityNeedRemove());
                             }
+                        }
+                        if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cRule 2 Size: " + validTotemBlockLocation2.size());
                         }
                     } else if (checkTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                         checkTrueOrFalse2 = false;
@@ -662,6 +655,42 @@ public class ValidManager {
                     this.block.getLocation());
             Bukkit.getPluginManager().callEvent(totemActivedEvent);
         });
+    }
+
+    private void initParsedID() {
+        // 处理 ItemsAdder 方块
+        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
+            if (CustomBlock.byAlreadyPlaced(block) != null &&
+                    MythicTotem.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
+                parsedID = "itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID();
+            }
+        }
+        // 处理 Oraxen 方块
+        if (parsedID == null && CommonUtil.checkPluginLoad("Oraxen") && OraxenBlocks.isOraxenBlock(block)) {
+            NoteBlockMechanic noteBlockMechanic = OraxenBlocks.getNoteBlockMechanic(block);
+            StringBlockMechanic stringBlockMechanic = OraxenBlocks.getStringMechanic(block);
+            if (noteBlockMechanic != null && noteBlockMechanic.getItemID() != null &&
+                    (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
+                parsedID = "oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID();
+            }
+            else if (stringBlockMechanic != null && stringBlockMechanic.getItemID() != null &&
+                    (MythicTotem.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
+                parsedID = "oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID();
+            }
+        }
+        // 处理 MMOItems 方块
+        if (parsedID == null && CommonUtil.checkPluginLoad("MMOItems")) {
+            if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
+                    (MythicTotem.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
+                            getFromBlock(block.getBlockData()).get().getId()))) {
+                parsedID = "mmoitems:" + MMOItems.plugin.getCustomBlocks().
+                        getFromBlock(block.getBlockData()).get().getId();
+            }
+        }
+        // 处理原版方块
+        if (parsedID == null && MythicTotem.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
+            parsedID = "minecraft:" + block.getType().toString().toLowerCase();
+        }
     }
 
     public Player getPlayer() {

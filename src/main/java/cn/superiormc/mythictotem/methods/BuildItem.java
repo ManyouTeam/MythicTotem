@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.methods;
 
+import cn.superiormc.mythictotem.managers.SavedItemManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import com.google.common.base.Enums;
@@ -50,6 +51,8 @@ public class BuildItem {
             Material material = Material.getMaterial(materialKey.toUpperCase());
             if (material != null) {
                 item.setType(material);
+            } else if (SavedItemManager.GetItemByKey(materialKey) != null) {
+                item = SavedItemManager.GetItemByKey(materialKey);
             }
         }
 
@@ -376,7 +379,12 @@ public class BuildItem {
 
             if (bannerPatternsKey != null) {
                 for (String pattern : bannerPatternsKey.getKeys(false)) {
-                    PatternType type = Enums.getIfPresent(PatternType.class, pattern.toUpperCase()).or(PatternType.BASE);
+                    PatternType type = null;
+                    if (CommonUtil.getMajorVersion(21)) {
+                        type = Registry.BANNER_PATTERN.get(CommonUtil.parseNamespacedKey(pattern));
+                    } else {
+                        type = Enums.getIfPresent(PatternType.class, pattern.toUpperCase()).or(PatternType.BASE);
+                    }
                     String bannerColor = bannerPatternsKey.getString(pattern);
                     if (bannerColor != null) {
                         DyeColor color = Enums.getIfPresent(DyeColor.class, bannerColor.toUpperCase()).or(DyeColor.WHITE);

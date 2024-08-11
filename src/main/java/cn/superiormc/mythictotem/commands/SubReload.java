@@ -9,8 +9,7 @@ import org.bukkit.command.CommandSender;
 
 public class SubReload {
 
-    public static void SubReloadCommand(CommandSender sender)
-    {
+    public static void SubReloadCommand(CommandSender sender) {
         if (sender.hasPermission("mythictotem.admin")) {
             MythicTotem.getTotemMaterial.clear();
             MythicTotem.getTotemMap.clear();
