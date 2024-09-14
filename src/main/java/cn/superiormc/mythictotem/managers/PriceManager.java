@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.managers;
 
+import cn.superiormc.mythicchanger.utils.CommonUtil;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
 import cn.superiormc.mythictotem.methods.BuildItem;
@@ -27,6 +28,8 @@ public class PriceManager {
             type = "unknown";
         } else if (section.contains("hook-plugin") && section.contains("hook-item")) {
             type = "hook";
+        } else if (section.contains("match-item") && CommonUtil.checkPluginLoad("MythicChanger")) {
+            type = "match";
         } else if (section.contains("material")) {
             type = "vanilla";
         } else if (section.contains("economy-plugin")) {
@@ -53,6 +56,9 @@ public class PriceManager {
                     section.getString("hook-item"),
                     player,
                     section.getInt("amount", 1), take, keyItems);
+        }
+        else if (type.equals("match")) {
+            priceBoolean = PriceHook.getPrice(player, section, section.getInt("amount", 1), take);
         }
         else if (type.equals("vanilla")) {
             priceBoolean = PriceHook.getPrice(player,

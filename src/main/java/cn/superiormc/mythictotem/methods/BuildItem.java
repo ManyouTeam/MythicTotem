@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.managers.SavedItemManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import com.google.common.base.Enums;
+import com.google.common.collect.MultimapBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.*;
@@ -257,6 +258,9 @@ public class BuildItem {
                 if (itemFlag != null) {
                     meta.addItemFlags(itemFlag);
                 }
+                if (CommonUtil.getMinorVersion(20, 6) && itemFlag == ItemFlag.HIDE_ATTRIBUTES && meta.getAttributeModifiers() == null) {
+                    meta.setAttributeModifiers(MultimapBuilder.hashKeys().hashSetValues().build());
+                }
             }
         }
 
@@ -386,7 +390,7 @@ public class BuildItem {
                         type = Enums.getIfPresent(PatternType.class, pattern.toUpperCase()).or(PatternType.BASE);
                     }
                     String bannerColor = bannerPatternsKey.getString(pattern);
-                    if (bannerColor != null) {
+                    if (type != null && bannerColor != null) {
                         DyeColor color = Enums.getIfPresent(DyeColor.class, bannerColor.toUpperCase()).or(DyeColor.WHITE);
                         banner.addPattern(new Pattern(color, type));
                     }
@@ -716,7 +720,7 @@ public class BuildItem {
         }
 
         // Music Instrument
-        if (CommonUtil.getMajorVersion(19)) {
+        if (CommonUtil.getMinorVersion(19, 3)) {
             if (meta instanceof MusicInstrumentMeta) {
                 MusicInstrumentMeta musicInstrumentMeta = (MusicInstrumentMeta) meta;
                 String musicKey = section.getString("music");

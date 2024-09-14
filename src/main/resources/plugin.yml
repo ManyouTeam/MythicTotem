@@ -26,7 +26,7 @@ softdepend:
   - MythicMobs
   - VotingPlugin
   - ExecutableItems
-
+  - MythicChanger
 commands:
   mythictotem:
     aliases:

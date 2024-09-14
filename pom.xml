@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>3.7.0</version>
+    <version>3.7.4</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -296,6 +296,13 @@
             <version>7.24.7.9</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ExecutableItems-7.24.7.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>cn.superiormc</groupId>
+            <artifactId>MythicChanger</artifactId>
+            <version>1.6.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/MythicChanger-1.6.9.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

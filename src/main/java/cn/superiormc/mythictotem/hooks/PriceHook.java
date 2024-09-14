@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.hooks;
 
+import cn.superiormc.mythicchanger.manager.MatchItemManager;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.bencodez.votingplugin.VotingPluginMain;
@@ -12,6 +13,7 @@ import me.TechsCode.UltraEconomy.UltraEconomyAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -342,5 +344,48 @@ public class PriceHook {
             }
         }
         return false;
+    }
+
+    public static boolean getPrice(Player player, ConfigurationSection section, int value, boolean take) {
+        if (value < 0) {
+            return false;
+        }
+        ItemStack[] storage = player.getInventory().getStorageContents();
+        int amount = 0;
+        for (ItemStack tempVal1 : storage) {
+            if (tempVal1 == null || tempVal1.getType().isAir()) {
+                continue;
+            }
+            ItemStack temItem = tempVal1.clone();
+            temItem.setAmount(1);
+            if (MatchItemManager.matchItemManager.getMatch(section.getConfigurationSection("match-item"), temItem)) {
+                amount += tempVal1.getAmount();
+            }
+        }
+        if (amount >= value) {
+            if (take) {
+                for (ItemStack itemStack : storage) {
+                    if (itemStack == null || itemStack.getType().isAir()) {
+                        continue;
+                    }
+                    ItemStack temItem = itemStack.clone();
+                    temItem.setAmount(1);
+                    if (MatchItemManager.matchItemManager.getMatch(section.getConfigurationSection("match-item"), temItem)) {
+                        if (itemStack.getAmount() >= value) {
+                            itemStack.setAmount(itemStack.getAmount() - value);
+                            break;
+                        } else {
+                            value -= itemStack.getAmount();
+                            itemStack.setAmount(0);
+                        }
+                    }
+                }
+                player.getInventory().setStorageContents(storage);
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

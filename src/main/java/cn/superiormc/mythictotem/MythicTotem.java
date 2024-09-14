@@ -6,7 +6,6 @@ import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
 import cn.superiormc.mythictotem.configs.Messages;
 import cn.superiormc.mythictotem.configs.TotemConfigs;
 import cn.superiormc.mythictotem.listeners.*;
-import cn.superiormc.mythictotem.libreforge.TriggerTotemActived;
 import cn.superiormc.mythictotem.managers.InitManager;
 import cn.superiormc.mythictotem.managers.PlacedBlockCheckManager;
 import cn.superiormc.mythictotem.managers.TotemManager;
@@ -63,15 +62,6 @@ public final class MythicTotem extends JavaPlugin {
         Init();
         ProtectionLib.init(this);
         this.saveDefaultConfig();
-        if (GeneralSettingConfigs.GetRegisterLibreforge()) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into libreforge...");
-            try {
-                TriggerTotemActived.load();
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fRegistered totem_actived trigger for libreforge!");
-            } catch (Throwable throwable) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cFailed to register totem_actived trigger!");
-            }
-        }
         TotemConfigs.initTotemConfigs();
         Messages.initLanguage();
         Events();

@@ -78,6 +78,18 @@ public class CheckValidHook {
             }
             return null;
         }
+        else if (pluginName.equals("eco")) {
+            if (Items.getCustomItem(itemStack) == null) {
+                return null;
+            }
+            return Items.getCustomItem(itemStack).getKey().toString();
+        }
+        else if (pluginName.equals("NeigeItems")) {
+            if (ItemManager.INSTANCE.isNiItem(itemStack) == null) {
+                return null;
+            }
+            return ItemManager.INSTANCE.isNiItem(itemStack).getId();
+        }
         else {
             MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                     + pluginName + " in totem prices config, however for now MythicTotem is not support it!");
@@ -120,7 +132,7 @@ public class CheckValidHook {
         }
         if (CommonUtil.checkPluginLoad("eco")) {
             if (Items.getCustomItem(itemStack) != null) {
-                return new String[]{"eco", Items.getCustomItem(itemStack).getKey().getKey()};
+                return new String[]{"eco", Items.getCustomItem(itemStack).getKey().toString()};
             }
         }
         if (CommonUtil.checkPluginLoad("MythicMobs")) {
