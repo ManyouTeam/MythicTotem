@@ -111,6 +111,7 @@ public class ValidManager {
         this.item = event.getItemDrop().getItemStack();
         MythicTotem.getDroppedItems.add(event.getItemDrop());
         CheckTotem();
+        MythicTotem.getDroppedItems.remove(event.getItemDrop());
     }
 
     public void CheckTotem() {
@@ -200,9 +201,6 @@ public class ValidManager {
                     break;
                 }
             }
-        }
-        if (event instanceof PlayerDropItemEvent) {
-            MythicTotem.getDroppedItems.remove(((PlayerDropItemEvent) event).getItemDrop());
         }
         MythicTotem.getCheckingBlock.remove(block);
     }

@@ -64,12 +64,4 @@ public class GeneralSettingConfigs {
         return MythicTotem.instance.getConfig().getBoolean("trigger.BlockPistonEvent.enabled", true);
     }
 
-    public static boolean GetBlockBreakEventCancel(){
-        return MythicTotem.instance.getConfig().getBoolean("disappear.BlockBreakEvent.enabled", false);
-    }
-
-    public static boolean GetBlockDamageEventCancel(){
-        return MythicTotem.instance.getConfig().getBoolean("disappear.BlockDamageEvent.enabled", false);
-    }
-
 }

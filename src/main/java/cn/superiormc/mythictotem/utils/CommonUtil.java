@@ -15,11 +15,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CommonUtil {
 
@@ -97,16 +96,6 @@ public class CommonUtil {
         } else {
             loc.getBlock().setType(Material.AIR);
         }
-        if (GeneralSettingConfigs.GetBlockBreakEventCancel() && !loc.getBlock().getType().isAir()) {
-            BlockBreakEvent bbe = new BlockBreakEvent(loc.getBlock(), player);
-            bbe.setDropItems(false);
-            bbe.setExpToDrop(0);
-            Bukkit.getPluginManager().callEvent(bbe);
-        }
-        if (GeneralSettingConfigs.GetBlockDamageEventCancel() && !loc.getBlock().getType().isAir()) {
-            BlockDamageEvent bde = new BlockDamageEvent(player, loc.getBlock(), null, true);
-            Bukkit.getPluginManager().callEvent(bde);
-        }
     }
 
     public static boolean checkProtection(Player player, Location loc) {
@@ -162,5 +151,22 @@ public class CommonUtil {
             return Color.fromRGB(Integer.parseInt(keySplit[0]), Integer.parseInt(keySplit[1]), Integer.parseInt(keySplit[2]));
         }
         return Color.fromRGB(Integer.parseInt(color));
+    }
+
+    public static boolean checkClass(String className, String methodName) {
+        try {
+            Class<?> targetClass = Class.forName(className);
+            Method[] methods = targetClass.getDeclaredMethods();
+
+            for (Method method : methods) {
+                if (method.getName().equals(methodName)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }

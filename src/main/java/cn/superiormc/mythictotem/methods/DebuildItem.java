@@ -344,18 +344,34 @@ public class DebuildItem {
         // Skull
         if (meta instanceof SkullMeta) {
             SkullMeta skullMeta = (SkullMeta) meta;
-            if (skullMeta.hasOwner()) {
+            if (skullMeta.hasOwner() && skullMeta.getOwningPlayer().getName() != null) {
                 section.set("skull", skullMeta.getOwningPlayer().getName());
             } else {
                 try {
                     Field field = skullMeta.getClass().getDeclaredField("profile");
                     field.setAccessible(true);
-                    GameProfile gameProfile = (GameProfile) field.get(skullMeta);
-                    if (gameProfile != null) {
-                        Property property = gameProfile.getProperties().get("textures").iterator().next();
-                        section.set("skull", property.getValue());
+                    if (MythicTotem.newSkullMethod) {
+                        Object playerProfile = field.get(skullMeta);
+                        if (playerProfile != null) {
+                            Field field2 = playerProfile.getClass().getDeclaredField("f");
+                            field2.setAccessible(true);
+                            GameProfile gameProfile = (GameProfile) field2.get(playerProfile);
+                            if (gameProfile != null) {
+                                Property property = gameProfile.getProperties().get("textures").iterator().next();
+                                Field field3 = property.getClass().getDeclaredField("value");
+                                field3.setAccessible(true);
+                                section.set("skull", field3.get(property));
+                            }
+                        }
+                    } else {
+                        GameProfile gameProfile = (GameProfile) field.get(skullMeta);
+                        if (gameProfile != null) {
+                            Property property = gameProfile.getProperties().get("textures").iterator().next();
+                            section.set("skull", property.getValue());
+                        }
                     }
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     MythicTotem.checkError("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
                 }
             }

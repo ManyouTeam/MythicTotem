@@ -1,5 +1,6 @@
 package cn.superiormc.mythictotem.methods;
 
+import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.SavedItemManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
@@ -34,6 +35,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -508,7 +510,24 @@ public class BuildItem {
             SkullMeta skullMeta = (SkullMeta) meta;
             String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
             if (skullTextureNameKey != null) {
-                if (skullTextureNameKey.length() > 16) {
+                if (MythicTotem.newSkullMethod) {
+                    try {
+                        Class<?> profileClass = Class.forName("net.minecraft.world.item.component.ResolvableProfile");
+                        Constructor<?> constroctor = profileClass.getConstructor(GameProfile.class);
+                        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
+                        profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
+                        try {
+                            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", profileClass);
+                            mtd.setAccessible(true);
+                            mtd.invoke(skullMeta, constroctor.newInstance(profile));
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            MythicTotem.checkError("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
                     GameProfile profile = new GameProfile(UUID.randomUUID(), "");
                     profile.getProperties().put("textures", new Property("textures", skullTextureNameKey));
                     try {
@@ -516,10 +535,9 @@ public class BuildItem {
                         mtd.setAccessible(true);
                         mtd.invoke(skullMeta, profile);
                     } catch (Exception exception) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
+                        exception.printStackTrace();
+                        MythicTotem.checkError("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
                     }
-                } else {
-                    skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(skullTextureNameKey));
                 }
             }
         }

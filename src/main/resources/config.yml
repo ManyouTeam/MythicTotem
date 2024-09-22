@@ -18,17 +18,6 @@ check-protection:
   can-interact: false
   can-use: false
 
-disappear:
-  BukkitAPI:
-    # This BukkitAPI option can not be disabled!
-    # If you are facing totem blocks not disappear issue, you can try enabled below options.
-    # However, they are not fully tested and will lead unknown issues!
-    enabled: true
-  BlockDamageEvent:
-    enabled: false
-  BlockBreakEvent:
-    enabled: false
-
 trigger:
   BlockPlaceEvent:
     enabled: true

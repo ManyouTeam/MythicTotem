@@ -35,9 +35,7 @@ public class PlayerDropListener implements Listener {
         if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eDrop trigger!");
         }
-        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
-            MythicTotem.getCheckingPlayer.remove(event.getPlayer());
-        }, MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
+        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> MythicTotem.getCheckingPlayer.remove(event.getPlayer()), MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
     }
 
     @EventHandler
