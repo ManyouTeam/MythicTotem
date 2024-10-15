@@ -13,6 +13,8 @@ help-main-console: |
   &f/mythictotem help &7- View help.
   &f/mythictotem list &7- View list of valid totems.
   &f/mythictotem reload &7- Reload the plugin.
+command-tab:
+  type-item-id: "[Type Item ID you want]"
 list-head: "&#98FB98[MythicTotem] &fValid Totem List:"
 list-content: "&f{totem}"
 saved: "&#98FB98[MythicTotem] &fSaved your mainhand item!"

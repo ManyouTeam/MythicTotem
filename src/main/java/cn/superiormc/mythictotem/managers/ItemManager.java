@@ -28,7 +28,7 @@ public class ItemManager {
 
     public void initSavedItems() {
         savedItemMap.clear();
-        File dir = new File(MythicTotem.instance.getDataFolder() + "/item");
+        File dir = new File(MythicTotem.instance.getDataFolder() + "/items");
         if(!dir.exists()) {
             dir.mkdir();
         }
@@ -50,7 +50,7 @@ public class ItemManager {
 
     public void saveMainHandItem(Player player, String key) {
         ItemStack itemStack = player.getInventory().getItemInMainHand();
-        File dir = new File(MythicTotem.instance.getDataFolder() + "/item");
+        File dir = new File(MythicTotem.instance.getDataFolder() + "/items");
         if (!dir.exists()) {
             dir.mkdir();
         }

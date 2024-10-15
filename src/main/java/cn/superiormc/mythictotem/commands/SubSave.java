@@ -20,7 +20,7 @@ public class SubSave extends AbstractCommand {
     @Override
     public void executeCommandInGame(String[] args, Player player) {
         ItemManager.itemManager.saveMainHandItem(player, args[1]);
-        LanguageManager.languageManager.sendStringText(player, "plugin.saved");
+        LanguageManager.languageManager.sendStringText(player, "saved");
     }
 
     @Override
