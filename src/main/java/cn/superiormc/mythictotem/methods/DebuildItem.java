@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.methods;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.CheckValidHook;
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
@@ -372,7 +373,7 @@ public class DebuildItem {
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[ManyouItems] §cError: Can not parse skull texture in a item!");
                 }
             }
         }

@@ -1,6 +1,7 @@
-package cn.superiormc.mythictotem.managers;
+package cn.superiormc.mythictotem.objects.checks;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.google.common.base.Enums;
 import dev.lone.itemsadder.api.CustomBlock;
@@ -20,14 +21,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public class MaterialManager {
+public class ObjectMaterialCheck {
 
     private final String materialString;
 
@@ -37,15 +36,16 @@ public class MaterialManager {
 
     private final int id;
 
-    public MaterialManager(@NotNull String materialString, @NotNull Location location,  int id) {
+    public ObjectMaterialCheck(@NotNull String materialString, @NotNull Location location, int id) {
         this.materialString = materialString;
         this.location = location;
         this.id = id;
     }
+
     public boolean checkMaterial() {
         Block block;
         if (materialString.equals("none")) {
-            if (MythicTotem.instance.getConfig().getBoolean("debug")) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fSkipped none block.");
             }
             return true;
@@ -55,7 +55,7 @@ public class MaterialManager {
                 EntityType entityType = Enums.getIfPresent(EntityType.class, "ZOMBIE").orNull();
                 if (material != null) {
                     block = location.getBlock();
-                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                    if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", real block: " + block.getType().name() + ", location: " + location + ", ID: " + id + ".");
                     }
@@ -63,12 +63,12 @@ public class MaterialManager {
                 } else if (!MythicTotem.freeVersion && entityType != null) {
                     Location tempLocation = location.clone().add(0.5, 0, 0.5);
                     Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
-                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                    if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entities amount: " + entities.size() + ".");
                     }
                     for (Entity singleEntity: entities) {
-                        if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                        if (ConfigManager.configManager.getBoolean("debug", false)) {
                             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                     materialString + ", find entity: " + singleEntity.getType() + ".");
                         }
@@ -108,12 +108,12 @@ public class MaterialManager {
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
-                if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
-                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                    if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
@@ -140,12 +140,12 @@ public class MaterialManager {
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
-                if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
-                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                    if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
@@ -191,12 +191,12 @@ public class MaterialManager {
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
-                if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
-                    if (MythicTotem.instance.getConfig().getBoolean("dev-debug")) {
+                    if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }

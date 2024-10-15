@@ -1,10 +1,9 @@
 package cn.superiormc.mythictotem.commands;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.Messages;
+import cn.superiormc.mythictotem.managers.LanguageManager;
 import cn.superiormc.mythictotem.methods.DebuildItem;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,14 +13,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class SubGenerateItemFormat {
+public class SubGenerateItemFormat extends AbstractCommand {
 
-    public static void SubGenerateItemFormatCommand(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Messages.GetMessages("in-game"));
-            return;
-        }
-        Player player = (Player) sender;
+    public SubGenerateItemFormat() {
+        this.id = "generateitemformat";
+        this.requiredPermission =  "mythictotem.admin";
+        this.onlyInGame = true;
+        this.requiredArgLength = new Integer[]{1};
+        this.premiumOnly = true;
+    }
+
+    @Override
+    public void executeCommandInGame(String[] args, Player player) {
         YamlConfiguration itemConfig = new YamlConfiguration();
         DebuildItem.debuildItem(player.getInventory().getItemInMainHand(), itemConfig);
         String yaml = itemConfig.saveToString();
@@ -33,6 +36,6 @@ public class SubGenerateItemFormat {
                 e.printStackTrace();
             }
         });
-        sender.sendMessage(Messages.GetMessages("generated"));
+        LanguageManager.languageManager.sendStringText(player, "generated");
     }
 }

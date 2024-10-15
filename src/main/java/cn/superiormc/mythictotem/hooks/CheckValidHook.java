@@ -1,6 +1,7 @@
 package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.ssomar.executableitems.executableitems.manager.ExecutableItemsManager;
 import com.willfp.eco.core.items.Items;
@@ -20,7 +21,7 @@ public class CheckValidHook {
 
     public static String checkValid(String pluginName, ItemStack itemStack) {
         if (!MythicTotem.instance.getServer().getPluginManager().isPluginEnabled(pluginName)) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem prices config try use its hook!");
             return null;
         }
@@ -91,7 +92,7 @@ public class CheckValidHook {
             return ItemManager.INSTANCE.isNiItem(itemStack).getId();
         }
         else {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                     + pluginName + " in totem prices config, however for now MythicTotem is not support it!");
             return null;
         }

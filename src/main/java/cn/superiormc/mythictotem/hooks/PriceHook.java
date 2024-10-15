@@ -2,6 +2,8 @@ package cn.superiormc.mythictotem.hooks;
 
 import cn.superiormc.mythicchanger.manager.MatchItemManager;
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.bencodez.votingplugin.VotingPluginMain;
 import com.bencodez.votingplugin.user.VotingPluginUser;
@@ -31,7 +33,7 @@ public class PriceHook {
             return false;
         }
         if (!CommonUtil.checkPluginLoad(pluginName)) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your server don't have " + pluginName +
                     " plugin, but your totem config try use its hook!");
             return false;
         }
@@ -105,12 +107,12 @@ public class PriceHook {
                 }
             case "ecobits":
                 if (Currencies.getByID(currencyName) == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                             currencyName + " in EcoBits plugin!");
                     return false;
                 }
                 if (Currencies.getByID(currencyName) == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                             currencyName + " in EcoBits plugin!");
                     return false;
                 }
@@ -125,7 +127,7 @@ public class PriceHook {
             case "peconomy":
                 PEconomyAPI peAPI = PEconomyAPI.get();
                 if (peAPI == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into PEconomy plugin!");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into PEconomy plugin!");
                     return false;
                 }
                 if (peAPI.hasAmount(player.getName(), currencyName, (int) value)) {
@@ -142,12 +144,12 @@ public class PriceHook {
             case "rediseconomy":
                 RedisEconomyAPI api = RedisEconomyAPI.getAPI();
                 if (api == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into RedisEconomy plugin!");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not hook into RedisEconomy plugin!");
                     return false;
                 }
                 dev.unnm3d.rediseconomy.currency.Currency redisCurrency = api.getCurrencyByName("vault");
                 if (redisCurrency == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find currency " +
                             currencyName + " in RedisEconomy plugin!");
                     return false;
                 }
@@ -160,7 +162,7 @@ public class PriceHook {
             case "votingplugin":
                 VotingPluginUser user = VotingPluginMain.getPlugin().getVotingPluginUserManager().getVotingPluginUser(player);
                 if (user == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cCan not find find user data " +
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find find user data " +
                             player.getName() + " in VotingPlugin plugin!");
                     return false;
                 }
@@ -172,7 +174,7 @@ public class PriceHook {
                 }
                 return false;
         }
-        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
+        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set hook plugin to "
                 + pluginName + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
@@ -204,7 +206,7 @@ public class PriceHook {
                 return false;
             }
         }
-        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
+        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
                 + vanillaType + " in UI config, however for now MythicTotem does not support it!");
         return false;
     }
@@ -216,7 +218,7 @@ public class PriceHook {
                                    boolean take,
                                    ItemStack keyItems) {
         if (MythicTotem.freeVersion) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: You are using free version, " +
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You are using free version, " +
                     "hook item price can not be used in this version!");
             return false;
         }
@@ -285,7 +287,7 @@ public class PriceHook {
                                    int value,
                                    boolean take,
                                    ItemStack keyItems) {
-        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+        if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aRequired Price Item: " + item + "!");
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aConfirmed Key Item: " + keyItems + "!");
         }

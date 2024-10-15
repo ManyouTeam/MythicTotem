@@ -1,12 +1,15 @@
-package cn.superiormc.mythictotem.managers;
+package cn.superiormc.mythictotem.objects;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
-public class TotemManager {
+public class ObjectTotem {
 
     // 图腾的行和列
     private int totemRow;
@@ -19,9 +22,9 @@ public class TotemManager {
     // 行列，Material
     private final Map<String, String> totemLocationMaterial = new HashMap<>();
 
-    private final List<String> totemAction;
+    private final ObjectAction totemAction;
 
-    private final List<String> totemCondition;
+    private final ObjectCondition totemCondition;
 
     private final List<String> totemCoreBlocks;
 
@@ -33,24 +36,24 @@ public class TotemManager {
     
     private final String totemID;
 
-    public TotemManager(String id, YamlConfiguration section) {
+    public ObjectTotem(String id, YamlConfiguration section) {
         this.totemID = id;
         this.totemDisappear = section.getBoolean("disappear", true);
-        this.totemAction = section.getStringList("actions");
-        this.totemCondition = section.getStringList("conditions");
+        this.totemAction = new ObjectAction(section.getStringList("actions"));
+        this.totemCondition = new ObjectCondition(section.getStringList("conditions"));
         this.totemCheckMode = section.getString("mode", "VERTICAL").toUpperCase();
         this.totemCoreBlocks = section.getStringList("core-blocks");
         this.totemSection = section;
         ConfigurationSection totemLayoutsExplainConfig = section.getConfigurationSection("explains");
         if (totemLayoutsExplainConfig == null) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found any explains option in totem: " + id + ".");
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found any explains option in totem: " + id + ".");
             return;
         }
         Set<String> totemLayoutsExplainList = totemLayoutsExplainConfig.getKeys(false);
         Map<String, String> totemLayoutsExplain = new HashMap<>();
         for (String totemLayoutsChar : totemLayoutsExplainList) {
             if (totemLayoutsChar.length() > 1) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem " + id + "'s layout explain config keys must be a char, like A.");
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem " + id + "'s layout explain config keys must be a char, like A.");
                 return;
             }
             String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar);
@@ -63,9 +66,9 @@ public class TotemManager {
         }
         ConfigurationSection layoutsSection = section.getConfigurationSection("layouts");
         if (layoutsSection != null) {
-            MythicTotem.threeDtotemAmount++;
-            if (MythicTotem.freeVersion && MythicTotem.threeDtotemAmount > 3) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
+            ConfigManager.configManager.plus3DTotem();
+            if (MythicTotem.freeVersion && ConfigManager.configManager.getThreeDtotemAmount() > 3) {
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
                         " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
                         " remove, otherwise plugin won't check 3D totems!");
                 return;
@@ -89,16 +92,16 @@ public class TotemManager {
                         // 放置到方块表中
                         // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
                         if (totemCoreBlocks.isEmpty() || totemCoreBlocks.contains(String.valueOf(realChar))) {
-                            if (MythicTotem.getTotemMaterial.containsKey(realString)) {
-                                MythicTotem.getTotemMaterial.get(realString).add(
-                                        new PlacedBlockCheckManager(this,
+                            if (ConfigManager.configManager.getTotemMaterial.containsKey(realString)) {
+                                ConfigManager.configManager.getTotemMaterial.get(realString).add(
+                                        new ObjectPlaceCheck(this,
                                                 totemRow,
                                                 totemColumn,
                                                 i));
                             } else {
-                                List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
-                                placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn, i));
-                                MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
+                                List<ObjectPlaceCheck> placedBlockCheckManagers = new ArrayList<>();
+                                placedBlockCheckManagers.add(new ObjectPlaceCheck(this, totemRow, totemColumn, i));
+                                ConfigManager.configManager.getTotemMaterial.put(realString, placedBlockCheckManagers);
                             }
                         }
                         this.totemLocationMaterial.put(generateID(i, totemRow, totemColumn), realString);
@@ -119,13 +122,13 @@ public class TotemManager {
                     String realString = totemLayoutsExplain.get(String.valueOf(realChar));
                     // 放置到方块表中
                     // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
-                    if (MythicTotem.getTotemMaterial.containsKey(realString)){
-                        MythicTotem.getTotemMaterial.get(realString).add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
+                    if (ConfigManager.configManager.getTotemMaterial.containsKey(realString)){
+                        ConfigManager.configManager.getTotemMaterial.get(realString).add(new ObjectPlaceCheck(this, totemRow, totemColumn));
                     }
                     else{
-                        List<PlacedBlockCheckManager> placedBlockCheckManagers = new ArrayList<>();
-                        placedBlockCheckManagers.add(new PlacedBlockCheckManager(this, totemRow, totemColumn));
-                        MythicTotem.getTotemMaterial.put(realString, placedBlockCheckManagers);
+                        List<ObjectPlaceCheck> placedBlockCheckManagers = new ArrayList<>();
+                        placedBlockCheckManagers.add(new ObjectPlaceCheck(this, totemRow, totemColumn));
+                        ConfigManager.configManager.getTotemMaterial.put(realString, placedBlockCheckManagers);
                     }
                     this.totemLocationMaterial.put(generateID(1, totemRow, totemColumn), realString);
                 }
@@ -153,11 +156,11 @@ public class TotemManager {
         return totemLocationMaterial.get(layer + ";;" + row + ";;" + column);
     }
 
-    public List<String> getTotemAction(){
+    public ObjectAction getTotemAction(){
         return this.totemAction;
     }
 
-    public List<String> getTotemCondition(){
+    public ObjectCondition getTotemCondition(){
         return this.totemCondition;
     }
 

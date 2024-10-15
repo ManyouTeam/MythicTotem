@@ -1,6 +1,9 @@
-package cn.superiormc.mythictotem.managers;
+package cn.superiormc.mythictotem.objects;
 
 import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
+import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.utils.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -16,25 +19,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ActionManager {
+public class ObjectAction {
 
     private final List<String> actions = new ArrayList<>();
 
-    private final Player player;
-
-    private final Block block;
-
-    private final PlacedBlockCheckManager totem;
-
-    private final Location startLocation;
-
     private final Map<Long, List<String>> delayActions = new HashMap<>();
 
-    public ActionManager(Location startLocation, PlacedBlockCheckManager totem, List<String> action, ValidManager manager) {
-        this.player = manager.getPlayer();
-        this.block = manager.getBlock();
-        this.totem = totem;
-        this.startLocation = startLocation;
+    public ObjectAction(List<String> action) {
         for (String singleAction : action) {
             Pattern pattern = Pattern.compile("-\\d+$");
             Matcher matcher = pattern.matcher(singleAction);
@@ -51,22 +42,25 @@ public class ActionManager {
         }
     }
 
-    public void CheckAction() {
+    public void checkAction(Location startLocation, ObjectPlaceCheck totem, ObjectCheck manager) {
         for (Long time : delayActions.keySet()) {
             Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
                 for (String singleAction : delayActions.get(time)) {
-                    doAction(singleAction);
+                    doAction(singleAction, startLocation, totem, manager);
                 }
             }, time);
         }
         Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
             for (String singleAction : actions) {
-                doAction(singleAction);
+                doAction(singleAction, startLocation, totem, manager);
             }
         });
     }
 
-    private void doAction(String singleAction) {
+    private void doAction(String singleAction, Location startLocation, ObjectPlaceCheck totem, ObjectCheck manager) {
+        Player player = manager.getPlayer();
+        Block block = manager.getBlock();
+        singleAction = replacePlaceholder(singleAction, player, block, startLocation, totem);
         if (singleAction.startsWith("none")) {
             return;
         } else if (singleAction.startsWith("sound: ") && player != null) {
@@ -81,23 +75,23 @@ public class ActionManager {
                     try {
                         volume = Float.parseFloat(soundParts[1]);
                     } catch (NumberFormatException e) {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid volume value in sound action.");
+                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid volume value in sound action.");
                     }
                 }
                 if (soundParts.length >= 3) {
                     try {
                         pitch = Float.parseFloat(soundParts[2]);
                     } catch (NumberFormatException e) {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid pitch value in sound action.");
+                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid pitch value in sound action.");
                     }
                 }
                 Location location = player.getLocation();
                 player.playSound(location, soundName, volume, pitch);
             } else {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid sound action format.");
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Invalid sound action format.");
             }
         } else if (singleAction.startsWith("message: ") && player != null) {
-            player.sendMessage(ReplacePlaceholder(TextUtil.parse(singleAction.substring(9))));
+            player.sendMessage(TextUtil.parse(singleAction.substring(9)));
         } else if (singleAction.startsWith("announcement: ")) {
             Collection<? extends Player> players = Bukkit.getOnlinePlayers();
             for (Player p : players) {
@@ -107,7 +101,7 @@ public class ActionManager {
             try {
                 PotionEffectType potionEffectType = PotionEffectType.getByName(singleAction.substring(8).split(";;")[0].toUpperCase());
                 if (potionEffectType == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found potion effect: " +
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found potion effect: " +
                             singleAction.split(";;")[0] + ".");
                     return;
                 }
@@ -120,7 +114,7 @@ public class ActionManager {
                 player.addPotionEffect(effect);
             }
             catch (ArrayIndexOutOfBoundsException e) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your effect action in totem configs can not being correctly load.");
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your effect action in totem configs can not being correctly load.");
             }
         } else if (singleAction.startsWith("entity_spawn: ") && player != null) {
             if (singleAction.split(";;").length == 1) {
@@ -134,7 +128,7 @@ public class ActionManager {
                         Double.parseDouble(singleAction.substring(14).split(";;")[4]));
                 EntityType entity = EntityType.valueOf(singleAction.substring(14).split(";;")[0].toUpperCase());
                 if (location.getWorld() == null) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your entity_spawn action in totem configs can not being correctly load.");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your entity_spawn action in totem configs can not being correctly load.");
                 }
                 location.getWorld().spawnEntity(location, entity);
             }
@@ -159,11 +153,11 @@ public class ActionManager {
                     player.teleport(loc);
                 }
                 else {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
                 }
             }
             catch (ArrayIndexOutOfBoundsException e) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your teleport action in totem configs can not being correctly load.");
             }
         } else if (CommonUtil.checkPluginLoad("MythicMobs") && singleAction.startsWith("mythicmobs_spawn: ")) {
             try {
@@ -196,22 +190,22 @@ public class ActionManager {
                             singleAction.substring(18).split(";;")[0],
                             Integer.parseInt(singleAction.substring(18).split(";;")[1]));
                 } else {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mythicmobs_spawn action in totem configs can not being correctly load.");
             }
         } else if (singleAction.startsWith("console_command: ")) {
-            CommonUtil.dispatchCommand(ReplacePlaceholder(singleAction.substring(17)));
+            CommonUtil.dispatchCommand(singleAction.substring(17));
         } else if (singleAction.startsWith("player_command: ") && player != null) {
-            CommonUtil.dispatchCommand(player, ReplacePlaceholder(singleAction.substring(16)));
+            CommonUtil.dispatchCommand(player, singleAction.substring(16));
 
         } else if (singleAction.startsWith("op_command: ") && player != null) {
-            CommonUtil.dispatchOpCommand(player, ReplacePlaceholder(singleAction.substring(12)));
+            CommonUtil.dispatchOpCommand(player, singleAction.substring(12));
         }
     }
 
-    private String ReplacePlaceholder(String str){
+    private String replacePlaceholder(String str, Player player, Block block, Location startLocation, ObjectPlaceCheck totem){
         if (Objects.nonNull(player)) {
                 str = str.replace("%world%", block.getWorld().getName())
                         .replace("%block_x%", String.valueOf(block.getX()))
@@ -226,8 +220,8 @@ public class ActionManager {
                         .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
                         .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
                         .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
-                        .replace("%totem_column%", String.valueOf(totem.GetColumn()))
-                        .replace("%totem_raw%", String.valueOf(totem.GetRow()));
+                        .replace("%totem_column%", String.valueOf(totem.getColumn()))
+                        .replace("%totem_raw%", String.valueOf(totem.getRow()));
             if (CommonUtil.checkPluginLoad("PlaceholderAPI")) {
                 str = PlaceholderAPI.setPlaceholders(player, str);
             }
@@ -241,8 +235,8 @@ public class ActionManager {
                     .replace("%totem_start_x%", String.valueOf(startLocation.getX()))
                     .replace("%totem_start_y%", String.valueOf(startLocation.getY()))
                     .replace("%totem_start_z%", String.valueOf(startLocation.getZ()))
-                    .replace("%totem_column%", String.valueOf(totem.GetColumn()))
-                    .replace("%totem_raw%", String.valueOf(totem.GetRow()));
+                    .replace("%totem_column%", String.valueOf(totem.getColumn()))
+                    .replace("%totem_raw%", String.valueOf(totem.getRow()));
         }
     }
 }

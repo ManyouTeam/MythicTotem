@@ -1,18 +1,28 @@
 package cn.superiormc.mythictotem.commands;
 
-import cn.superiormc.mythictotem.configs.Messages;
+import cn.superiormc.mythictotem.managers.LanguageManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SubHelp {
+public class SubHelp extends AbstractCommand {
 
-    public static void SubHelpCommand(CommandSender sender) {
-        if (!(sender instanceof Player)){
-            sender.sendMessage(Messages.GetMessages("help-main-console"));
-        } else if (sender.hasPermission("mythictotem.admin")) {
-            sender.sendMessage(Messages.GetMessages("help-main-admin"));
-        } else {
-            sender.sendMessage(Messages.GetMessages("help-main"));
+    public SubHelp() {
+        this.id = "help";
+        this.onlyInGame = false;
+        this.requiredArgLength = new Integer[]{1};
+    }
+
+    @Override
+    public void executeCommandInGame(String[] args, Player player) {
+        if (player.hasPermission("mythictotem.admin")) {
+            LanguageManager.languageManager.sendStringText(player, "help-main-admin");
+            return;
         }
+        LanguageManager.languageManager.sendStringText(player, "help-main");
+    }
+
+    @Override
+    public void executeCommandInConsole(String[] args) {
+        LanguageManager.languageManager.sendStringText("help-main-console");
     }
 }

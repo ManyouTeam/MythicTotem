@@ -1,16 +1,16 @@
-package cn.superiormc.mythictotem.managers;
+package cn.superiormc.mythictotem.objects.checks;
 
-import cn.superiormc.mythicchanger.utils.CommonUtil;
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.PriceHook;
+import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.methods.BuildItem;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PriceManager {
+public class ObjectPriceCheck {
 
     private final ConfigurationSection section;
 
@@ -20,7 +20,7 @@ public class PriceManager {
 
     private final String type;
 
-    public PriceManager(ConfigurationSection section, Player player, Block block) {
+    public ObjectPriceCheck(ConfigurationSection section, Player player, Block block) {
         this.section = section;
         this.player = player;
         this.block = block;
@@ -39,12 +39,12 @@ public class PriceManager {
         } else {
             type = "free";
         }
-        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+        if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aPrice Type: " + type + "!");
         }
     }
     public boolean CheckPrice(boolean take, ItemStack keyItems) {
-        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+        if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
         }
         boolean priceBoolean = false;

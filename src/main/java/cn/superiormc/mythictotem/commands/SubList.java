@@ -1,21 +1,32 @@
 package cn.superiormc.mythictotem.commands;
 
-import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.Messages;
-import cn.superiormc.mythictotem.configs.TotemConfigs;
-import org.bukkit.command.CommandSender;
+import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.LanguageManager;
+import org.bukkit.entity.Player;
 
-public class SubList {
+public class SubList extends AbstractCommand {
 
-    public static void SubListCommand(CommandSender sender) {
-        if (sender.hasPermission("mythictotem.admin")) {
-            sender.sendMessage(Messages.GetMessages("list-head"));
-            for (String totemID : MythicTotem.getTotemMap.keySet()) {
-                sender.sendMessage(Messages.GetMessages("list-prefix") + totemID);
-            }
-        }
-        else {
-            sender.sendMessage(Messages.GetMessages("error-miss-permission"));
+    public SubList() {
+        this.id = "list";
+        this.onlyInGame = false;
+        this.requiredPermission = "mythictotem.admin";
+        this.requiredArgLength = new Integer[]{1};
+    }
+
+    @Override
+    public void executeCommandInGame(String[] args, Player player) {
+        LanguageManager.languageManager.sendStringText(player, "list-head");
+        for (String totemID : ConfigManager.configManager.getTotems().keySet()) {
+            LanguageManager.languageManager.sendStringText(player, "list-content", "totem", totemID);
         }
     }
+
+    @Override
+    public void executeCommandInConsole(String[] args) {
+        LanguageManager.languageManager.sendStringText("list-head");
+        for (String totemID : ConfigManager.configManager.getTotems().keySet()) {
+            LanguageManager.languageManager.sendStringText("list-content", "totem", totemID);
+        }
+    }
+
 }

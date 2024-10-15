@@ -1,7 +1,8 @@
 package cn.superiormc.mythictotem.utils;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
+import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
@@ -11,12 +12,12 @@ import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
@@ -45,6 +46,15 @@ public class CommonUtil {
                 MythicTotem.miniorVersion >= minorVersion);
     }
 
+    public static void giveOrDrop(Player player, ItemStack... item) {
+        HashMap<Integer, ItemStack> result = player.getInventory().addItem(item);
+        if (!result.isEmpty()) {
+            for (int id : result.keySet()) {
+                player.getWorld().dropItem(player.getLocation(), result.get(id));
+            }
+        }
+    }
+
     public static void dispatchCommand(String command){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
@@ -69,7 +79,7 @@ public class CommonUtil {
             tempVal2 = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> location.getWorld().getNearbyEntities(location, distance,
                     distance, distance)).get();
         } catch (InterruptedException | ExecutionException e) {
-            MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong when get nearby entities.");
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong when get nearby entities.");
             return new HashSet<>();
         }
         return tempVal2;
@@ -90,7 +100,7 @@ public class CommonUtil {
         }
     }
 
-    public static void removeBlock(Player player, Location loc){
+    public static void removeBlock(Location loc){
         if (CommonUtil.checkPluginLoad("ItemsAdder") && CustomBlock.byAlreadyPlaced(loc.getBlock()) != null) {
             CustomBlock.remove(loc);
         } else {
@@ -106,19 +116,19 @@ public class CommonUtil {
             return true;
         }
         int i = 0;
-        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-build") &&
+        if (ConfigManager.configManager.getBoolean("check-protection.can-build", false) &&
                 !ProtectionLib.canBuild(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-break") &&
+        if (ConfigManager.configManager.getBoolean("check-protection.can-break", false) &&
                 !ProtectionLib.canBreak(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-interact") &&
+        if (ConfigManager.configManager.getBoolean("check-protection.can-interact", false) &&
                 !ProtectionLib.canInteract(player, loc)) {
             i ++;
         }
-        if (MythicTotem.instance.getConfig().getBoolean("check-protection.can-use") &&
+        if (ConfigManager.configManager.getBoolean("check-protection.can-use", false) &&
                 !ProtectionLib.canUse(player, loc)) {
             i ++;
         }

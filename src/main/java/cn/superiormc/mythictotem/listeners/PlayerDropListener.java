@@ -1,8 +1,8 @@
 package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.configs.GeneralSettingConfigs;
-import cn.superiormc.mythictotem.managers.ValidManager;
+import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,25 +17,26 @@ public class PlayerDropListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (GeneralSettingConfigs.GetPlayerDropEventBlackCreative() && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
+        if (ConfigManager.configManager.getBoolean("trigger.PlayerDropItemEvent.black-creative-mode", true) && event.getPlayer().getGameMode().name().equals("CREATIVE")) {
             return;
         }
-        if (GeneralSettingConfigs.GetPlayerDropEventRequireShift() && (!event.getPlayer().isSneaking())) {
+        if (ConfigManager.configManager.getBoolean("trigger.PlayerDropItemEvent.require-shift", true) && (!event.getPlayer().isSneaking())) {
             return;
         }
-        if (MythicTotem.getCheckingPlayer.contains(event.getPlayer())) {
+        if (ConfigManager.configManager.getCheckingPlayer.contains(event.getPlayer())) {
             return;
         }
-        MythicTotem.getCheckingPlayer.add(event.getPlayer());
+        ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
         Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
             synchronized(event) {
-                new ValidManager(event);
+                new ObjectCheck(event);
             }
         });
-        if (MythicTotem.instance.getConfig().getBoolean("debug", false)) {
+        if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eDrop trigger!");
         }
-        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> MythicTotem.getCheckingPlayer.remove(event.getPlayer()), MythicTotem.instance.getConfig().getLong("cooldown-tick", 5L));
+        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()),
+                ConfigManager.configManager.getLong("cooldown-tick", 5L));
     }
 
     @EventHandler
@@ -43,7 +44,7 @@ public class PlayerDropListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (MythicTotem.getDroppedItems.contains(event.getItem())) {
+        if (ConfigManager.configManager.getDroppedItems.contains(event.getItem())) {
             event.setCancelled(true);
         }
     }
@@ -53,7 +54,7 @@ public class PlayerDropListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (MythicTotem.getDroppedItems.contains(event.getItem())) {
+        if (ConfigManager.configManager.getDroppedItems.contains(event.getItem())) {
             event.setCancelled(true);
         }
     }

@@ -1,7 +1,9 @@
-package cn.superiormc.mythictotem.managers;
+package cn.superiormc.mythictotem.objects;
 
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.hooks.CheckValidHook;
+import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
@@ -13,28 +15,19 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class ConditionManager {
+public class ObjectCondition {
 
     private final List<String> condition;
 
-    private final Player player;
-
-    private final Block block;
-
-    private final String event;
-
-    private final ItemStack item;
-
-    public ConditionManager(List<String> condition,
-                            ValidManager manager) {
+    public ObjectCondition(List<String> condition) {
         this.condition = condition;
-        this.event = manager.getEvent();
-        this.player = manager.getPlayer();
-        this.block = manager.getBlock();
-        this.item = manager.getItem();
     }
 
-    public boolean CheckCondition() {
+    public boolean checkCondition(ObjectCheck manager) {
+        Player player = manager.getPlayer();
+        Block block = manager.getBlock();
+        String event = manager.getEvent();
+        ItemStack item= manager.getItem();
         boolean conditionTrueOrFasle = true;
         for (String singleCondition : condition) {
             if (singleCondition.startsWith("none")){
@@ -87,64 +80,57 @@ public class ConditionManager {
                         String placeholder = conditionString[0];
                         String conditionValue = conditionString[1];
                         String value = conditionString[2];
+                        placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
+                        value = PlaceholderAPI.setPlaceholders(player, value);
                         if (conditionValue.equals("!=")) {
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (placeholder.equals(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals("==")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if(!placeholder.equals(value)){
+                            if (!placeholder.equals(value)){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals("!*=")) {
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (placeholder.contains(value)) {
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals("*=")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if(!placeholder.contains(value)){
+                            if (!placeholder.contains(value)){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals(">=")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
-                            if(!(Double.parseDouble(placeholder) >= Double.parseDouble(value))){
+                            if (!(Double.parseDouble(placeholder) >= Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals(">")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (!(Double.parseDouble(placeholder) > Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals("<=")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (!(Double.parseDouble(placeholder) <= Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if(conditionValue.equals("<")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (!(Double.parseDouble(placeholder) < Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
                             }
                         }
                         if (conditionValue.equals("=")){
-                            placeholder = PlaceholderAPI.setPlaceholders(player, placeholder);
                             if (!(Double.parseDouble(placeholder) == Double.parseDouble(value))){
                                 conditionTrueOrFasle = false;
                                 break;
@@ -152,18 +138,18 @@ public class ConditionManager {
                         }
                     }
                     else {
-                        MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your placeholder condition in totem configs can not being correctly load.");
+                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your placeholder condition in totem configs can not being correctly load.");
                         return false;
                     }
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your placeholder condition in totem configs can not being correctly load.");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your placeholder condition in totem configs can not being correctly load.");
                     return false;
                 }
             } else if (!MythicTotem.freeVersion && singleCondition.startsWith("mobs_near: ") && block != null) {
                 String[] tempVal1 = singleCondition.substring(11).split(";;");
                 if (tempVal1.length != 2) {
-                    MythicTotem.checkError("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mobs_near condition in totem configs can not being correctly load.");
+                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your mobs_near condition in totem configs can not being correctly load.");
                     return false;
                 }
                 for (Entity tempVal3 : CommonUtil.getNearbyEntity(block.getLocation(), Double.parseDouble(tempVal1[1]))) {

@@ -4,14 +4,16 @@
 
 debug: false
 
-dev-debug: false
-
 language: en_US
 
 cooldown-tick: 5
 
-# Premium version only.
-check-prices: true
+# Paper only feature.
+paper-api:
+  save-item: true
+  # For paper users, enable this option can use their API to directly get the skull, have the performance improve.
+  skull: true
+
 check-protection:
   can-build: false
   can-break: false
