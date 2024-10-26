@@ -4,12 +4,12 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import dev.lone.itemsadder.api.CustomBlock;
-import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +22,20 @@ import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 public class CommonUtil {
+
+    public static String modifyString(String text, String... args) {
+        for (int i = 0 ; i < args.length ; i += 2) {
+            String var1 = "{" + args[i] + "}";
+            String var2 = "%" + args[i] + "%";
+            if (args[i + 1] == null) {
+                text = text.replace(var1, "").replace(var2, "");
+            }
+            else {
+                text = text.replace(var1, args[i + 1]).replace(var2, args[i + 1]);
+            }
+        }
+        return text;
+    }
 
     public static boolean checkPluginLoad(String pluginName){
         return MythicTotem.instance.getServer().getPluginManager().isPluginEnabled(pluginName);
@@ -87,10 +101,7 @@ public class CommonUtil {
 
     public static void summonMythicMobs(Location location, String mobID, int level) {
         try {
-            MythicMob mob = MythicBukkit.inst().getMobManager().getMythicMob(mobID).orElse(null);
-            if (mob != null) {
-                mob.spawn(BukkitAdapter.adapt(location), level);
-            }
+            MythicBukkit.inst().getMobManager().getMythicMob(mobID).ifPresent(mob -> mob.spawn(BukkitAdapter.adapt(location), level));
         }
         catch (NoClassDefFoundError ep) {
             io.lumine.xikage.mythicmobs.mobs.MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(mobID);
@@ -100,11 +111,13 @@ public class CommonUtil {
         }
     }
 
-    public static void removeBlock(Location loc){
-        if (CommonUtil.checkPluginLoad("ItemsAdder") && CustomBlock.byAlreadyPlaced(loc.getBlock()) != null) {
-            CustomBlock.remove(loc);
+    public static void removeBlock(Block block) {
+        if (block == null) {
+            return;
+        } else if (CommonUtil.checkPluginLoad("ItemsAdder") && CustomBlock.byAlreadyPlaced(block) != null) {
+            CustomBlock.remove(block.getLocation());
         } else {
-            loc.getBlock().setType(Material.AIR);
+            block.setType(Material.AIR);
         }
     }
 

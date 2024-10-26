@@ -13,8 +13,11 @@ explains:
   B: 'minecraft:dirt'
   C: 'minecraft:netherrack'
 actions:
-  - 'message: Hello World!'
-  - 'mythicmobs_spawn: SkeletalKnight'
-conditions:
-  - 'none'
+  1:
+    type: message
+    message: 'Hello!'
+  2:
+    type: mythicmobs_spawn
+    entity: SkeletalKnight'
+conditions: []
 disappear: true

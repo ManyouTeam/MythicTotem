@@ -1,7 +1,9 @@
 package cn.superiormc.mythictotem.objects.checks;
 
-import cn.superiormc.mythictotem.hooks.PriceHook;
+import cn.superiormc.mythictotem.hooks.ItemPriceUtil;
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.methods.BuildItem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import org.bukkit.Bukkit;
@@ -36,6 +38,8 @@ public class ObjectPriceCheck {
             type = "economy";
         } else if (section.contains("economy-type") && !(section.contains("economy-plugin"))) {
             type = "exp";
+        } else if (section.getBoolean("block-as-price")) {
+            type = "block";
         } else {
             type = "free";
         }
@@ -48,39 +52,40 @@ public class ObjectPriceCheck {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
         }
         boolean priceBoolean = false;
-        if (type.equals("free")) {
-            priceBoolean = true;
-        }
-        else if (type.equals("hook")) {
-            priceBoolean = PriceHook.getPrice(section.getString("hook-plugin"),
-                    section.getString("hook-item"),
-                    player,
-                    section.getInt("amount", 1), take, keyItems);
-        }
-        else if (type.equals("match")) {
-            priceBoolean = PriceHook.getPrice(player, section, section.getInt("amount", 1), take);
-        }
-        else if (type.equals("vanilla")) {
-            priceBoolean = PriceHook.getPrice(player,
-                    BuildItem.buildItemStack(section),
-                    section.getInt("amount", 1),
-                    take,
-                    keyItems);
-        }
-        else if (type.equals("economy")) {
-            priceBoolean = PriceHook.getPrice(section.getString("economy-plugin"),
-                    section.getString("economy-type", "default"),
-                    player,
-                    section.getDouble("amount", 0), take);
-        }
-        else if (type.equals("exp")) {
-            priceBoolean = PriceHook.getPrice(section.getString("economy-type"),
-                    player,
-                    section.getInt("amount", 0), take);
-        }
-        else if (type.equals("unknwon")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cThere is something wrong in your totem configs!");
-            priceBoolean = false;
+        switch (type) {
+            case "free":
+                priceBoolean = true;
+                break;
+            case "block":
+                CommonUtil.removeBlock(block);
+                break;
+            case "hook":
+                priceBoolean = ItemPriceUtil.getPrice(section.getString("hook-plugin"),
+                        section.getString("hook-item"),
+                        player,
+                        section.getInt("amount", 1), take, keyItems);
+                break;
+            case "match":
+                priceBoolean = ItemPriceUtil.getPrice(player, section, section.getInt("amount", 1), take);
+                break;
+            case "vanilla":
+                priceBoolean = ItemPriceUtil.getPrice(player,
+                        BuildItem.buildItemStack(section),
+                        section.getInt("amount", 1),
+                        take, keyItems);
+                break;
+            case "economy":
+                priceBoolean = HookManager.hookManager.getPrice(player, section.getString("economy-plugin"),
+                        section.getString("economy-type", "default"),
+                        section.getDouble("amount", 0), take);
+                break;
+            case "exp":
+                priceBoolean = HookManager.hookManager.getPrice(player, section.getString("economy-type"),
+                        section.getInt("amount", 0), take);
+                break;
+            case "unknwon":
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong in your totem configs!");
+                break;
         }
         return priceBoolean;
     }

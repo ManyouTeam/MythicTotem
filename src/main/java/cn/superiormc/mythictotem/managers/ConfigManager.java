@@ -101,6 +101,10 @@ public class ConfigManager {
         return s.replace("{plugin_folder}", String.valueOf(MythicTotem.instance.getDataFolder()));
     }
 
+    public List<String> getStringList(String path) {
+        return config.getStringList(path);
+    }
+
     public void plus3DTotem() {
         threeDtotemAmount++;
     }

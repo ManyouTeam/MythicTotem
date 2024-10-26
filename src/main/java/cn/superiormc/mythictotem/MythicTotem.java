@@ -2,7 +2,6 @@ package cn.superiormc.mythictotem;
 
 import cn.superiormc.mythictotem.managers.*;
 import cn.superiormc.mythictotem.utils.CommonUtil;
-import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,8 +31,10 @@ public final class MythicTotem extends JavaPlugin {
         }
         new ErrorManager();
         new InitManager();
-        ProtectionLib.init(this);
+        new ActionManager();
+        new ConditionManager();
         new ConfigManager();
+        new HookManager();
         if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPaper is found, enabled Paper only feature!");
             isPaper = true;

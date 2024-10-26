@@ -39,8 +39,8 @@ public class ObjectTotem {
     public ObjectTotem(String id, YamlConfiguration section) {
         this.totemID = id;
         this.totemDisappear = section.getBoolean("disappear", true);
-        this.totemAction = new ObjectAction(section.getStringList("actions"));
-        this.totemCondition = new ObjectCondition(section.getStringList("conditions"));
+        this.totemAction = new ObjectAction(section.getConfigurationSection("actions"));
+        this.totemCondition = new ObjectCondition(section.getConfigurationSection("conditions"));
         this.totemCheckMode = section.getString("mode", "VERTICAL").toUpperCase();
         this.totemCoreBlocks = section.getStringList("core-blocks");
         this.totemSection = section;

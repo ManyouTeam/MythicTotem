@@ -97,7 +97,7 @@ public class ObjectCheck {
         CheckTotem();
     }
 
-    public ObjectCheck(PlayerDropItemEvent event){
+    public ObjectCheck(PlayerDropItemEvent event) {
         this.event = event;
         this.block = event.getItemDrop().getLocation().subtract(new Vector(0, 1, 0)).getBlock();
         if (block.isEmpty() || block.getBoundingBox().getHeight() >= 1) {
@@ -136,10 +136,10 @@ public class ObjectCheck {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eParsed Block ID: " + parsedID);
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
         }
-        for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
+        big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
-            if (!condition.checkCondition(this)) {
+            if (!condition.getAllBoolean(player, player.getLocation(), this, singleTotem)) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.getTotem().getTotemID() +
                             " because conditions not meet!");
@@ -154,7 +154,6 @@ public class ObjectCheck {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.getTotem().getTotemID() +
                             " prices...");
                 }
-                int i = 0;
                 for (String singleSection : singleTotem.getTotem().getSection().getConfigurationSection("prices").getKeys(false)) {
                     ObjectPriceCheck priceManager = new ObjectPriceCheck(singleTotem.getTotem().getSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!singleTotem.getTotem().getKeyMode()) {
@@ -167,15 +166,12 @@ public class ObjectCheck {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eItem: " + item + "!");
                     }
                     if (!priceManager.CheckPrice(false, item)) {
-                        i++;
+                        if (ConfigManager.configManager.getBoolean("debug", false)) {
+                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.getTotem().getTotemID() +
+                                    " because prices not meet!");
+                        }
+                        continue big;
                     }
-                }
-                if (i > 0) {
-                    if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.getTotem().getTotemID() +
-                                " because prices not meet!");
-                    }
-                    continue;
                 }
             }
             if (singleTotem.getTotem().getCheckMode().equals("VERTICAL")) {
@@ -635,7 +631,7 @@ public class ObjectCheck {
         Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
             if (singleTotem.getTotem().getTotemDisappear()) {
                 for (Location loc : validTotemBlockLocation) {
-                    CommonUtil.removeBlock(loc);
+                    CommonUtil.removeBlock(loc.getBlock());
                 }
             }
             if (event instanceof EntityPlaceEvent) {
@@ -644,7 +640,7 @@ public class ObjectCheck {
             for (Entity singleEntity : needRemoveEntities) {
                 singleEntity.remove();
             }
-            singleTotem.getTotem().getTotemAction().checkAction(startLocation, singleTotem, this);
+            singleTotem.getTotem().getTotemAction().runAllActions(player, startLocation, this, singleTotem);
             TotemActivedEvent totemActivedEvent = new TotemActivedEvent(
                     singleTotem.getTotem().getTotemID(),
                     this.player,

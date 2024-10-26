@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -262,7 +262,7 @@
         <dependency>
             <groupId>io.th0rgal</groupId>
             <artifactId>protectionlib</artifactId>
-            <version>1.3.6</version>
+            <version>1.6.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -303,6 +303,13 @@
             <version>1.6.9</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/MythicChanger-1.6.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.qKing12</groupId>
+            <artifactId>RoyaleEconomyAPI</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/RoyaleEconomyAPI.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

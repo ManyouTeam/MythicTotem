@@ -14,7 +14,7 @@ public class SubGiveSaveItem extends AbstractCommand {
 
     public SubGiveSaveItem() {
         this.id = "givesaveitem";
-        this.requiredPermission =  "mythictotem." + id;
+        this.requiredPermission =  "mythictotem.admin";
         this.onlyInGame = false;
         this.requiredArgLength = new Integer[]{2, 3};
         this.requiredConsoleArgLength = new Integer[]{3, 4};

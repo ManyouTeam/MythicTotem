@@ -8,7 +8,10 @@ explains:
   B: 'minecraft:end_stone'
   C: 'minecraft:netherrack'
 actions:
-  - 'message: Hello!'
-  - 'mythicmobs_spawn: SkeletalKnight'
-conditions:
-  - 'none'
+  1:
+    type: message
+    message: 'Hello!'
+  2:
+    type: mythicmobs_spawn
+    entity: SkeletalKnight'
+conditions: []

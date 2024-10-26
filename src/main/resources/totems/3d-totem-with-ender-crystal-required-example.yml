@@ -17,10 +17,13 @@ explains:
   B: 'minecraft:obsidian'
   C: 'minecraft:diamond_block'
 actions:
-  - 'message: Hello World!'
-  - 'entity_spawn: ENDER_DRAGON'
-conditions:
-  - 'trigger: EntityPlaceEvent'
+  1:
+    type: message
+    message: 'Hello!'
+  2:
+    type: mythicmobs_spawn
+    entity: SkeletalKnight'
+conditions: []
 # Core block means what block player should place ender crystal on.
 core-blocks:
   - B

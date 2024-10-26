@@ -1,8 +1,8 @@
 package cn.superiormc.mythictotem.methods;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.hooks.CheckValidHook;
 import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
@@ -40,9 +40,9 @@ public class DebuildItem {
 
     public static ConfigurationSection debuildItem(ItemStack itemStack, ConfigurationSection section) {
 
-        if (!CheckValidHook.checkValid(itemStack)[0].equals("vanilla")) {
-            section.set("hook-plugin", CheckValidHook.checkValid(itemStack)[0]);
-            section.set("hook-item", CheckValidHook.checkValid(itemStack)[1]);
+        if (!HookManager.hookManager.getHookItemPluginAndID(itemStack)[0].equals("vanilla")) {
+            section.set("hook-plugin", HookManager.hookManager.getHookItemPluginAndID(itemStack)[0]);
+            section.set("hook-item", HookManager.hookManager.getHookItemPluginAndID(itemStack)[1]);
         } else {
             // Material
             section.set("material", itemStack.getType().name());

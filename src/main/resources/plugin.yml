@@ -9,6 +9,11 @@ softdepend:
   - Lands
   - PlotSquared
   - CrashClaim
+  - BentoBox
+  - Residence
+  - GriefPrevention
+  - HuskTowns
+  - HuskClaims
   - MMOItems
   - MythicLib
   - ItemsAdder
