@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
 import org.bukkit.inventory.meta.components.ToolComponent;
+import org.bukkit.inventory.meta.components.UseCooldownComponent;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -518,6 +519,43 @@ public class DebuildItem {
                 if (musicInstrumentMeta.getInstrument() != null) {
                     section.set("music", musicInstrumentMeta.getInstrument().getKey().toString());
                 }
+            }
+        }
+
+        // Repairable
+        if (meta instanceof Repairable) {
+            Repairable repairableMeta = (Repairable) meta;
+            if (repairableMeta.hasRepairCost()) {
+                section.set("repair-cost", repairableMeta.getRepairCost());
+            }
+        }
+
+        if (CommonUtil.getMinorVersion(21, 2)) {
+            // Enchantable
+            if (meta.hasEnchantable()) {
+                section.set("enchantable", meta.getEnchantable());
+            }
+
+            // Glider
+            if (meta.isGlider()) {
+                section.set("glider", meta.isGlider());
+            }
+
+            // Item Model
+            if (meta.hasItemModel()) {
+                section.set("item-model", meta.getItemModel());
+            }
+
+            // Tooltip Style
+            if (meta.hasTooltipStyle()) {
+                section.set("tooltip-style", meta.getTooltipStyle());
+            }
+
+            // Item Cooldown
+            if (meta.hasUseCooldown()) {
+                UseCooldownComponent useCooldownComponent = meta.getUseCooldown();
+                section.set("use-cooldown.cooldown-group", useCooldownComponent.getCooldownGroup());
+                section.set("use-cooldown.cooldown-seconds", useCooldownComponent.getCooldownSeconds());
             }
         }
 

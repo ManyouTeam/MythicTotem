@@ -31,6 +31,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
 import org.bukkit.inventory.meta.components.ToolComponent;
+import org.bukkit.inventory.meta.components.UseCooldownComponent;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
@@ -130,10 +131,6 @@ public class BuildItem {
             ConfigurationSection foodKey = section.getConfigurationSection("food");
             FoodComponent foodComponent = meta.getFood();
             if (foodKey != null) {
-                double eatSecond = foodKey.getDouble("eat-seconds", -1);
-                if (eatSecond >= 0) {
-                    foodComponent.setEatSeconds((float) eatSecond);
-                }
                 if (foodKey.contains("can-always-eat")) {
                     foodComponent.setCanAlwaysEat(foodKey.getBoolean("can-always-eat"));
                 }
@@ -146,34 +143,41 @@ public class BuildItem {
                     foodComponent.setSaturation((float) foodSaturation);
                 }
                 ConfigurationSection convertItem = section.getConfigurationSection("convert");
-                if (CommonUtil.getMajorVersion(21) && convertItem != null) {
-                    foodComponent.setUsingConvertsTo(buildItemStack(convertItem));
-                }
-                for (String effects : foodKey.getStringList("effects")) {
-                    String[] effectParseResult = effects.replace(" ", "").split(",");
-                    if (effectParseResult.length < 4) {
-                        continue;
+                if (!CommonUtil.getMinorVersion(21, 2)) {
+                    double eatSecond = foodKey.getDouble("eat-seconds", -1);
+                    if (eatSecond >= 0) {
+                        foodComponent.setEatSeconds((float) eatSecond);
                     }
-                    PotionEffectType potionEffectType = null;
-                    if (CommonUtil.getMajorVersion(20)) {
-                        potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
-                    } else {
-                        potionEffectType = PotionEffectType.getByName(effectParseResult[0]);
+                    if (CommonUtil.getMajorVersion(21) && convertItem != null) {
+                        foodComponent.setUsingConvertsTo(buildItemStack(convertItem));
                     }
-                    if (potionEffectType != null) {
-                        PotionEffect potionEffect = new PotionEffect(potionEffectType,
-                                Integer.parseInt(effectParseResult[1]),
-                                Integer.parseInt(effectParseResult[2]),
-                                effectParseResult.length < 5 || Boolean.parseBoolean(effectParseResult[3]),
-                                effectParseResult.length < 6 || Boolean.parseBoolean(effectParseResult[4]),
-                                effectParseResult.length < 7 || Boolean.parseBoolean(effectParseResult[5]));
-                        foodComponent.addEffect(potionEffect, Float.parseFloat(effectParseResult[effectParseResult.length - 1]));
+                    for (String effects : foodKey.getStringList("effects")) {
+                        String[] effectParseResult = effects.replace(" ", "").split(",");
+                        if (effectParseResult.length < 4) {
+                            continue;
+                        }
+                        PotionEffectType potionEffectType = null;
+                        if (CommonUtil.getMajorVersion(20)) {
+                            potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
+                        } else {
+                            potionEffectType = PotionEffectType.getByName(effectParseResult[0]);
+                        }
+                        if (potionEffectType != null) {
+                            PotionEffect potionEffect = new PotionEffect(potionEffectType,
+                                    Integer.parseInt(effectParseResult[1]),
+                                    Integer.parseInt(effectParseResult[2]),
+                                    effectParseResult.length < 5 || Boolean.parseBoolean(effectParseResult[3]),
+                                    effectParseResult.length < 6 || Boolean.parseBoolean(effectParseResult[4]),
+                                    effectParseResult.length < 7 || Boolean.parseBoolean(effectParseResult[5]));
+                            foodComponent.addEffect(potionEffect, Float.parseFloat(effectParseResult[effectParseResult.length - 1]));
+                        }
                     }
                 }
                 meta.setFood(foodComponent);
             }
         }
 
+        // Tool
         if (CommonUtil.getMajorVersion(21)) {
             ConfigurationSection toolKey = section.getConfigurationSection("tool");
             ToolComponent toolComponent = meta.getTool();
@@ -209,6 +213,7 @@ public class BuildItem {
             }
         }
 
+        // Jukebox
         if (CommonUtil.getMajorVersion(21)) {
             JukeboxPlayableComponent jukeboxPlayableComponent = meta.getJukeboxPlayable();
             String song = section.getString("song");
@@ -285,7 +290,12 @@ public class BuildItem {
         ConfigurationSection attributesKey = section.getConfigurationSection("attributes");
         if (attributesKey != null) {
             for (String attribute : attributesKey.getKeys(false)) {
-                Attribute attributeInst = Enums.getIfPresent(Attribute.class, attribute.toUpperCase(Locale.ENGLISH)).orNull();
+                Attribute attributeInst;
+                if (CommonUtil.getMinorVersion(21, 2)) {
+                    attributeInst = Registry.ATTRIBUTE.get(CommonUtil.parseNamespacedKey(attribute));
+                } else {
+                    attributeInst = Enums.getIfPresent(Attribute.class, attribute.toUpperCase(Locale.ENGLISH)).orNull();
+                }
                 if (attributeInst == null) {
                     continue;
                 }
@@ -767,6 +777,54 @@ public class BuildItem {
                     if (musicInstrument != null) {
                         musicInstrumentMeta.setInstrument(musicInstrument);
                     }
+                }
+            }
+        }
+
+        // Repairable
+        if (meta instanceof Repairable) {
+            Repairable repairableMeta = (Repairable) meta;
+            int repairCost = section.getInt("repair-cost", -1);
+            if (repairCost >= 0) {
+                repairableMeta.setRepairCost(repairCost);
+            }
+        }
+
+        if (CommonUtil.getMinorVersion(21, 2)) {
+            // Enchantable
+            int enchantable = section.getInt("enchantable", -1);
+            if (enchantable >= 0) {
+                meta.setEnchantable(enchantable);
+            }
+
+            // Glider
+            if (section.getString("glider") != null) {
+                meta.setGlider(section.getBoolean("glider"));
+            }
+
+            // Item Model
+            String itemModel = section.getString("item-model", null);
+            if (itemModel != null) {
+                meta.setItemModel(CommonUtil.parseNamespacedKey(itemModel));
+            }
+
+            // Tooltip Style
+            String tooltipStyle = section.getString("tooltip-style", null);
+            if (tooltipStyle != null) {
+                meta.setTooltipStyle(CommonUtil.parseNamespacedKey(tooltipStyle));
+            }
+
+            // Use Cooldown
+            ConfigurationSection useCooldown = section.getConfigurationSection("use-cooldown");
+            if (useCooldown != null) {
+                UseCooldownComponent useCooldownComponent = meta.getUseCooldown();
+                String cooldownGroup = useCooldown.getString("cooldown-group", null);
+                if (cooldownGroup != null) {
+                    useCooldownComponent.setCooldownGroup(CommonUtil.parseNamespacedKey(cooldownGroup));
+                }
+                int cooldownSeconds = useCooldown.getInt("cooldown-seconds", -1);
+                if (cooldownSeconds >= 0) {
+                    useCooldownComponent.setCooldownSeconds((float) cooldownSeconds);
                 }
             }
         }
