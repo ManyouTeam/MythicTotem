@@ -7,9 +7,7 @@ import cn.superiormc.mythictotem.utils.CommonUtil;
 import com.google.common.collect.Multimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockState;
@@ -18,24 +16,21 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
-import org.bukkit.inventory.meta.components.FoodComponent;
-import org.bukkit.inventory.meta.components.JukeboxPlayableComponent;
-import org.bukkit.inventory.meta.components.ToolComponent;
-import org.bukkit.inventory.meta.components.UseCooldownComponent;
+import org.bukkit.inventory.meta.components.*;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
+import org.bukkit.Sound;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DebuildItem {
 
@@ -89,9 +84,6 @@ public class DebuildItem {
         // Food
         if (CommonUtil.getMinorVersion(20, 5)) {
             FoodComponent foodComponent = meta.getFood();
-            if (foodComponent.getEatSeconds() != 1.6f) {
-                section.set("food.eat-seconds", foodComponent.getEatSeconds());
-            }
             if (foodComponent.canAlwaysEat()) {
                 section.set("food.can-alawys-eat", true);
             }
@@ -101,25 +93,30 @@ public class DebuildItem {
             if (foodComponent.getSaturation() > 0) {
                 section.set("food.saturation", foodComponent.getSaturation());
             }
-            if (CommonUtil.getMajorVersion(21) && foodComponent.getUsingConvertsTo() != null) {
-                debuildItem(foodComponent.getUsingConvertsTo(), section.createSection("food.convert"));
-            }
-            List<String> effects = new ArrayList<>();
-            for (FoodComponent.FoodEffect foodEffect : foodComponent.getEffects()) {
-                if (CommonUtil.getMajorVersion(18)) {
-                    effects.add(foodEffect.getEffect().getType().getKey() + ", " + foodEffect.getEffect().getDuration() + ", " +
-                            foodEffect.getEffect().getAmplifier() + ", " + foodEffect.getEffect().isAmbient() + ", " +
-                            foodEffect.getEffect().hasParticles() + ", " + foodEffect.getEffect().hasIcon() + ", " +
-                            foodEffect.getProbability());
-                } else {
-                    effects.add(foodEffect.getEffect().getType().getName() + ", " + foodEffect.getEffect().getDuration() + ", " +
-                            foodEffect.getEffect().getAmplifier() + ", " + foodEffect.getEffect().isAmbient() + ", " +
-                            foodEffect.getEffect().hasParticles() + ", " + foodEffect.getEffect().hasIcon() + ", " +
-                            foodEffect.getProbability());
+            if (!CommonUtil.getMinorVersion(21, 2)) {
+                if (foodComponent.getEatSeconds() != 1.6F) {
+                    section.set("food.eat-seconds", foodComponent.getEatSeconds());
                 }
-            }
-            if (!effects.isEmpty()) {
-                section.set("effects", effects);
+                if (CommonUtil.getMajorVersion(21) && foodComponent.getUsingConvertsTo() != null) {
+                    debuildItem(foodComponent.getUsingConvertsTo(), section.createSection("food.convert"));
+                }
+                List<String> effects = new ArrayList<>();
+                for (FoodComponent.FoodEffect foodEffect : foodComponent.getEffects()) {
+                    if (CommonUtil.getMajorVersion(18)) {
+                        effects.add(foodEffect.getEffect().getType().getKey() + ", " + foodEffect.getEffect().getDuration() + ", " +
+                                foodEffect.getEffect().getAmplifier() + ", " + foodEffect.getEffect().isAmbient() + ", " +
+                                foodEffect.getEffect().hasParticles() + ", " + foodEffect.getEffect().hasIcon() + ", " +
+                                foodEffect.getProbability());
+                    } else {
+                        effects.add(foodEffect.getEffect().getType().getName() + ", " + foodEffect.getEffect().getDuration() + ", " +
+                                foodEffect.getEffect().getAmplifier() + ", " + foodEffect.getEffect().isAmbient() + ", " +
+                                foodEffect.getEffect().hasParticles() + ", " + foodEffect.getEffect().hasIcon() + ", " +
+                                foodEffect.getProbability());
+                    }
+                }
+                if (!effects.isEmpty()) {
+                    section.set("effects", effects);
+                }
             }
         }
 
@@ -556,6 +553,44 @@ public class DebuildItem {
                 UseCooldownComponent useCooldownComponent = meta.getUseCooldown();
                 section.set("use-cooldown.cooldown-group", useCooldownComponent.getCooldownGroup());
                 section.set("use-cooldown.cooldown-seconds", useCooldownComponent.getCooldownSeconds());
+            }
+
+            // Equippable
+            if (meta.hasEquippable()) {
+                EquippableComponent equippableComponent = meta.getEquippable();
+                Collection<EntityType> entities = equippableComponent.getAllowedEntities();
+                if (entities != null && !entities.isEmpty()) {
+                    section.set("equippable.entities", entities);
+                }
+                if (!equippableComponent.isDamageOnHurt()) {
+                    section.set("equippable.damage-on-hurt", equippableComponent.isDamageOnHurt());
+                }
+                if (!equippableComponent.isDispensable()) {
+                    section.set("equippable.dispensable", equippableComponent.isDispensable());
+                }
+                if (!equippableComponent.isSwappable()) {
+                    section.set("equippable.swappable", equippableComponent.isSwappable());
+                }
+                NamespacedKey cameraOverlay = equippableComponent.getCameraOverlay();
+                if (cameraOverlay != null) {
+                    section.set("equippable.camera-overlay", cameraOverlay.asString());
+                }
+                NamespacedKey model = equippableComponent.getModel();
+                if (model != null) {
+                    section.set("equippable.model", model.asString());
+                }
+                section.set("equippable.equipment-slot", equippableComponent.getSlot().name());
+                Sound equipSound = equippableComponent.getEquipSound();
+                if (!equipSound.getKey().asString().equals("minecraft:item.armor.equip_generic")) {
+                    section.set("equippable.sound", equipSound.getKey().asString());
+                }
+            }
+            // Damage
+            if (meta.hasDamageResistant()) {
+                Tag<DamageType> damageTypeTag = meta.getDamageResistant();
+                if (damageTypeTag != null) {
+                    section.set("damage-resistant", damageTypeTag.getKey().asString());
+                }
             }
         }
 
