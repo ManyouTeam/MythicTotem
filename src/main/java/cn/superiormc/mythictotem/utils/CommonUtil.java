@@ -57,7 +57,7 @@ public class CommonUtil {
 
     public static boolean getMinorVersion(int majorVersion, int minorVersion) {
         return MythicTotem.majorVersion > majorVersion || (MythicTotem.majorVersion == majorVersion &&
-                MythicTotem.miniorVersion >= minorVersion);
+                MythicTotem.minorVersion >= minorVersion);
     }
 
     public static void giveOrDrop(Player player, ItemStack... item) {

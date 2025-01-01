@@ -21,7 +21,7 @@ public class ActionConditional extends AbstractRunAction {
         if (MythicTotem.freeVersion) {
             return;
         }
-        ConfigurationSection conditionSection = singleAction.getSection().getConfigurationSection("actions");
+        ConfigurationSection conditionSection = singleAction.getSection().getConfigurationSection("conditions");
         if (conditionSection == null) {
             return;
         }

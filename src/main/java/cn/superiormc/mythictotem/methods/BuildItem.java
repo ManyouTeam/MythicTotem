@@ -197,6 +197,20 @@ public class BuildItem {
                     Collection<Material> materials = new ArrayList<>();
                     int i = 0;
                     for (String singleMaterial : ruleParseResult) {
+                        Tag<Material> tempVal1 = Bukkit.getTag(Tag.REGISTRY_ITEMS, cn.superiormc.mythicchanger.utils.CommonUtil.parseNamespacedKey(singleMaterial), Material.class);
+                        if (tempVal1 != null) {
+                            float speed = Float.parseFloat(ruleParseResult[1]);
+                            boolean correctForDrop = Boolean.parseBoolean(ruleParseResult[2]);
+                            toolComponent.addRule(tempVal1, speed, correctForDrop);
+                            continue;
+                        }
+                        Tag<Material> tempVal2 = Bukkit.getTag(Tag.REGISTRY_BLOCKS, cn.superiormc.mythicchanger.utils.CommonUtil.parseNamespacedKey(singleMaterial), Material.class);
+                        if (tempVal2 != null) {
+                            float speed = Float.parseFloat(ruleParseResult[1]);
+                            boolean correctForDrop = Boolean.parseBoolean(ruleParseResult[2]);
+                            toolComponent.addRule(tempVal2, speed, correctForDrop);
+                            continue;
+                        }
                         Material material = Material.getMaterial(singleMaterial.toUpperCase());
                         if (material == null) {
                             break;
@@ -308,6 +322,13 @@ public class BuildItem {
                 String attribName = subSection.getString("name");
                 double attribAmount = subSection.getDouble("amount");
                 String attribOperation = subSection.getString("operation");
+
+                Collection<AttributeModifier> tempVal2 = meta.getAttributeModifiers(attributeInst);
+                if (tempVal2 != null) {
+                    for (AttributeModifier tempVal1 : tempVal2) {
+                        meta.removeAttributeModifier(attributeInst, tempVal1);
+                    }
+                }
 
                 if (CommonUtil.getMinorVersion(20, 5)) {
                     String attribSlot = subSection.getString("slot");
