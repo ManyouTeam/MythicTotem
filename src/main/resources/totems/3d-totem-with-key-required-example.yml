@@ -23,7 +23,10 @@ actions:
   2:
     type: mythicmobs_spawn
     entity: SkeletalKnight'
-conditions: []
+conditions:
+  1:
+    type: trigger
+    event: 'PlayerDropItemEvent'
 # Core block means what block player should drop item on.
 core-blocks:
   - B

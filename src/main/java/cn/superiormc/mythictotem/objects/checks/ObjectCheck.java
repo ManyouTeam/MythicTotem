@@ -268,7 +268,7 @@ public class ObjectCheck {
                     } else {
                         validXTotemBlockLocation1.add(nowLocation_1);
                         if (materialManager_1.getEntityNeedRemove() != null) {
-                          validXTotemEntity1.add(materialManager_1.getEntityNeedRemove());
+                            validXTotemEntity1.add(materialManager_1.getEntityNeedRemove());
                         }
                     }
                 } else if (checkXTrueOrFalse1 && !materialManager_1.checkMaterial()) {

@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -44,6 +45,7 @@ public class ObjectMaterialCheck {
 
     public boolean checkMaterial() {
         Block block;
+        String[] tempVal1 = materialString.split(":");
         if (materialString.equals("none")) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fSkipped none block.");
@@ -51,7 +53,7 @@ public class ObjectMaterialCheck {
             return true;
         } else if (materialString.startsWith("minecraft:")) {
             try {
-                Material material = Material.getMaterial(materialString.split(":")[1].toUpperCase());
+                Material material = Material.getMaterial(tempVal1[1].toUpperCase());
                 EntityType entityType = Enums.getIfPresent(EntityType.class, "ZOMBIE").orNull();
                 if (material != null) {
                     block = location.getBlock();
@@ -62,7 +64,11 @@ public class ObjectMaterialCheck {
                     return material == block.getType();
                 } else if (!MythicTotem.freeVersion && entityType != null) {
                     Location tempLocation = location.clone().add(0.5, 0, 0.5);
-                    Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
+                    double checkDistance = 0.5;
+                    if (tempVal1.length >= 3) {
+                        checkDistance = Double.parseDouble(tempVal1[tempVal1.length - 1]);
+                    }
+                    Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entities amount: " + entities.size() + ".");
@@ -94,20 +100,23 @@ public class ObjectMaterialCheck {
                 if (iaBlock == null) {
                     return false;
                 }
-                return (materialString.split(":")[1] + ":" + materialString.split(":")[2]).
+                return (tempVal1[1] + ":" + tempVal1[2]).
                         equals(iaBlock.getNamespacedID());
             } catch (NullPointerException ignored) {
             }
         } else if (materialString.startsWith("itemsadder_furniture:") && !MythicTotem.freeVersion) {
             try {
-                block = location.getBlock();
-                if (materialString.split(":").length != 3) {
+                if (tempVal1.length < 3) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your itemsadder_furniture material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
-                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
+                double checkDistance = 0.5;
+                if (tempVal1.length >= 4) {
+                    checkDistance = Double.parseDouble(tempVal1[tempVal1.length - 1]);
+                }
+                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
@@ -118,11 +127,14 @@ public class ObjectMaterialCheck {
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
                     this.entity = singleEntity;
+                    if (singleEntity instanceof Player) {
+                        continue;
+                    }
                     CustomFurniture iaEntity = CustomFurniture.byAlreadySpawned(singleEntity);
                     if (iaEntity == null) {
                         continue;
                     }
-                    if ((materialString.split(":")[1] + ":" + materialString.split(":")[2]).
+                    if ((tempVal1[1] + ":" + tempVal1[2]).
                             equals(iaEntity.getNamespacedID())) {
                         return true;
                     }
@@ -132,14 +144,17 @@ public class ObjectMaterialCheck {
             }
         } else if (materialString.startsWith("itemsadder_mob:") && !MythicTotem.freeVersion) {
             try {
-                block = location.getBlock();
-                if (materialString.split(":").length != 3) {
+                if (tempVal1.length < 3) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your itemsadder_mob material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
-                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
+                double checkDistance = 0.5;
+                if (tempVal1.length >= 4) {
+                    checkDistance = Double.parseDouble(tempVal1[tempVal1.length - 1]);
+                }
+                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
@@ -149,13 +164,16 @@ public class ObjectMaterialCheck {
                         Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
+                    if (singleEntity instanceof Player) {
+                        continue;
+                    }
                     if (singleEntity instanceof ArmorStand) {
                         this.entity = singleEntity;
                         CustomMob iaEntity = CustomMob.byAlreadySpawned(singleEntity);
                         if (iaEntity == null) {
                             continue;
                         }
-                        if ((materialString.split(":")[1] + ":" + materialString.split(":")[2]).
+                        if ((tempVal1[1] + ":" + tempVal1[2]).
                                 equals(iaEntity.getNamespacedID())) {
                             return true;
                         }
@@ -167,30 +185,31 @@ public class ObjectMaterialCheck {
         } else if (materialString.startsWith("oraxen:")) {
             try {
                 block = location.getBlock();
-                NoteBlockMechanic tempVal1 = OraxenBlocks.getNoteBlockMechanic(block);
+                NoteBlockMechanic tempVal4 = OraxenBlocks.getNoteBlockMechanic(block);
                 StringBlockMechanic tempVal2 = OraxenBlocks.getStringMechanic(block);
                 BlockMechanic tempVal3 = OraxenBlocks.getBlockMechanic(block);
-                if (tempVal3 != null && (materialString.split(":")[1]).equals(tempVal3.getItemID())) {
+                if (tempVal3 != null && (tempVal1[1]).equals(tempVal3.getItemID())) {
                     return true;
-                }
-                else if (tempVal2 != null && (materialString.split(":")[1]).equals(tempVal2.getItemID())) {
+                } else if (tempVal2 != null && (tempVal1[1]).equals(tempVal2.getItemID())) {
                     return true;
-                }
-                else if (tempVal1 != null && (materialString.split(":")[1]).equals(tempVal1.getItemID())) {
+                } else if (tempVal4 != null && (tempVal1[1]).equals(tempVal4.getItemID())) {
                     return true;
                 }
             } catch (NullPointerException ignored) {
             }
         } else if (materialString.startsWith("oraxen_furniture:") && !MythicTotem.freeVersion) {
             try {
-                block = location.getBlock();
-                if (materialString.split(":").length != 2) {
+                if (tempVal1.length < 2) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your oraxen_furniture material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
                 Location tempLocation = location.clone().add(0.5, 0, 0.5);
-                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, 1);
+                double checkDistance = 0.5;
+                if (tempVal1.length >= 3) {
+                    checkDistance = Double.parseDouble(tempVal1[tempVal1.length - 1]);
+                }
+                Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
@@ -201,11 +220,14 @@ public class ObjectMaterialCheck {
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
                     this.entity = singleEntity;
+                    if (singleEntity instanceof Player) {
+                        continue;
+                    }
                     FurnitureMechanic furnitureMechanic = OraxenFurniture.getFurnitureMechanic(singleEntity);
                     if (furnitureMechanic == null) {
                         continue;
                     }
-                    if (materialString.split(":")[1].equals(furnitureMechanic.getItemID())) {
+                    if (tempVal1[1].equals(furnitureMechanic.getItemID())) {
                         return true;
                     }
                 }
@@ -220,7 +242,7 @@ public class ObjectMaterialCheck {
         } else {
             block = location.getBlock();
             try {
-                return (Material.getMaterial(materialString.split(":")[1].toUpperCase()) == block.getType());
+                return (Material.getMaterial(tempVal1[1].toUpperCase()) == block.getType());
             } catch (IllegalArgumentException | NullPointerException ignored) {
             }
         }

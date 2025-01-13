@@ -40,7 +40,7 @@ public class PlayerClickListener implements Listener {
          if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + event.getClickedBlock().getLocation());
             //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cBiome: " + event.getClickedBlock().getBiome().name());
+            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cBiome: " + event.getClickedBlock().getBiome().name());
         }
     }
 }
