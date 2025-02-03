@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.objects.checks;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomBlock;
@@ -238,19 +239,19 @@ public class ObjectCheck {
         for (int i = 0; i < base_row; i++) {
             for (int b = 0; b < base_column; b++) {
                 Location nowLocation_1 = startLocation_1.clone().add(0, -i, b);
-                if (!CommonUtil.checkProtection(player, nowLocation_1)) {
+                if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_1)) {
                     checkXTrueOrFalse1 = false;
                 }
                 Location nowLocation_2 = startLocation_2.clone().add(0, -i, -b);
-                if (!CommonUtil.checkProtection(player, nowLocation_2)) {
+                if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_2)) {
                     checkXTrueOrFalse2 = false;
                 }
                 Location nowLocation_3 = startLocation_3.clone().add(b, -i, 0);
-                if (!CommonUtil.checkProtection(player, nowLocation_3)) {
+                if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_3)) {
                     checkZTrueOrFalse1 = false;
                 }
                 Location nowLocation_4 = startLocation_4.clone().add(-b, -i, 0);
-                if (!CommonUtil.checkProtection(player, nowLocation_4)) {
+                if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_4)) {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.getTotem().getRealMaterial(1, i, b);
@@ -425,35 +426,35 @@ public class ObjectCheck {
             for (int i = 0; i < base_row; i++) {
                 for (int b = 0; b < base_column; b++) {
                     Location nowLocation_1 = startLocation_1.clone().add(-b, 1 - a, -i);
-                    if (!CommonUtil.checkProtection(player, nowLocation_1)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_1)) {
                         checkTrueOrFalse1 = false;
                     }
                     Location nowLocation_2 = startLocation_2.clone().add(-b, 1 - a, i);
-                    if (!CommonUtil.checkProtection(player, nowLocation_2)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_2)) {
                         checkTrueOrFalse2 = false;
                     }
                     Location nowLocation_3 = startLocation_3.clone().add(b, 1 - a, -i);
-                    if (!CommonUtil.checkProtection(player, nowLocation_3)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_3)) {
                         checkTrueOrFalse3 = false;
                     }
                     Location nowLocation_4 = startLocation_4.clone().add(b, 1 - a, i);
-                    if (!CommonUtil.checkProtection(player, nowLocation_4)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_4)) {
                         checkTrueOrFalse4 = false;
                     }
                     Location nowLocation_5 = startLocation_5.clone().add(-i, 1 - a, -b);
-                    if (!CommonUtil.checkProtection(player, nowLocation_5)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_5)) {
                         checkTrueOrFalse5 = false;
                     }
                     Location nowLocation_6 = startLocation_6.clone().add(-i, 1 - a, b);
-                    if (!CommonUtil.checkProtection(player, nowLocation_6)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_6)) {
                         checkTrueOrFalse6 = false;
                     }
                     Location nowLocation_7 = startLocation_7.clone().add(i, 1 - a, -b);
-                    if (!CommonUtil.checkProtection(player, nowLocation_7)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_7)) {
                         checkTrueOrFalse7 = false;
                     }
                     Location nowLocation_8 = startLocation_8.clone().add(i, 1 - a, b);
-                    if (!CommonUtil.checkProtection(player, nowLocation_8)) {
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation_8)) {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.getTotem().getRealMaterial(a, i, b);

@@ -121,33 +121,6 @@ public class CommonUtil {
         }
     }
 
-    public static boolean checkProtection(Player player, Location loc) {
-        if (player == null) {
-            return true;
-        }
-        if (loc == null) {
-            return true;
-        }
-        int i = 0;
-        if (ConfigManager.configManager.getBoolean("check-protection.can-build", false) &&
-                !ProtectionLib.canBuild(player, loc)) {
-            i ++;
-        }
-        if (ConfigManager.configManager.getBoolean("check-protection.can-break", false) &&
-                !ProtectionLib.canBreak(player, loc)) {
-            i ++;
-        }
-        if (ConfigManager.configManager.getBoolean("check-protection.can-interact", false) &&
-                !ProtectionLib.canInteract(player, loc)) {
-            i ++;
-        }
-        if (ConfigManager.configManager.getBoolean("check-protection.can-use", false) &&
-                !ProtectionLib.canUse(player, loc)) {
-            i ++;
-        }
-        return i == 0;
-    }
-
     public static void mkDir(File dir) {
         if (!dir.exists()) {
             File parentFile = dir.getParentFile();

@@ -23,12 +23,6 @@ paper-api:
   # For paper users, enable this option can use their API to directly get the skull, have the performance improve.
   skull: true
 
-check-protection:
-  can-build: false
-  can-break: false
-  can-interact: false
-  can-use: false
-
 trigger:
   BlockPlaceEvent:
     enabled: true

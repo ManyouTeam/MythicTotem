@@ -5,10 +5,9 @@ api-version: 1.14
 softdepend:
   - WorldGuard
   - Towny
-  - Factions
+  - Dominion
   - Lands
   - PlotSquared
-  - CrashClaim
   - BentoBox
   - Residence
   - GriefPrevention
