@@ -6,14 +6,15 @@ debug: false
 
 language: en_US
 
-price:
+# Item Price
+item-price:
   # Support Value: Bukkit, ItemFormat.
   check-method: Bukkit
-  # Only support ItemFormat sell method.
-  ignore-item-format-key:
-    - 'lore'
-    - 'damage'
-    - 'tool.damage-per-block'
+  item-format:
+    ignore-key:
+      - 'lore'
+      - 'damage'
+      - 'tool.damage-per-block'
 
 cooldown-tick: 5
 
