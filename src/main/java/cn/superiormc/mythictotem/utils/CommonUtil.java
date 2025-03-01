@@ -1,13 +1,11 @@
 package cn.superiormc.mythictotem.utils;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.th0rgal.protectionlib.ProtectionLib;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -88,22 +86,28 @@ public class CommonUtil {
     }
 
     public static Collection<Entity> getNearbyEntity(Location location, double distance) {
-        Collection<Entity> tempVal2;
-        try {
-            tempVal2 = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> location.getWorld().getNearbyEntities(location, distance,
-                    distance, distance)).get();
-        } catch (InterruptedException | ExecutionException e) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong when get nearby entities.");
-            return new HashSet<>();
+        Collection<Entity> tempVal2 = new HashSet<>();
+        if (MythicTotem.isFolia) {
+            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Folia servers do not support entity as totem layout, skipping totem check.");
+        } else {
+            try {
+                tempVal2 = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> location.getWorld().getNearbyEntities(location, distance,
+                        distance, distance)).get();
+            } catch (InterruptedException | ExecutionException e) {
+                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong when get nearby entities.");
+                return new HashSet<>();
+            }
         }
         return tempVal2;
     }
 
     public static void summonMythicMobs(Location location, String mobID, int level) {
+        if (!CommonUtil.checkPluginLoad("MythicMobs")) {
+            return;
+        }
         try {
             MythicBukkit.inst().getMobManager().getMythicMob(mobID).ifPresent(mob -> mob.spawn(BukkitAdapter.adapt(location), level));
-        }
-        catch (NoClassDefFoundError ep) {
+        } catch (NoClassDefFoundError ep) {
             io.lumine.xikage.mythicmobs.mobs.MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(mobID);
             if (mob != null) {
                 mob.spawn(io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter.adapt(location), level);

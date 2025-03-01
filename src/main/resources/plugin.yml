@@ -2,6 +2,7 @@ name: MythicTotem
 version: '${project.version}'
 main: cn.superiormc.mythictotem.MythicTotem
 api-version: 1.14
+folia-supported: true
 softdepend:
   - WorldGuard
   - Towny

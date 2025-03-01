@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.objects.ObjectAction;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,6 +29,6 @@ public class ActionDelay extends AbstractRunAction {
         }
         long time = singleAction.getSection().getLong("time");
         ObjectAction action = new ObjectAction(chanceSection);
-        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> action.runAllActions(player, startLocation, check, totem), time);
+        SchedulerUtil.runTaskLater(() -> action.runAllActions(player, startLocation, check, totem), time);
     }
 }

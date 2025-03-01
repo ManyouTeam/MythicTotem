@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.listeners;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,12 +31,12 @@ public class PlayerPlaceListener implements Listener {
         }
         ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
         if (event.canBuild() && (!event.isCancelled())){
-            Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
+            SchedulerUtil.runTaskAsynchronously(() -> {
                 synchronized(event) {
                     new ObjectCheck(event);
                 }
             });
-            Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> {
+            SchedulerUtil.runTaskLater(() -> {
                 ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer());
             }, ConfigManager.configManager.getLong("cooldown-tick", 5L));
         }

@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>4.2.1</version>
+    <version>4.2.2</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -264,7 +264,7 @@
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
-            <version>5.2.3</version>
+            <version>5.8.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

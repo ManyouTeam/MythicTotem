@@ -13,6 +13,8 @@ public final class MythicTotem extends JavaPlugin {
 
     public static boolean isPaper = false;
 
+    public static boolean isFolia = false;
+
     public static int majorVersion;
 
     public static int minorVersion;
@@ -29,16 +31,22 @@ public final class MythicTotem extends JavaPlugin {
         } catch (Throwable throwable) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not get your Minecraft version! Default set to 1.0.0.");
         }
+        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPaper is found, enabled Paper only feature!");
+            isPaper = true;
+        }
+        if (CommonUtil.getClass("io.papermc.paper.threadedregions.RegionizedServerInitEvent")) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fFolia is found, enabled Folia compatibility feature!");
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §6Warning: Folia support is not fully test, major bugs maybe found! " +
+                    "Please do not use in production environment!");
+            isFolia = true;
+        }
         new ErrorManager();
         new InitManager();
         new ActionManager();
         new ConditionManager();
         new ConfigManager();
         new HookManager();
-        if (CommonUtil.getClass("com.destroystokyo.paper.PaperConfig")) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fPaper is found, enabled Paper only feature!");
-            isPaper = true;
-        }
         new LanguageManager();
         new ListenerManager();
         new CommandManager();

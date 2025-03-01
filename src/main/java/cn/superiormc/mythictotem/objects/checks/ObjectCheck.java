@@ -6,6 +6,7 @@ import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.noteblock.NoteBlockMechanic;
@@ -182,7 +183,7 @@ public class ObjectCheck {
                 }
                 if (VerticalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
+                        SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 }
@@ -193,7 +194,7 @@ public class ObjectCheck {
                 }
                 if (HorizontalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
+                        SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 }
@@ -629,7 +630,7 @@ public class ObjectCheck {
                 priceManager.CheckPrice(true, item);
             }
         }
-        Bukkit.getScheduler().runTask(MythicTotem.instance, () -> {
+        SchedulerUtil.runSync(() -> {
             if (singleTotem.getTotem().getTotemDisappear()) {
                 for (Location loc : validTotemBlockLocation) {
                     CommonUtil.removeBlock(loc.getBlock());

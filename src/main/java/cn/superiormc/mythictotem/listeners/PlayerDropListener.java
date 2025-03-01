@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.listeners;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +28,7 @@ public class PlayerDropListener implements Listener {
             return;
         }
         ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
-        Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, () -> {
+        SchedulerUtil.runTaskAsynchronously(() -> {
             synchronized(event) {
                 new ObjectCheck(event);
             }
@@ -35,7 +36,7 @@ public class PlayerDropListener implements Listener {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
             Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eDrop trigger!");
         }
-        Bukkit.getScheduler().runTaskLater(MythicTotem.instance, () -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()),
+        SchedulerUtil.runTaskLater(() -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()),
                 ConfigManager.configManager.getLong("cooldown-tick", 5L));
     }
 
