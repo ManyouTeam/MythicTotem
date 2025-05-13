@@ -5,6 +5,7 @@ import cn.superiormc.mythictotem.hooks.economy.*;
 import cn.superiormc.mythictotem.hooks.items.*;
 import cn.superiormc.mythictotem.hooks.protection.*;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -93,6 +94,9 @@ public class HookManager {
         if (CommonUtil.checkPluginLoad("Nexo")) {
             registerNewItemHook("Nexo", new ItemNexoHook());
         }
+        if (CommonUtil.checkPluginLoad("CraftEngine")) {
+            registerNewItemHook("CraftEngine", new ItemCraftEngineHook());
+        }
     }
 
     private void initProtectionHook() {
@@ -132,6 +136,7 @@ public class HookManager {
     public void registerNewEconomyHook(String pluginName,
                                        AbstractEconomyHook economyHook) {
         if (!economyHooks.containsKey(pluginName)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
             economyHooks.put(pluginName, economyHook);
         }
     }
@@ -139,6 +144,7 @@ public class HookManager {
     public void registerNewItemHook(String pluginName,
                                     AbstractItemHook itemHook) {
         if (!itemHooks.containsKey(pluginName)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
             itemHooks.put(pluginName, itemHook);
         }
     }
@@ -146,6 +152,7 @@ public class HookManager {
     public void registerNewProtectionHook(String pluginName,
                                     AbstractProtectionHook protectionHook) {
         if (!protectionHooks.containsKey(pluginName)) {
+            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
             protectionHooks.put(pluginName, protectionHook);
         }
     }

@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.utils;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import dev.lone.itemsadder.api.CustomBlock;
+import dev.lone.itemsadder.api.ItemsAdder;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -27,8 +28,7 @@ public class CommonUtil {
             String var2 = "%" + args[i] + "%";
             if (args[i + 1] == null) {
                 text = text.replace(var1, "").replace(var2, "");
-            }
-            else {
+            } else {
                 text = text.replace(var1, args[i + 1]).replace(var2, args[i + 1]);
             }
         }
@@ -118,11 +118,14 @@ public class CommonUtil {
     public static void removeBlock(Block block) {
         if (block == null) {
             return;
-        } else if (CommonUtil.checkPluginLoad("ItemsAdder") && CustomBlock.byAlreadyPlaced(block) != null) {
-            CustomBlock.remove(block.getLocation());
-        } else {
-            block.setType(Material.AIR);
         }
+        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
+            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
+            if (customBlock != null) {
+                customBlock.remove();
+            }
+        }
+        block.setType(Material.AIR);
     }
 
     public static void mkDir(File dir) {

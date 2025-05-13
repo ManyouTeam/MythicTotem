@@ -1,6 +1,5 @@
 package cn.superiormc.mythictotem.listeners;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;

@@ -34,6 +34,8 @@ public abstract class AbstractSingleRun {
                 "block_z", String.valueOf(check.getBlock().getZ()),
                 "totem_column", String.valueOf(totem.getColumn()),
                 "totem_row", String.valueOf(totem.getRow()),
+                "totem_layout", String.valueOf(totem.getLayer()),
+                "totem_id", totem.getTotem().getTotemID(),
                 "totem_start_x", String.valueOf(startLocation.getX()),
                 "totem_start_y", String.valueOf(startLocation.getY()),
                 "totem_start_z", String.valueOf(startLocation.getZ())

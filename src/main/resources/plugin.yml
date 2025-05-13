@@ -32,6 +32,7 @@ softdepend:
   - VotingPlugin
   - ExecutableItems
   - MythicChanger
+  - CraftEngine
 commands:
   mythictotem:
     aliases:

@@ -11,6 +11,7 @@ item-price:
   # Support Value: Bukkit, ItemFormat.
   check-method: Bukkit
   item-format:
+    require-same-key: false
     ignore-key:
       - 'lore'
       - 'damage'

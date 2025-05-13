@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>4.2.2</version>
+    <version>4.2.5</version>
     <packaging>jar</packaging>
 
     <name>MythicTotem</name>
@@ -130,6 +130,10 @@
         <repository>
             <id>glaremasters repo</id>
             <url>https://repo.glaremasters.me/repository/towny/</url>
+        </repository>
+        <repository>
+            <id>momirealms repo</id>
+            <url>https://repo.momirealms.net/releases/</url>
         </repository>
     </repositories>
 
@@ -395,6 +399,18 @@
             <groupId>cn.lunadeer</groupId>
             <artifactId>DominionAPI</artifactId>
             <version>3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.momirealms</groupId>
+            <artifactId>craft-engine-core</artifactId>
+            <version>0.0.34</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.momirealms</groupId>
+            <artifactId>craft-engine-bukkit</artifactId>
+            <version>0.0.34</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

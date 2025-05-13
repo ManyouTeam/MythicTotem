@@ -6,6 +6,7 @@ import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.methods.BuildItem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,7 +58,9 @@ public class ObjectPriceCheck {
                 priceBoolean = true;
                 break;
             case "block":
-                CommonUtil.removeBlock(block);
+                SchedulerUtil.runSync(() -> {
+                    CommonUtil.removeBlock(block);
+                });
                 break;
             case "hook":
                 priceBoolean = ItemPriceUtil.getPrice(section.getString("hook-plugin"),

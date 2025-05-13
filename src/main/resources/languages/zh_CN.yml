@@ -1,0 +1,26 @@
+plugin-reloaded: "&#98FB98[MythicTotem] &f插件已重载!"
+help-main: |
+  &#98FB98&lMythicTotem &7作者 @PQguanfang
+  &f/mythictotem help &7- 查看帮助.
+help-main-admin: |
+  &#98FB98&lMythicTotem &7作者 @PQguanfang
+  &f/mythictotem help &7- 查看帮助.
+  &f/mythictotem list &7- 查看有效图腾名单.
+  &f/mythictotem reload &7- 重启插件.
+  &f/mythictotem save &7- 保存手持物品. &c(Premium)
+help-main-console: |
+  &#98FB98&lMythicTotem &7作者 @PQguanfang
+  &f/mythictotem help &7- 查看帮助.
+  &f/mythictotem list &7- 查看有效图腾名单.
+  &f/mythictotem reload &7- 重启插件.
+command-tab:
+  type-item-id: "[输入想要的ID]"
+list-head: "&#98FB98[MythicTotem] &f有效图腾列表:"
+list-content: "&f{totem}"
+saved: "&#98FB98[MythicTotem] &f已保存手持物品!"
+error-args: "&#98FB98[MythicTotem] &c错误的插件用法，如需帮助，请输入指令 /mythictotem help!"
+error-miss-permission: "&#98FB98[MythicTotem] &c你没有权限使用这个指令!"
+error-save-item-not-found: "&#98FB98[MythicTotem] &c找不到名称为 {item} 的物品!"
+in-game: "&#98FB98[MythicTotem] &c你必须在游戏中使用这个指令!"
+give-save-item: "&#98FB98[MythicTotem] &f给予玩家 {player} 保存物品 {item} x{amount}!"
+generated: "&#98FB98[MythicTotem] &f已在插件根目录下生成手持物品的物品格式文件!"
