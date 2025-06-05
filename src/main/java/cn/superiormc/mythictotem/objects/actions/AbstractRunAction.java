@@ -34,7 +34,7 @@ public abstract class AbstractRunAction {
         if (requiredArgs != null) {
             for (String arg : requiredArgs) {
                 if (!singleAction.getSection().contains(arg)) {
-                    ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your action missing required arg: " + arg + ".");
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Your action missing required arg: " + arg + ".");
                     return;
                 }
             }

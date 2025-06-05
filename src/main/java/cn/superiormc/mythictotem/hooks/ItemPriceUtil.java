@@ -6,6 +6,7 @@ import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.utils.ItemUtil;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class ItemPriceUtil {
                                    boolean take,
                                    ItemStack keyItems) {
         if (MythicTotem.freeVersion) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You are using free version, " +
+            ErrorManager.errorManager.sendErrorMessage("§cError: You are using free version, " +
                     "hook item price can not be used in this version!");
             return false;
         }
@@ -89,8 +90,8 @@ public class ItemPriceUtil {
                                    boolean take,
                                    ItemStack keyItems) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aRequired Price Item: " + item + "!");
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aConfirmed Key Item: " + keyItems + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aRequired Price Item: " + item + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aConfirmed Key Item: " + keyItems + "!");
         }
         if (value < 0) {
             return false;

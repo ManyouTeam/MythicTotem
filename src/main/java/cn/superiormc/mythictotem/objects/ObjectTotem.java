@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,14 +47,14 @@ public class ObjectTotem {
         this.totemSection = section;
         ConfigurationSection totemLayoutsExplainConfig = section.getConfigurationSection("explains");
         if (totemLayoutsExplainConfig == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not found any explains option in totem: " + id + ".");
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not found any explains option in totem: " + id + ".");
             return;
         }
         Set<String> totemLayoutsExplainList = totemLayoutsExplainConfig.getKeys(false);
         Map<String, String> totemLayoutsExplain = new HashMap<>();
         for (String totemLayoutsChar : totemLayoutsExplainList) {
             if (totemLayoutsChar.length() > 1) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Totem " + id + "'s layout explain config keys must be a char, like A.");
+                ErrorManager.errorManager.sendErrorMessage("§cError: Totem " + id + "'s layout explain config keys must be a char, like A.");
                 return;
             }
             String totemLayoutsMaterial = totemLayoutsExplainConfig.getString(totemLayoutsChar);
@@ -68,7 +69,7 @@ public class ObjectTotem {
         if (layoutsSection != null) {
             ConfigManager.configManager.plus3DTotem();
             if (MythicTotem.freeVersion && ConfigManager.configManager.getThreeDtotemAmount() > 3) {
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Free version" +
+                ErrorManager.errorManager.sendErrorMessage("§cError: Free version" +
                         " can only create up to 3 3D totems, but your totem configs have more then 3 3D totems, please" +
                         " remove, otherwise plugin won't check 3D totems!");
                 return;
@@ -109,7 +110,7 @@ public class ObjectTotem {
                     this.totemRow++;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 3D Totem: §e" + totemID +
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded 3D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
         else {
@@ -135,7 +136,7 @@ public class ObjectTotem {
                 this.totemRow++;
             }
             this.totemLayer = 1;
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fLoaded 2D Totem: §e" + totemID +
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded 2D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
     }

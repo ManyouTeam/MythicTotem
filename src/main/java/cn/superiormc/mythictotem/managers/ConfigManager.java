@@ -59,7 +59,7 @@ public class ConfigManager {
                 if (fileName.endsWith(".yml")) {
                     String substring = fileName.substring(0, fileName.length() - 4);
                     if (totems.containsKey(substring)) {
-                        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Already loaded a totem config called: " +
+                        ErrorManager.errorManager.sendErrorMessage("§cError: Already loaded a totem config called: " +
                                 fileName + "!");
                         continue;
                     }

@@ -43,7 +43,7 @@ public class ItemMythicMobsHook extends AbstractItemHook {
         if (mythicMobsVersion == 5) {
             return MythicBukkit.inst().getItemManager().getMythicTypeFromItem(hookItem);
         }
-        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your MythicMobs is too old, we can not parse the item from " +
+        ErrorManager.errorManager.sendErrorMessage("§cError: Your MythicMobs is too old, we can not parse the item from " +
                 "old version of MythicMobs.");
         return null;
     }

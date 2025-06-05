@@ -7,6 +7,7 @@ import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.methods.BuildItem;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -45,12 +46,12 @@ public class ObjectPriceCheck {
             type = "free";
         }
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aPrice Type: " + type + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aPrice Type: " + type + "!");
         }
     }
     public boolean CheckPrice(boolean take, ItemStack keyItems) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §aKey Item: " + keyItems + "!");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aKey Item: " + keyItems + "!");
         }
         boolean priceBoolean = false;
         switch (type) {
@@ -87,7 +88,7 @@ public class ObjectPriceCheck {
                         section.getInt("amount", 0), take);
                 break;
             case "unknwon":
-                ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: There is something wrong in your totem configs!");
+                ErrorManager.errorManager.sendErrorMessage("§cError: There is something wrong in your totem configs!");
                 break;
         }
         return priceBoolean;

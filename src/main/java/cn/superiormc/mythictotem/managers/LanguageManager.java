@@ -34,7 +34,7 @@ public class LanguageManager {
         if (!file.exists()){
             file = new File(MythicTotem.instance.getDataFolder(), "message.yml");
             if (!file.exists()) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cWe can not found your message file, " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cWe can not found your message file, " +
                         "please try restart your server!");
             }
         }
@@ -68,11 +68,11 @@ public class LanguageManager {
         String text = this.messageFile.getString(args[0]);
         if (text == null) {
             if (this.tempMessageFile.getString(args[0]) == null) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not found language key: " + args[0] + "!");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cCan not found language key: " + args[0] + "!");
                 return;
             }
             else {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cUpdated your language file, added " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cUpdated your language file, added " +
                         "new language key and it's default value: " + args[0] + "!");
                 text = this.tempMessageFile.getString(args[0]);
                 messageFile.set(args[0], text);
@@ -104,11 +104,11 @@ public class LanguageManager {
         String text = this.messageFile.getString(args[0]);
         if (text == null) {
             if (this.tempMessageFile.getString(args[0]) == null) {
-                player.sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not found language key: " + args[0] + "!");
+                player.sendMessage(TextUtil.pluginPrefix() + " §cCan not found language key: " + args[0] + "!");
                 return;
             }
             else {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cUpdated your language file, added " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cUpdated your language file, added " +
                         "new language key and it's default value: " + args[0] + "!");
                 text = this.tempMessageFile.getString(args[0]);
                 messageFile.set(args[0], text);
@@ -143,7 +143,7 @@ public class LanguageManager {
                 return "§cCan not found language key: " + args[0] + "!";
             }
             else {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cUpdated your language file, added " +
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cUpdated your language file, added " +
                         "new language key and it's default value: " + args[0] + "!");
                 text = this.tempMessageFile.getString(args[0]);
                 messageFile.set(args[0], text);

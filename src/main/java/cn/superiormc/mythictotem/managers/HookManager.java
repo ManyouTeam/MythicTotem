@@ -5,6 +5,7 @@ import cn.superiormc.mythictotem.hooks.economy.*;
 import cn.superiormc.mythictotem.hooks.items.*;
 import cn.superiormc.mythictotem.hooks.protection.*;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -136,7 +137,7 @@ public class HookManager {
     public void registerNewEconomyHook(String pluginName,
                                        AbstractEconomyHook economyHook) {
         if (!economyHooks.containsKey(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fHooking into " + pluginName + "...");
             economyHooks.put(pluginName, economyHook);
         }
     }
@@ -144,7 +145,7 @@ public class HookManager {
     public void registerNewItemHook(String pluginName,
                                     AbstractItemHook itemHook) {
         if (!itemHooks.containsKey(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fHooking into " + pluginName + "...");
             itemHooks.put(pluginName, itemHook);
         }
     }
@@ -152,7 +153,7 @@ public class HookManager {
     public void registerNewProtectionHook(String pluginName,
                                     AbstractProtectionHook protectionHook) {
         if (!protectionHooks.containsKey(pluginName)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fHooking into " + pluginName + "...");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fHooking into " + pluginName + "...");
             protectionHooks.put(pluginName, protectionHook);
         }
     }
@@ -166,7 +167,7 @@ public class HookManager {
             return false;
         }
         if (!economyHooks.containsKey(pluginName)) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not hook into "
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not hook into "
                     + pluginName + " plugin, maybe we do not support this plugin, or your server didn't correctly load " +
                     "this plugin!");
             return false;
@@ -198,14 +199,14 @@ public class HookManager {
             }
             return false;
         }
-        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
+        ErrorManager.errorManager.sendErrorMessage("§cError: You set economy type to "
                 + vanillaType + " in shop config, however for now UltimateShop does not support it!");
         return false;
     }
 
     public ItemStack getHookItem(Player player, String pluginName, String itemID) {
         if (!itemHooks.containsKey(pluginName)) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not hook into "
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not hook into "
                     + pluginName + " plugin, maybe we do not support this plugin, or your server didn't correctly load " +
                     "this plugin!");
             return null;
@@ -216,7 +217,7 @@ public class HookManager {
 
     public void giveEconomy(String pluginName, String currencyName, Player player, double value) {
         if (!economyHooks.containsKey(pluginName)) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not hook into "
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not hook into "
                     + pluginName + " plugin, maybe we do not support this plugin, or your server didn't correctly load " +
                     "this plugin!");
             return;
@@ -237,14 +238,14 @@ public class HookManager {
             player.giveExpLevels(value);
             return;
         }
-        ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: You set economy type to "
+        ErrorManager.errorManager.sendErrorMessage("§cError: You set economy type to "
                 + vanillaType + " in shop config, however for now UltimateShop does not support it!");
         return;
     }
 
     public void takeEconomy(String pluginName, String currencyName, Player player, double value) {
         if (!economyHooks.containsKey(pluginName)) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not hook into "
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not hook into "
                     + pluginName + " plugin, maybe we do not support this plugin, or your server didn't correctly load " +
                     "this plugin!");
             return;
@@ -261,7 +262,7 @@ public class HookManager {
             return null;
         }
         if (!itemHooks.containsKey(pluginName)) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Can not hook into "
+            ErrorManager.errorManager.sendErrorMessage("§cError: Can not hook into "
                     + pluginName + " plugin, maybe we do not support this plugin, or your server didn't correctly load " +
                     "this plugin!");
             return null;

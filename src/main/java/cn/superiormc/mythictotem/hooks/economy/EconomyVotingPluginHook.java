@@ -15,7 +15,7 @@ public class EconomyVotingPluginHook extends AbstractEconomyHook {
     public double getEconomy(Player player, String currencyID) {
         VotingPluginUser user = VotingPluginMain.getPlugin().getVotingPluginUserManager().getVotingPluginUser(player);
         if (user == null) {
-            ErrorManager.errorManager.sendErrorMessage("§x§9§8§F§B§9§8[MythicTotem] §cCan not find find user data " +
+            ErrorManager.errorManager.sendErrorMessage("§cCan not find find user data " +
                     player.getName() + " in VotingPlugin plugin!");
             return 0;
         }

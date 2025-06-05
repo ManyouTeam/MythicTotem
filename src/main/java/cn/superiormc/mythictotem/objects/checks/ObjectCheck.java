@@ -7,6 +7,7 @@ import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.noteblock.NoteBlockMechanic;
@@ -90,9 +91,9 @@ public class ObjectCheck {
         }
         this.block = event.getBlocks().getLast().getRelative(event.getDirection()).getLocation().getBlock();
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLocation: " + block.getLocation());
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eLength: " + event.getBlocks().size());
-            //Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLocation: " + block.getLocation());
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLength: " + event.getBlocks().size());
+            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
         }
         this.player = null;
         this.item = null;
@@ -107,7 +108,7 @@ public class ObjectCheck {
         }
         if (block.isEmpty()) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cSkipped because block is air!");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cSkipped because block is air!");
             }
             return;
         }
@@ -121,12 +122,12 @@ public class ObjectCheck {
     public void CheckTotem() {
         if (ConfigManager.configManager.getCheckingBlock.contains(block)) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped checking block!");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped checking block!");
             }
             return;
         }
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eBlock Type: " + block.getType().name());
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eBlock Type: " + block.getType().name());
         }
         initParsedID();
         if (parsedID == null) {
@@ -135,15 +136,15 @@ public class ObjectCheck {
         List<ObjectPlaceCheck> placedBlockCheckManagers = ConfigManager.configManager.getTotemMaterial.get(parsedID);
         ConfigManager.configManager.getCheckingBlock.add(block);
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eParsed Block ID: " + parsedID);
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §c-------------Checking Info-------------");
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eParsed Block ID: " + parsedID);
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §c-------------Checking Info-------------");
         }
         big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
             if (!condition.getAllBoolean(player, player.getLocation(), this, singleTotem)) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.getTotem().getTotemID() +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                             " because conditions not meet!");
                 }
                 continue;
@@ -153,7 +154,7 @@ public class ObjectCheck {
                     singleTotem.getTotem().getSection().contains("prices");
             if (usePrice) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eChecking " + singleTotem.getTotem().getTotemID() +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eChecking " + singleTotem.getTotem().getTotemID() +
                             " prices...");
                 }
                 for (String singleSection : singleTotem.getTotem().getSection().getConfigurationSection("prices").getKeys(false)) {
@@ -161,15 +162,15 @@ public class ObjectCheck {
                     if (!singleTotem.getTotem().getKeyMode()) {
                         item = null;
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSet item to null!");
+                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSet item to null!");
                         }
                     }
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eItem: " + item + "!");
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eItem: " + item + "!");
                     }
                     if (!priceManager.CheckPrice(false, item)) {
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eSkipped " + singleTotem.getTotem().getTotemID() +
+                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                                     " because prices not meet!");
                         }
                         continue big;
@@ -178,7 +179,7 @@ public class ObjectCheck {
             }
             if (singleTotem.getTotem().getCheckMode().equals("VERTICAL")) {
                  if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.getTotem().getTotemID() +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " VERTICAL totem check!");
                 }
                 if (VerticalTotem(singleTotem)) {
@@ -189,7 +190,7 @@ public class ObjectCheck {
                 }
             } else {
                  if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §eStarted " + singleTotem.getTotem().getTotemID() +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " HORIZONTAL totem check!");
                 }
                 if (HorizontalTotem(singleTotem)) {
@@ -340,7 +341,7 @@ public class ObjectCheck {
         int offset_column = singleTotem.getColumn();
         int offset_layer = singleTotem.getLayer();
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cChecking: " + offset_row
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cChecking: " + offset_row
                     + " - " +  offset_column
                     + " - " +  offset_layer + "!");
         }
@@ -381,7 +382,7 @@ public class ObjectCheck {
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cStart Location: " + startLocation_1);
+            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cStart Location: " + startLocation_1);
         }
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.getTotem().getRealRow();
@@ -460,7 +461,7 @@ public class ObjectCheck {
                     }
                     String material = singleTotem.getTotem().getRealMaterial(a, i, b);
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cMaterial should be: " + material);
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cMaterial should be: " + material);
                     }
                     //1
                     ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(material, nowLocation_1, 1);
@@ -498,7 +499,7 @@ public class ObjectCheck {
                             }
                         }
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cRule 2 Size: " + validTotemBlockLocation2.size());
+                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cRule 2 Size: " + validTotemBlockLocation2.size());
                         }
                     } else if (checkTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                         checkTrueOrFalse2 = false;

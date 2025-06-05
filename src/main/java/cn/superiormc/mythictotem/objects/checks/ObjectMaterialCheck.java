@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.objects.checks;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import com.google.common.base.Enums;
 import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomFurniture;
@@ -49,7 +50,7 @@ public class ObjectMaterialCheck {
         String[] tempVal1 = materialString.split(":");
         if (materialString.equals("none")) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fSkipped none block.");
+                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSkipped none block.");
             }
             return true;
         } else if (materialString.startsWith("minecraft:")) {
@@ -59,7 +60,7 @@ public class ObjectMaterialCheck {
                 if (material != null) {
                     block = location.getBlock();
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                 materialString + ", real block: " + block.getType().name() + ", location: " + location + ", ID: " + id + ".");
                     }
                     return material == block.getType();
@@ -71,12 +72,12 @@ public class ObjectMaterialCheck {
                     }
                     Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                 materialString + ", find entities amount: " + entities.size() + ".");
                     }
                     for (Entity singleEntity: entities) {
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                     materialString + ", find entity: " + singleEntity.getType() + ".");
                         }
                         if (singleEntity.getType() == entityType) {
@@ -93,7 +94,7 @@ public class ObjectMaterialCheck {
             try {
                 block = location.getBlock();
                 if (materialString.split(":").length != 3) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your itemsadder material does not meet" +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your itemsadder material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
@@ -108,7 +109,7 @@ public class ObjectMaterialCheck {
         } else if (materialString.startsWith("itemsadder_furniture:") && !MythicTotem.freeVersion) {
             try {
                 if (tempVal1.length < 3) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your itemsadder_furniture material does not meet" +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your itemsadder_furniture material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
@@ -119,12 +120,12 @@ public class ObjectMaterialCheck {
                 }
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
                     this.entity = singleEntity;
@@ -146,7 +147,7 @@ public class ObjectMaterialCheck {
         } else if (materialString.startsWith("itemsadder_mob:") && !MythicTotem.freeVersion) {
             try {
                 if (tempVal1.length < 3) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your itemsadder_mob material does not meet" +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your itemsadder_mob material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
@@ -157,12 +158,12 @@ public class ObjectMaterialCheck {
                 }
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
                     if (singleEntity instanceof Player) {
@@ -201,7 +202,7 @@ public class ObjectMaterialCheck {
         } else if (materialString.startsWith("oraxen_furniture:") && !MythicTotem.freeVersion) {
             try {
                 if (tempVal1.length < 2) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §cError: Your oraxen_furniture material does not meet" +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your oraxen_furniture material does not meet" +
                             " the format claimed in plugin Wiki!");
                     return false;
                 }
@@ -212,12 +213,12 @@ public class ObjectMaterialCheck {
                 }
                 Collection<Entity> entities = CommonUtil.getNearbyEntity(tempLocation, checkDistance);
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                             materialString + ", find entities amount: " + entities.size() + ".");
                 }
                 for (Entity singleEntity : entities) {
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage("§x§9§8§F§B§9§8[MythicTotem] §fShould be: " +
+                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
                                 materialString + ", find entity: " + singleEntity.getType() + ".");
                     }
                     this.entity = singleEntity;
