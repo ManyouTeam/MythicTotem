@@ -42,9 +42,6 @@ public class ObjectCondition {
     }
 
     public boolean getAllBoolean(Player player, Location startLocation, ObjectCheck check, ObjectPlaceCheck totem) {
-        if (player == null) {
-            return false;
-        }
         for (ObjectSingleCondition singleCondition : conditions){
             if (!singleCondition.checkBoolean(player, startLocation, check, totem)) {
                 return false;

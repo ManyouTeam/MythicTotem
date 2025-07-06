@@ -54,7 +54,7 @@ public class ObjectCheck {
             return;
         }
         this.item = this.player.getInventory().getItemInMainHand();
-        CheckTotem();
+        checkTotem();
     }
 
     public ObjectCheck(BlockPlaceEvent event) {
@@ -62,7 +62,7 @@ public class ObjectCheck {
         this.block = event.getBlockPlaced();
         this.player = event.getPlayer();
         this.item = event.getItemInHand();
-        CheckTotem();
+        checkTotem();
     }
 
     public ObjectCheck(PlayerInteractEvent event) {
@@ -73,7 +73,7 @@ public class ObjectCheck {
         this.block = event.getClickedBlock();
         this.player = event.getPlayer();
         this.item = event.getItem();
-        CheckTotem();
+        checkTotem();
     }
 
     public ObjectCheck(BlockRedstoneEvent event) {
@@ -81,7 +81,7 @@ public class ObjectCheck {
         this.block = event.getBlock();
         this.player = null;
         this.item = null;
-        CheckTotem();
+        checkTotem();
     }
 
     public ObjectCheck(BlockPistonExtendEvent event) {
@@ -97,7 +97,7 @@ public class ObjectCheck {
         }
         this.player = null;
         this.item = null;
-        CheckTotem();
+        checkTotem();
     }
 
     public ObjectCheck(PlayerDropItemEvent event) {
@@ -115,11 +115,11 @@ public class ObjectCheck {
         this.player = event.getPlayer();
         this.item = event.getItemDrop().getItemStack();
         ConfigManager.configManager.getDroppedItems.add(event.getItemDrop());
-        CheckTotem();
+        checkTotem();
         ConfigManager.configManager.getDroppedItems.remove(event.getItemDrop());
     }
 
-    public void CheckTotem() {
+    public void checkTotem() {
         if (ConfigManager.configManager.getCheckingBlock.contains(block)) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
                 Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped checking block!");
@@ -142,7 +142,7 @@ public class ObjectCheck {
         big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
-            if (!condition.getAllBoolean(player, player.getLocation(), this, singleTotem)) {
+            if (!condition.getAllBoolean(player, block.getLocation(), this, singleTotem)) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                             " because conditions not meet!");
@@ -152,7 +152,7 @@ public class ObjectCheck {
             // 价格
             boolean usePrice = !MythicTotem.freeVersion &&
                     singleTotem.getTotem().getSection().contains("prices");
-            if (usePrice) {
+            if (usePrice && player != null) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eChecking " + singleTotem.getTotem().getTotemID() +
                             " prices...");
@@ -182,7 +182,7 @@ public class ObjectCheck {
                     Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " VERTICAL totem check!");
                 }
-                if (VerticalTotem(singleTotem)) {
+                if (verticalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
                         SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
@@ -193,7 +193,7 @@ public class ObjectCheck {
                     Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " HORIZONTAL totem check!");
                 }
-                if (HorizontalTotem(singleTotem)) {
+                if (horizontalTotem(singleTotem)) {
                     if (event instanceof PlayerDropItemEvent && usePrice) {
                         SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
@@ -203,7 +203,8 @@ public class ObjectCheck {
         }
         ConfigManager.configManager.getCheckingBlock.remove(block);
     }
-    private boolean VerticalTotem(ObjectPlaceCheck singleTotem) {
+
+    private boolean verticalTotem(ObjectPlaceCheck singleTotem) {
         // 玩家放置的方块的坐标的偏移
         int offset_y = singleTotem.getRow();
         int offset_x_or_z = singleTotem.getColumn();
@@ -318,16 +319,16 @@ public class ObjectCheck {
                 }
                 // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
-                    AfterCheck(singleTotem, startLocation_1, validXTotemBlockLocation1, validXTotemEntity1);
+                    afterCheck(singleTotem, startLocation_1, validXTotemBlockLocation1, validXTotemEntity1);
                     return true;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
-                    AfterCheck(singleTotem, startLocation_2, validXTotemBlockLocation2, validXTotemEntity2);
+                    afterCheck(singleTotem, startLocation_2, validXTotemBlockLocation2, validXTotemEntity2);
                     return true;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
-                    AfterCheck(singleTotem, startLocation_3, validZTotemBlockLocation1, validZTotemEntity1);
+                    afterCheck(singleTotem, startLocation_3, validZTotemBlockLocation1, validZTotemEntity1);
                     return true;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
-                    AfterCheck(singleTotem, startLocation_4, validZTotemBlockLocation2, validZTotemEntity2);
+                    afterCheck(singleTotem, startLocation_4, validZTotemBlockLocation2, validZTotemEntity2);
                     return true;
                 }
             }
@@ -335,7 +336,7 @@ public class ObjectCheck {
         return false;
     }
 
-    private boolean HorizontalTotem(ObjectPlaceCheck singleTotem) {
+    private boolean horizontalTotem(ObjectPlaceCheck singleTotem) {
         // 玩家放置的方块的坐标的偏移
         int offset_row = singleTotem.getRow();
         int offset_column = singleTotem.getColumn();
@@ -584,28 +585,28 @@ public class ObjectCheck {
                     }
                     // 条件满足
                     if (validTotemBlockLocation1.size() == (base_row * base_column) * base_layer - validNoneBlockAmount1) {
-                        AfterCheck(singleTotem, startLocation_1, validTotemBlockLocation1, validTotemEntity1);
+                        afterCheck(singleTotem, startLocation_1, validTotemBlockLocation1, validTotemEntity1);
                         return true;
                     } else if (validTotemBlockLocation2.size() == (base_row * base_column) * base_layer - validNoneBlockAmount2) {
-                        AfterCheck(singleTotem, startLocation_2, validTotemBlockLocation2, validTotemEntity2);
+                        afterCheck(singleTotem, startLocation_2, validTotemBlockLocation2, validTotemEntity2);
                         return true;
                     } else if (validTotemBlockLocation3.size() == (base_row * base_column) * base_layer - validNoneBlockAmount3) {
-                        AfterCheck(singleTotem, startLocation_3, validTotemBlockLocation3, validTotemEntity3);
+                        afterCheck(singleTotem, startLocation_3, validTotemBlockLocation3, validTotemEntity3);
                         return true;
                     } else if (validTotemBlockLocation4.size() == (base_row * base_column) * base_layer - validNoneBlockAmount4) {
-                        AfterCheck(singleTotem, startLocation_4, validTotemBlockLocation4, validTotemEntity4);
+                        afterCheck(singleTotem, startLocation_4, validTotemBlockLocation4, validTotemEntity4);
                         return true;
                     } else if (validTotemBlockLocation5.size() == (base_row * base_column) * base_layer - validNoneBlockAmount5) {
-                        AfterCheck(singleTotem, startLocation_5, validTotemBlockLocation5, validTotemEntity5);
+                        afterCheck(singleTotem, startLocation_5, validTotemBlockLocation5, validTotemEntity5);
                         return true;
                     } else if (validTotemBlockLocation6.size() == (base_row * base_column) * base_layer - validNoneBlockAmount6) {
-                        AfterCheck(singleTotem, startLocation_6, validTotemBlockLocation6, validTotemEntity6);
+                        afterCheck(singleTotem, startLocation_6, validTotemBlockLocation6, validTotemEntity6);
                         return true;
                     } else if (validTotemBlockLocation7.size() == (base_row * base_column) * base_layer - validNoneBlockAmount7) {
-                        AfterCheck(singleTotem, startLocation_7, validTotemBlockLocation7, validTotemEntity7);
+                        afterCheck(singleTotem, startLocation_7, validTotemBlockLocation7, validTotemEntity7);
                         return true;
                     } else if (validTotemBlockLocation8.size() == (base_row * base_column) * base_layer - validNoneBlockAmount8) {
-                        AfterCheck(singleTotem, startLocation_8, validTotemBlockLocation8, validTotemEntity8);
+                        afterCheck(singleTotem, startLocation_8, validTotemBlockLocation8, validTotemEntity8);
                         return true;
                     }
                 }
@@ -614,13 +615,13 @@ public class ObjectCheck {
         return false;
     }
 
-    private void AfterCheck(ObjectPlaceCheck singleTotem,
+    private void afterCheck(ObjectPlaceCheck singleTotem,
                             Location startLocation,
                             List<Location> validTotemBlockLocation,
                             Collection<Entity> needRemoveEntities) {
         ConfigManager.configManager.getCheckingBlock.remove(block);
         ConfigurationSection priceSection = singleTotem.getTotem().getSection().getConfigurationSection("prices");
-        if (!MythicTotem.freeVersion && priceSection != null) {
+        if (!MythicTotem.freeVersion && player != null && priceSection != null) {
             for (String singleSection : priceSection.getKeys(false)) {
                 ObjectPriceCheck priceManager = new ObjectPriceCheck(singleTotem.getTotem().getSection().getConfigurationSection("prices." + singleSection),
                         player,

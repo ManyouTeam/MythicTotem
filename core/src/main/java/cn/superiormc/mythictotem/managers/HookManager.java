@@ -282,7 +282,7 @@ public class HookManager {
     }
 
     public boolean getProtectionCanUse(Player player, Location location) {
-        if (MythicTotem.freeVersion || player.isOp() || player.hasPermission("mythictotem.bypass.protection")) {
+        if (MythicTotem.freeVersion || player == null || player.isOp() || player.hasPermission("mythictotem.bypass.protection")) {
             return true;
         }
         for (AbstractProtectionHook protectionHook : protectionHooks.values()) {
