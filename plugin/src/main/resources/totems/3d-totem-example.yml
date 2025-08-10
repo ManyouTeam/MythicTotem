@@ -18,6 +18,6 @@ actions:
     message: 'Hello!'
   2:
     type: mythicmobs_spawn
-    entity: SkeletalKnight'
+    entity: 'SkeletalKnight'
 conditions: []
 disappear: true

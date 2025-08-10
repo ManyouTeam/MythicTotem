@@ -76,11 +76,11 @@ public class PaperMethodUtil implements SpecialMethodUtil {
 
     @Override
     public ItemStack getItemObject(Object object) {
-        if (CommonUtil.getMajorVersion(15)) {
-            return ItemStack.deserializeBytes((byte[]) object);
-        }
         if (object instanceof ItemStack) {
             return (ItemStack) object;
+        }
+        if (CommonUtil.getMajorVersion(15)) {
+            return ItemStack.deserializeBytes((byte[]) object);
         }
         return null;
     }

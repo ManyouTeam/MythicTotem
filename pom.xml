@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.2</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -141,6 +141,10 @@
         <repository>
             <id>momirealms repo</id>
             <url>https://repo.momirealms.net/releases/</url>
+        </repository>
+        <repository>
+            <id>bg-repo</id>
+            <url>https://repo.bg-software.com/repository/api/</url>
         </repository>
     </repositories>
 

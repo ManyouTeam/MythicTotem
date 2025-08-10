@@ -1,5 +1,5 @@
 name: MythicTotem
-version: '${project.version}'
+version: '4.3.2'
 main: cn.superiormc.mythictotem.MythicTotem
 api-version: 1.14
 folia-supported: true
@@ -14,6 +14,7 @@ softdepend:
   - GriefPrevention
   - HuskTowns
   - HuskClaims
+  - SuperiorSkyblock2
   - MMOItems
   - MythicLib
   - ItemsAdder

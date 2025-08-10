@@ -7,7 +7,7 @@
     <parent>
         <groupId>cn.superiormc</groupId>
         <artifactId>MythicTotem</artifactId>
-        <version>4.3.0</version>
+        <version>4.3.2</version>
     </parent>
 
     <artifactId>core</artifactId>
@@ -317,6 +317,12 @@
             <groupId>cn.lunadeer</groupId>
             <artifactId>DominionAPI</artifactId>
             <version>3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.bgsoftware</groupId>
+            <artifactId>SuperiorSkyblockAPI</artifactId>
+            <version>2025.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

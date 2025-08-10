@@ -22,7 +22,7 @@ actions:
     message: 'Hello!'
   2:
     type: mythicmobs_spawn
-    entity: SkeletalKnight'
+    entity: 'SkeletalKnight'
 conditions: []
 # Core block means what block player should place ender crystal on.
 core-blocks:

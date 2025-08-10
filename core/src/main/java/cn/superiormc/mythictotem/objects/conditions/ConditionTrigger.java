@@ -15,6 +15,6 @@ public class ConditionTrigger extends AbstractCheckCondition {
 
     @Override
     protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, Location startLocation, ObjectCheck check, ObjectPlaceCheck totem) {
-        return check.getEvent().equals(singleCondition.getString("event").toUpperCase());
+        return check.getEvent().equals(singleCondition.getString("event"));
     }
 }
