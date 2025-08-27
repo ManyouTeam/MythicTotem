@@ -70,10 +70,10 @@
     <dependencies>
         <dependency>
             <groupId>cn.superiormc</groupId>
-            <artifactId>ManyouItems</artifactId>
+            <artifactId>LegacyCodesCompatibility</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ManyouItems-1.0.0.jar</systemPath>
+            <systemPath>${project.basedir}/lib/LegacyCodesCompatibility.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>
@@ -238,7 +238,7 @@
             <artifactId>MythicChanger</artifactId>
             <version>1.6.9</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/MythicChanger-1.6.9.jar</systemPath>
+            <systemPath>${project.basedir}/lib/MythicChanger-2.6.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>me.qKing12</groupId>
@@ -250,9 +250,14 @@
         <dependency>
             <groupId>com.nexomc</groupId>
             <artifactId>nexo</artifactId>
-            <version>0.5.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/nexo-0.5.0-dev.jar</systemPath>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.bekvon.bukkit.residence</groupId>

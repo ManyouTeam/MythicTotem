@@ -917,7 +917,7 @@ public class BuildItem {
         // MythicChanger Changes
         ConfigurationSection changeSection = section.getConfigurationSection("change-item");
         if (changeSection != null && CommonUtil.checkPluginLoad("MythicChanger")) {
-            ChangesManager.changesManager.setRealChange(new ObjectAction(), changeSection, item.clone(), item, player);
+            ChangesManager.changesManager.setRealChange(new ObjectAction(), changeSection, item, player);
         }
         return item;
     }
