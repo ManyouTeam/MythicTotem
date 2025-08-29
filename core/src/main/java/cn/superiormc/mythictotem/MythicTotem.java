@@ -11,7 +11,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static JavaPlugin instance;
 
-    public static final boolean freeVersion = false;
+    public static final boolean freeVersion = true;
 
     public static SpecialMethodUtil methodUtil;
 
@@ -52,7 +52,7 @@ public final class MythicTotem extends JavaPlugin {
                 Bukkit.getPluginManager().disablePlugin(this);
             }
         }
-        if (CommonUtil.getClass("io.papermc.paper.threadedregions.RegionizedServerInitEvent")) {
+        if (CommonUtil.getClass("io.papermc.paper.threadedregions.RegionizedServer")) {
             Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fFolia is found, enabled Folia compatibility feature!");
             Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §6Warning: Folia support is not fully test, major bugs maybe found! " +
                     "Please do not use in production environment!");
