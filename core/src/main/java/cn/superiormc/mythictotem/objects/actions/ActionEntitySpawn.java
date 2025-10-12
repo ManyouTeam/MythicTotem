@@ -29,9 +29,9 @@ public class ActionEntitySpawn extends AbstractRunAction {
         } else {
             World world = Bukkit.getWorld(worldName);
             location = new Location(world,
-                    singleAction.getDouble("x"),
-                    singleAction.getDouble("y"),
-                    singleAction.getDouble("z"));
+                    singleAction.getDouble("x", player, startLocation, check, totem),
+                    singleAction.getDouble("y", player, startLocation, check, totem),
+                    singleAction.getDouble("z", player, startLocation, check, totem));
 
         }
         MythicTotem.methodUtil.spawnEntity(location, entity);

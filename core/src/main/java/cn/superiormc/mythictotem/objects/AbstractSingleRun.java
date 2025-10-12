@@ -64,6 +64,10 @@ public abstract class AbstractSingleRun {
         return section.getDouble(path);
     }
 
+    public double getDouble(String path, Player player, Location startLocation, ObjectCheck check, ObjectPlaceCheck totem) {
+        return Double.parseDouble(replacePlaceholder(section.getString(path), player, startLocation, check, totem));
+    }
+
     public boolean getBoolean(String path, boolean defaultValue) {
         return section.getBoolean(path, defaultValue);
     }

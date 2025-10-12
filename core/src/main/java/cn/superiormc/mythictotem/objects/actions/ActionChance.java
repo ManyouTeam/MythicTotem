@@ -26,7 +26,7 @@ public class ActionChance extends AbstractRunAction {
         if (chanceSection == null) {
             return;
         }
-        double rate = singleAction.getDouble("rate");
+        double rate = singleAction.getDouble("rate", player, startLocation, check, totem);
         if (RandomUtils.nextDouble(0, 100) > rate) {
             ObjectAction action = new ObjectAction(chanceSection);
             action.runAllActions(player, startLocation, check, totem);
