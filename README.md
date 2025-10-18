@@ -59,7 +59,7 @@ MythicTotem supports multiple Minecraft events as activation triggers:
 
 ---
 
-## ❤️ MythicTotem is a summoning totem plugin for modern Minecraft servers.
+### ❤️ MythicTotem is a summoning totem plugin for modern Minecraft servers.
 
 **MythicTotem** lets you redefine how boss summoning works in Minecraft.  
 From fully 3D, player-built totems to advanced custom conditions and effects, everything is possible — all while maintaining perfect performance and flexibility.
