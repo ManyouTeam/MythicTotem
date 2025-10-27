@@ -39,7 +39,7 @@ public interface SpecialMethodUtil {
 
     void sendMessage(Player player, String text);
 
-    Inventory createNewInv(Player player, int size, String text);
+    void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut);
 
     String legacyParse(String text);
 

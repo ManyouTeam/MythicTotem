@@ -34,7 +34,7 @@ public class ConditionTriggerItem extends AbstractCheckCondition {
             }
             return tempVal1.equals(section.getString("hook-item"));
         } else if (section.contains("match-item") && CommonUtil.checkPluginLoad("MythicChanger")) {
-            return MatchItemManager.matchItemManager.getMatch(section, check.getItem());
+            return MatchItemManager.matchItemManager.getMatch(section, player, check.getItem());
         } else if (section.contains("material")) {
             return ItemUtil.isSameItem(BuildItem.buildItemStack(player, section, section.getInt("amount")), check.getItem());
         }
