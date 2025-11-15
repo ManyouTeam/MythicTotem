@@ -13,7 +13,7 @@ public class CommandManager {
 
     private final Map<String, AbstractCommand> registeredCommands = new HashMap<>();
 
-    public CommandManager(){
+    public CommandManager() {
         commandManager = this;
         registerBukkitCommands();
         registerObjectCommand();

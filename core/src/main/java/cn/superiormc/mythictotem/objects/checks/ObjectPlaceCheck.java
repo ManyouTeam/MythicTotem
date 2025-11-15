@@ -13,14 +13,14 @@ public class ObjectPlaceCheck {
 
     private final ObjectTotem totem;
 
-    public ObjectPlaceCheck(ObjectTotem totemManager, int row, int column){
+    public ObjectPlaceCheck(ObjectTotem totemManager, int row, int column) {
         this.totem = totemManager;
         this.row = row;
         this.column = column;
         this.layer = 1;
     }
 
-    public ObjectPlaceCheck(ObjectTotem totemManager, int row, int column, int layer){
+    public ObjectPlaceCheck(ObjectTotem totemManager, int row, int column, int layer) {
         this.totem = totemManager;
         this.row = row;
         this.column = column;

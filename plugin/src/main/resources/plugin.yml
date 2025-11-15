@@ -1,5 +1,5 @@
 name: MythicTotem
-version: '4.3.9'
+version: '4.3.10'
 main: cn.superiormc.mythictotem.MythicTotem
 api-version: 1.14
 folia-supported: true
