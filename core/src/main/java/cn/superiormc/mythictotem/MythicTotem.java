@@ -11,7 +11,7 @@ public final class MythicTotem extends JavaPlugin {
 
     public static JavaPlugin instance;
 
-    public static final boolean freeVersion = false;
+    public static final boolean freeVersion = true;
 
     public static SpecialMethodUtil methodUtil;
 
@@ -63,6 +63,7 @@ public final class MythicTotem extends JavaPlugin {
         new ActionManager();
         new ConditionManager();
         new ConfigManager();
+        new BlockCheckManager();
         new HookManager();
         new LanguageManager();
         new ListenerManager();

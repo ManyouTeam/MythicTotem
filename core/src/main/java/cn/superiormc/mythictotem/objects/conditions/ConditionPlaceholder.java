@@ -17,32 +17,37 @@ public class ConditionPlaceholder extends AbstractCheckCondition {
     protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, Location startLocation, ObjectCheck check, ObjectPlaceCheck totem) {
         String placeholder = singleCondition.getString("placeholder", player, startLocation, check, totem);
         String value = singleCondition.getString("value", player, startLocation, check, totem);
-        switch (singleCondition.getString("rule")) {
-            case ">=":
-                return Double.parseDouble(placeholder) >= Double.parseDouble(value);
-            case ">":
-                return Double.parseDouble(placeholder) > Double.parseDouble(value);
-            case "=":
-                return Double.parseDouble(placeholder) == Double.parseDouble(value);
-            case "<":
-                return Double.parseDouble(placeholder) < Double.parseDouble(value);
-            case "<=":
-                return Double.parseDouble(placeholder) <= Double.parseDouble(value);
-            case "==":
-                return placeholder.equals(value);
-            case "!=":
-                return !placeholder.equals(value);
-            case "*=":
-                return placeholder.contains(value);
-            case "=*":
-                return value.contains(placeholder);
-            case "!*=":
-                return !placeholder.contains(value);
-            case "!=*":
-                return !value.contains(placeholder);
-            default:
-                ErrorManager.errorManager.sendErrorMessage("§cError: Your placeholder condition can not being correctly load.");
-                return true;
+        try {
+            switch (singleCondition.getString("rule")) {
+                case ">=":
+                    return Double.parseDouble(placeholder) >= Double.parseDouble(value);
+                case ">":
+                    return Double.parseDouble(placeholder) > Double.parseDouble(value);
+                case "=":
+                    return Double.parseDouble(placeholder) == Double.parseDouble(value);
+                case "<":
+                    return Double.parseDouble(placeholder) < Double.parseDouble(value);
+                case "<=":
+                    return Double.parseDouble(placeholder) <= Double.parseDouble(value);
+                case "==":
+                    return placeholder.equals(value);
+                case "!=":
+                    return !placeholder.equals(value);
+                case "*=":
+                    return placeholder.contains(value);
+                case "=*":
+                    return value.contains(placeholder);
+                case "!*=":
+                    return !placeholder.contains(value);
+                case "!=*":
+                    return !value.contains(placeholder);
+                default:
+                    ErrorManager.errorManager.sendErrorMessage("§cError: Your placeholder condition can not being correctly load.");
+                    return true;
+            }
+        } catch (Throwable throwable) {
+            ErrorManager.errorManager.sendErrorMessage("§cError: Your placeholder condition can not being correctly load.");
+            return true;
         }
     }
 }
