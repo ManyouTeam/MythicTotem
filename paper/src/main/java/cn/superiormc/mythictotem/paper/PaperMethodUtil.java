@@ -168,8 +168,12 @@ public class PaperMethodUtil implements SpecialMethodUtil {
 
     @Override
     public void sendTitle(Player player, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
-        player.showTitle(Title.title(PaperTextUtil.modernParse(title),
-                PaperTextUtil.modernParse(subTitle),
+        if (player == null) {
+            return;
+        }
+
+        player.showTitle(Title.title(PaperTextUtil.modernParse(title, player),
+                PaperTextUtil.modernParse(subTitle, player),
                 Title.Times.times(Ticks.duration(fadeIn),
                         Ticks.duration(stay),
                         Ticks.duration(fadeOut))));
