@@ -8,6 +8,8 @@ config-files:
   language: en_US
   force-parse-mini-message: true
 
+debuild-item-method: 'LEGACY'
+
 # Item Price
 item-price:
   # Support Value: Bukkit, ItemFormat.

@@ -2,6 +2,8 @@ package cn.superiormc.mythictotem.paper;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.paper.methods.BuildItemPaper;
+import cn.superiormc.mythictotem.paper.methods.DebuildItemPaper;
 import cn.superiormc.mythictotem.paper.utils.PaperTextUtil;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SpecialMethodUtil;
@@ -145,7 +147,7 @@ public class PaperMethodUtil implements SpecialMethodUtil {
     public void setItemLore(ItemMeta meta, List<String> lores, Player player) {
         List<Component> veryNewLore = new ArrayList<>();
         for (String lore : lores) {
-            for (String singleLore : lore.split("\n")) {
+            for (String singleLore : lore.split("\\\\n")) {
                 if (PaperTextUtil.containsLegacyCodes(singleLore)) {
                     singleLore = "<!i>" + singleLore;
                 }
@@ -207,10 +209,17 @@ public class PaperMethodUtil implements SpecialMethodUtil {
 
     @Override
     public ItemStack editItemStack(ItemStack item, Player player, ConfigurationSection section, int amount, String... args) {
-        if (!CommonUtil.getMinorVersion(21, 5) || MythicTotem.freeVersion) {
+        if (!CommonUtil.getMinorVersion(21, 6) || MythicTotem.freeVersion) {
             return item;
         }
         return BuildItemPaper.editItemStack(item, player, section, amount, args);
     }
 
+    @Override
+    public ConfigurationSection serializeItemStack(ItemStack item) {
+        if (!CommonUtil.getMinorVersion(21, 6) || MythicTotem.freeVersion) {
+            return null;
+        }
+        return DebuildItemPaper.serializeItemStack(item);
+    }
 }

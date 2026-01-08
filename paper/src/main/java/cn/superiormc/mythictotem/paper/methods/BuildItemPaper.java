@@ -1,6 +1,5 @@
-package cn.superiormc.mythictotem.paper;
+package cn.superiormc.mythictotem.paper.methods;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.paper.utils.PaperTextUtil;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
@@ -10,6 +9,7 @@ import com.google.common.base.Enums;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.*;
+import io.papermc.paper.datacomponent.item.attribute.AttributeModifierDisplay;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
 import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
 import io.papermc.paper.potion.SuspiciousEffectEntry;
@@ -23,13 +23,14 @@ import net.kyori.adventure.util.TriState;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.block.*;
+import org.bukkit.block.BlockType;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Axolotl;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TropicalFish;
 import org.bukkit.inventory.EquipmentSlot;
@@ -165,7 +166,12 @@ public class BuildItemPaper {
                     i ++;
                 }
                 RegistryKeySet<@org.jetbrains.annotations.NotNull BlockType> blockTypes = RegistrySet.keySet(RegistryKey.BLOCK, blockTypeKeys);
-                Tool.Rule rule = Tool.rule(blockTypes, Float.parseFloat(ruleParseResult[i]), TriState.byBoolean(Boolean.parseBoolean(ruleParseResult[i + 1])));
+                String booleanValue = ruleParseResult[i + 1];
+                Boolean parsedBoolean = null;
+                if (!booleanValue.equalsIgnoreCase("null")) {
+                    parsedBoolean = Boolean.valueOf(booleanValue);
+                }
+                Tool.Rule rule = Tool.rule(blockTypes, Float.parseFloat(ruleParseResult[i]), TriState.byBoolean(parsedBoolean));
                 builder.addRule(rule);
             }
             item.setData(DataComponentTypes.TOOL, builder.build());
@@ -240,6 +246,7 @@ public class BuildItemPaper {
                 String attribOperation = subSection.getString("operation");
 
                 String attribSlot = subSection.getString("slot");
+                String attribDisplayMode = subSection.getString("display-mode");
 
                 EquipmentSlotGroup slot = EquipmentSlotGroup.ANY;
 
@@ -257,7 +264,22 @@ public class BuildItemPaper {
                                 Enums.getIfPresent(AttributeModifier.Operation.class, attribOperation)
                                         .or(AttributeModifier.Operation.ADD_NUMBER),
                                 slot);
-                    builder.addModifier(attributeInst, modifier, slot);
+                    if (CommonUtil.getMinorVersion(21, 6)) {
+                        AttributeModifierDisplay attributeModifierDisplay = AttributeModifierDisplay.hidden();
+                        if (attribDisplayMode != null) {
+                            attributeModifierDisplay = switch (attribDisplayMode.toUpperCase()) {
+                                case "HIDDEN" -> AttributeModifierDisplay.hidden();
+                                case "RESET", "DEFAULT" -> AttributeModifierDisplay.reset();
+                                case "OVERRIDE", "TEXT" -> AttributeModifierDisplay.override(PaperTextUtil.modernParse(
+                                        subSection.getString("display-text")
+                                        , player));
+                                default -> attributeModifierDisplay;
+                            };
+                        }
+                        builder.addModifier(attributeInst, modifier, slot, attributeModifierDisplay);
+                    } else {
+                        builder.addModifier(attributeInst, modifier, slot);
+                    }
                 }
             }
             item.setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, builder.build());
@@ -265,7 +287,7 @@ public class BuildItemPaper {
 
         // Damage
         int damageKey = section.getInt("damage", -1);
-        if (damageKey > 0) {
+        if (damageKey >= 0) {
             item.setData(DataComponentTypes.DAMAGE, damageKey);
         }
 
@@ -293,8 +315,8 @@ public class BuildItemPaper {
         if (bannerPatternsKey != null) {
             BannerPatternLayers.Builder builder = BannerPatternLayers.bannerPatternLayers();
             for (String pattern : bannerPatternsKey.getKeys(false)) {
-                //PatternType type = RegistryAccess.registryAccess().getRegistry(RegistryKey.BANNER_PATTERN).get(CommonUtil.parseNamespacedKey(pattern));
-                PatternType type = Registry.BANNER_PATTERN.get(CommonUtil.parseNamespacedKey(pattern));
+                PatternType type = RegistryAccess.registryAccess().getRegistry(RegistryKey.BANNER_PATTERN).get(CommonUtil.parseNamespacedKey(pattern));
+                //PatternType type = Registry.BANNER_PATTERN.get(CommonUtil.parseNamespacedKey(pattern));
                 String bannerColor = bannerPatternsKey.getString(pattern);
                 if (type != null && bannerColor != null) {
                     DyeColor color = Enums.getIfPresent(DyeColor.class, bannerColor.toUpperCase()).or(DyeColor.WHITE);
@@ -421,9 +443,7 @@ public class BuildItemPaper {
         // Skull
         String skullTextureNameKey = section.getString("skull-meta", section.getString("skull"));
         if (skullTextureNameKey != null) {
-            if (!MythicTotem.freeVersion) {
-                skullTextureNameKey = TextUtil.withPAPI(skullTextureNameKey, player);
-            }
+            skullTextureNameKey = TextUtil.withPAPI(skullTextureNameKey, player);
             PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "");
             profile.setProperty(new ProfileProperty("textures", skullTextureNameKey));
             item.setData(DataComponentTypes.PROFILE, ResolvableProfile.resolvableProfile(profile));
@@ -562,16 +582,60 @@ public class BuildItemPaper {
 
         // Equippable
         ConfigurationSection equippable = section.getConfigurationSection("equippable");
-        if (!MythicTotem.freeVersion && equippable != null) {
-            String slot = equippable.getString("slot");
-            if (slot != null) {
-                item.setData(DataComponentTypes.EQUIPPABLE, Equippable.equippable(EquipmentSlot.valueOf(slot.toUpperCase())));
+        if (equippable != null) {
+            String slotStr = equippable.getString("slot");
+            if (slotStr != null) {
+                EquipmentSlot slot = EquipmentSlot.valueOf(slotStr.toUpperCase());
+                Equippable.Builder builder = Equippable.equippable(slot);
+                String equipSound = equippable.getString("equip-sound");
+                if (equipSound != null) {
+                    builder.equipSound(CommonUtil.parseNamespacedKey(equipSound));
+                }
+                String assetId = equippable.getString("asset-id");
+                if (assetId != null) {
+                    builder.assetId(CommonUtil.parseNamespacedKey(assetId));
+                }
+                String cameraOverlay = equippable.getString("camera-overlay");
+                if (cameraOverlay != null) {
+                    builder.cameraOverlay(CommonUtil.parseNamespacedKey(cameraOverlay));
+                }
+                if (equippable.contains("allowed-entities")) {
+                    List<TypedKey<EntityType>> keys = equippable.getStringList("allowed-entities")
+                            .stream()
+                            .map(CommonUtil::parseNamespacedKey)          // Key
+                            .map(key -> TypedKey.create(RegistryKey.ENTITY_TYPE, key))
+                            .toList();
+                    if (!keys.isEmpty()) {
+                        builder.allowedEntities(RegistrySet.keySet(RegistryKey.ENTITY_TYPE, keys)
+                        );
+                    }
+                }
+                if (equippable.contains("dispensable")) {
+                    builder.dispensable(equippable.getBoolean("dispensable"));
+                }
+                if (equippable.contains("swappable")) {
+                    builder.swappable(equippable.getBoolean("swappable"));
+                }
+                if (equippable.contains("damage-on-hurt")) {
+                    builder.damageOnHurt(equippable.getBoolean("damage-on-hurt"));
+                }
+                if (equippable.contains("equip-on-interact")) {
+                    builder.equipOnInteract(equippable.getBoolean("equip-on-interact"));
+                }
+                if (equippable.contains("can-be-sheared") && CommonUtil.getMinorVersion(21, 6)) {
+                    builder.canBeSheared(equippable.getBoolean("can-be-sheared"));
+                }
+                String shearSound = equippable.getString("shear-sound");
+                if (shearSound != null && CommonUtil.getMinorVersion(21, 6)) {
+                    builder.shearSound(CommonUtil.parseNamespacedKey(shearSound));
+                }
+                item.setData(DataComponentTypes.EQUIPPABLE, builder.build());
             }
         }
 
         // Weapon
         ConfigurationSection weaponKey = section.getConfigurationSection("weapon");
-        if (!MythicTotem.freeVersion && weaponKey != null) {
+        if (weaponKey != null) {
             Weapon.Builder builder = Weapon.weapon();
             if (weaponKey.contains("damage-per-attack")) {
                 builder.itemDamagePerAttack(weaponKey.getInt("damage-per-attack"));
@@ -675,6 +739,174 @@ public class BuildItemPaper {
             }
             item.setData(DataComponentTypes.CONSUMABLE, builder.build());
         }
+
+        if (CommonUtil.getMinorVersion(21, 11)) {
+            // Damage Type
+            String damageTypeKey = section.getString("damage-type");
+            if (damageTypeKey != null) {
+                DamageType damageType = RegistryAccess.registryAccess().getRegistry(RegistryKey.DAMAGE_TYPE).get(CommonUtil.parseNamespacedKey(damageTypeKey));
+                if (damageType != null) {
+                    item.setData(DataComponentTypes.DAMAGE_TYPE, damageType);
+                }
+            }
+
+            // Kinetic Weapon
+            ConfigurationSection kineticWeaponKey = section.getConfigurationSection("kinetic-weapon");
+            if (kineticWeaponKey != null) {
+                KineticWeapon.Builder builder = KineticWeapon.kineticWeapon();
+                int contactCooldown = kineticWeaponKey.getInt("contact-cooldown-ticks", -1);
+                if (contactCooldown >= 0) {
+                    builder.contactCooldownTicks(contactCooldown);
+                }
+                int delayTicks = kineticWeaponKey.getInt("delay-ticks", -1);
+                if (delayTicks >= 0) {
+                    builder.delayTicks(delayTicks);
+                }
+                double forwardMovement = kineticWeaponKey.getDouble("forward-movement", -1);
+                if (forwardMovement >= 0) {
+                    builder.forwardMovement((float) forwardMovement);
+                }
+                double damageMultiplier = kineticWeaponKey.getDouble("damage-multiplier", -1);
+                if (damageMultiplier >= 0) {
+                    builder.damageMultiplier((float) damageMultiplier);
+                }
+                String sound = kineticWeaponKey.getString("sound");
+                if (sound != null) {
+                    builder.sound(CommonUtil.parseNamespacedKey(sound));
+                }
+                String hitSound = kineticWeaponKey.getString("hit-sound");
+                if (hitSound != null) {
+                    builder.hitSound(CommonUtil.parseNamespacedKey(hitSound));
+                }
+                KineticWeapon.Condition damageCondition = parseKineticWeaponCondition(kineticWeaponKey, "damage-conditions");
+                if (damageCondition != null) {
+                    builder.damageConditions(damageCondition);
+                }
+                KineticWeapon.Condition knockbackCondition = parseKineticWeaponCondition(kineticWeaponKey, "knockback-conditions");
+                if (knockbackCondition != null) {
+                    builder.knockbackConditions(knockbackCondition);
+                }
+                KineticWeapon.Condition dismountCondition = parseKineticWeaponCondition(kineticWeaponKey, "dismount-conditions");
+                if (dismountCondition != null) {
+                    builder.dismountConditions(dismountCondition);
+                }
+                item.setData(DataComponentTypes.KINETIC_WEAPON, builder.build());
+            }
+
+            // Minimum Attack Charge
+            double minimumAttackChargeKey = section.getDouble("minimum-attack-charge", -1);
+            if (minimumAttackChargeKey >= 0 && minimumAttackChargeKey <= 1) {
+                item.setData(DataComponentTypes.MINIMUM_ATTACK_CHARGE, (float) minimumAttackChargeKey);
+            }
+
+            // Piercing Weapon
+            ConfigurationSection piercingWeaponKey = section.getConfigurationSection("piercing-weapon");
+            if (piercingWeaponKey != null) {
+                PiercingWeapon.Builder builder = PiercingWeapon.piercingWeapon();
+                if (piercingWeaponKey.contains("deals-knockback")) {
+                    builder.dealsKnockback(piercingWeaponKey.getBoolean("deals-knockback"));
+                }
+                if (piercingWeaponKey.contains("dismounts")) {
+                    builder.dismounts(piercingWeaponKey.getBoolean("dismounts"));
+                }
+                String sound = piercingWeaponKey.getString("sound");
+                if (sound != null) {
+                    builder.sound(CommonUtil.parseNamespacedKey(sound));
+                }
+                String hitSound = piercingWeaponKey.getString("hit-sound");
+                if (hitSound != null) {
+                    builder.hitSound(CommonUtil.parseNamespacedKey(hitSound));
+                }
+                item.setData(DataComponentTypes.PIERCING_WEAPON, builder.build());
+            }
+
+            // Swing Animation
+            ConfigurationSection swingAnimationKey = section.getConfigurationSection("swing-animation");
+            if (swingAnimationKey != null) {
+                SwingAnimation.Builder builder = SwingAnimation.swingAnimation();
+                String typeStr = swingAnimationKey.getString("type");
+                if (typeStr != null) {
+                    builder.type(Enums.getIfPresent(SwingAnimation.Animation.class, typeStr).or(SwingAnimation.Animation.NONE));
+                }
+                int duration = swingAnimationKey.getInt("duration", -1);
+                if (duration > 0) {
+                    builder.duration(duration);
+                }
+                item.setData(DataComponentTypes.SWING_ANIMATION, builder.build());
+            }
+
+            // Use Effects
+            ConfigurationSection useEffectsKey = section.getConfigurationSection("use-effects");
+            if (useEffectsKey != null) {
+                UseEffects.Builder builder = UseEffects.useEffects();
+                if (useEffectsKey.contains("can-sprint")) {
+                    builder.canSprint(useEffectsKey.getBoolean("can-sprint"));
+                }
+                if (useEffectsKey.contains("interact-vibrations")) {
+                    builder.interactVibrations(useEffectsKey.getBoolean("interact-vibrations"));
+                }
+                double speedMultiplier = useEffectsKey.getDouble("speed-multiplier", -1);
+                if (speedMultiplier >= 0 && speedMultiplier <= 1) {
+                    builder.speedMultiplier((float) speedMultiplier);
+                }
+                item.setData(DataComponentTypes.USE_EFFECTS, builder.build());
+            }
+
+            // Attack Range
+            ConfigurationSection attackRangeKey = section.getConfigurationSection("attack-range-key");
+            if (attackRangeKey != null) {
+                AttackRange.Builder builder = AttackRange.attackRange();
+                double minReach = attackRangeKey.getDouble("min-reach", -1);
+                if (minReach >= 0 && minReach <= 64) {
+                    builder.minReach((float) minReach);
+                }
+                double maxReach = attackRangeKey.getDouble("max-reach", -1);
+                if (maxReach >= 0 && maxReach <= 64) {
+                    builder.maxReach((float) maxReach);
+                }
+                double minCreativeReach = attackRangeKey.getDouble("min-creative-reach", -1);
+                if (minCreativeReach >= 0 && minCreativeReach <= 64) {
+                    builder.minCreativeReach((float) minCreativeReach);
+                }
+                double maxCreativeReach = attackRangeKey.getDouble("max-creative-reach", -1);
+                if (maxCreativeReach >= 0 && maxCreativeReach <= 64) {
+                    builder.maxCreativeReach((float) maxCreativeReach);
+                }
+                double hitboxMargin = attackRangeKey.getDouble("hitbox-margin", -1);
+                if (hitboxMargin >= 0 && hitboxMargin <= 1) {
+                    builder.hitboxMargin((float) hitboxMargin);
+                }
+                double mobFactor = attackRangeKey.getDouble("mob-factor", -1);
+                if (mobFactor >= 0 && mobFactor <= 2) {
+                    builder.mobFactor((float) mobFactor);
+                }
+                item.setData(DataComponentTypes.ATTACK_RANGE, builder.build());
+            }
+        }
         return item;
+    }
+
+    private static KineticWeapon.Condition parseKineticWeaponCondition(
+            ConfigurationSection parent,
+            String key
+    ) {
+        ConfigurationSection section = parent.getConfigurationSection(key);
+        if (section == null) {
+            return null;
+        }
+
+        int maxDuration = section.getInt("max-duration-ticks", -1);
+        double minSpeed = section.getDouble("min-speed", -1);
+        double minRelativeSpeed = section.getDouble("min-relative-speed", -1);
+
+        if (maxDuration < 0 || minSpeed < 0 || minRelativeSpeed < 0) {
+            return null;
+        }
+
+        return KineticWeapon.condition(
+                maxDuration,
+                (float) minSpeed,
+                (float) minRelativeSpeed
+        );
     }
 }

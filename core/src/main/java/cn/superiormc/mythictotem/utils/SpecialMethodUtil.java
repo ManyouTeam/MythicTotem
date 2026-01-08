@@ -54,4 +54,6 @@ public interface SpecialMethodUtil {
                             ConfigurationSection section,
                             int amount,
                             String... args);
+
+    ConfigurationSection serializeItemStack(ItemStack item);
 }

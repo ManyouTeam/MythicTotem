@@ -831,6 +831,7 @@ public class BuildItem {
                 if (cooldownSeconds >= 0) {
                     useCooldownComponent.setCooldownSeconds((float) cooldownSeconds);
                 }
+                meta.setUseCooldown(useCooldownComponent);
             }
 
             // Equippable
