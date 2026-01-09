@@ -24,7 +24,7 @@ public class CraftEngineBlockChecker implements BlockChecker {
         String[] parts = materialString.split(":");
         try {
             if (parts.length != 3) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your craftengine material does not meet" +
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Your craftengine material does not meet" +
                         " the format claimed in plugin Wiki!");
                 return false;
             }

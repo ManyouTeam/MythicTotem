@@ -84,7 +84,7 @@ public abstract class AbstractEntityChecker implements BlockChecker {
      */
     protected boolean isValidMaterialFormat(String[] parts, int minParts) {
         if (parts.length < minParts) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Your " + getCheckerName() + " material does not meet" +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Your " + getCheckerName() + " material does not meet" +
                     " the format claimed in plugin Wiki!");
             return false;
         }
@@ -96,7 +96,7 @@ public abstract class AbstractEntityChecker implements BlockChecker {
      */
     protected void debugLog(String materialString, int entityCount) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fShould be: " +
                     materialString + ", find entities amount: " + entityCount + ".");
         }
     }
@@ -106,7 +106,7 @@ public abstract class AbstractEntityChecker implements BlockChecker {
      */
     protected void debugLogEntity(String materialString, Entity entity) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fShould be: " +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fShould be: " +
                     materialString + ", find entity: " + entity.getType() + ".");
         }
     }

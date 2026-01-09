@@ -34,7 +34,7 @@ public class EntityPlaceListener implements Listener {
         });
         SchedulerUtil.runTaskLater(() -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()), ConfigManager.configManager.getLong("cooldown-tick", 5L));
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eEntity place trigger!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eEntity place trigger!");
         }
     }
 }

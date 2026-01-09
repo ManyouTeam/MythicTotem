@@ -16,27 +16,27 @@ public class ListenerManager {
     private void registerListeners(){
         if (ConfigManager.configManager.getBoolean("trigger.BlockPlaceEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new PlayerPlaceListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled BlockPlaceEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled BlockPlaceEvent trigger.");
         }
         if (ConfigManager.configManager.getBoolean("trigger.PlayerInteractEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled PlayerInteractEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled PlayerInteractEvent trigger.");
         }
         if (ConfigManager.configManager.getBoolean("trigger.BlockRedstoneEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new TotemRedstoneListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled BlockRedstoneEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled BlockRedstoneEvent trigger.");
         }
         if (ConfigManager.configManager.getBoolean("trigger.PlayerDropItemEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new PlayerDropListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled PlayerDropItemEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled PlayerDropItemEvent trigger.");
         }
         if (ConfigManager.configManager.getBoolean("trigger.BlockPistonEvent.enabled", true) && !MythicTotem.freeVersion) {
             Bukkit.getPluginManager().registerEvents(new TotemPistonListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled BlockPistonEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled BlockPistonEvent trigger.");
         }
         if (ConfigManager.configManager.getBoolean("trigger.EntityPlaceEvent.enabled", true)) {
             Bukkit.getPluginManager().registerEvents(new EntityPlaceListener(), MythicTotem.instance);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fEnabled EntityPlaceEvent trigger.");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled EntityPlaceEvent trigger.");
         }
     }
 }

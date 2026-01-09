@@ -46,13 +46,13 @@ public class ObjectPriceCheck {
             type = "free";
         }
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aPrice Type: " + type + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §aPrice Type: " + type + "!");
         }
     }
 
     public boolean CheckPrice(boolean take, ItemStack keyItems) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aKey Item: " + keyItems + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §aKey Item: " + keyItems + "!");
         }
         boolean priceBoolean = false;
         switch (type) {

@@ -42,9 +42,9 @@ public class PlayerPlaceListener implements Listener {
             }, ConfigManager.configManager.getLong("cooldown-tick", 5L));
         }
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLocation: " + event.getBlockPlaced().getLocation());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlockPlaced()).getNamespacedID());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cBiome: " + event.getBlock().getBiome());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + event.getBlockPlaced().getLocation());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlockPlaced()).getNamespacedID());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cBiome: " + event.getBlock().getBiome());
         }
     }
 }

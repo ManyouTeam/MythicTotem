@@ -6,6 +6,8 @@ debug: false
 
 config-files:
   language: en_US
+  # Premium version only.
+  per-player-language: true
   force-parse-mini-message: true
 
 debuild-item-method: 'LEGACY'

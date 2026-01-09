@@ -110,7 +110,7 @@ public class ObjectTotem {
                     this.totemRow++;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded 3D Totem: §e" + totemID +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded 3D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
         else {
@@ -136,7 +136,7 @@ public class ObjectTotem {
                 this.totemRow++;
             }
             this.totemLayer = 1;
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fLoaded 2D Totem: §e" + totemID +
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded 2D Totem: §e" + totemID +
                     " §fwith size: " + totemRow + "x" + totemColumn);
         }
     }

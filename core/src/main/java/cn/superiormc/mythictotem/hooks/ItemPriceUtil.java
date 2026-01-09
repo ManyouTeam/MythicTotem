@@ -90,8 +90,8 @@ public class ItemPriceUtil {
                                    boolean take,
                                    ItemStack keyItems) {
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aRequired Price Item: " + item + "!");
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §aConfirmed Key Item: " + keyItems + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §aRequired Price Item: " + item + "!");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §aConfirmed Key Item: " + keyItems + "!");
         }
         if (value < 0) {
             return false;

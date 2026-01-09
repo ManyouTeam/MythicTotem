@@ -20,8 +20,8 @@ public class TotemRedstoneListener implements Listener {
             }
         });
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLocation: " + event.getBlock().getLocation());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + event.getBlock().getLocation());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
         }
     }
 }

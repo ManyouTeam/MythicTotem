@@ -40,9 +40,9 @@ public class PlayerClickListener implements Listener {
             ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer());
         }, ConfigManager.configManager.getLong("cooldown-tick", 5L));
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLocation: " + event.getClickedBlock().getLocation());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cBiome: " + event.getClickedBlock().getBiome().name());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + event.getClickedBlock().getLocation());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cBiome: " + event.getClickedBlock().getBiome().name());
         }
     }
 }

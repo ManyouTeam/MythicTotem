@@ -92,9 +92,9 @@ public class ObjectCheck {
         }
         this.block = event.getBlocks().getLast().getRelative(event.getDirection()).getLocation().getBlock();
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLocation: " + block.getLocation());
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eLength: " + event.getBlocks().size());
-            //Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + block.getLocation());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLength: " + event.getBlocks().size());
+            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
         }
         this.player = null;
         this.item = null;
@@ -109,7 +109,7 @@ public class ObjectCheck {
         }
         if (block.isEmpty()) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cSkipped because block is air!");
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cSkipped because block is air!");
             }
             return;
         }
@@ -123,12 +123,12 @@ public class ObjectCheck {
     public void checkTotem() {
         if (ConfigManager.configManager.getCheckingBlock.contains(block)) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped checking block!");
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped checking block!");
             }
             return;
         }
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eBlock Type: " + block.getType().name());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eBlock Type: " + block.getType().name());
         }
         initParsedID();
         if (parsedID == null) {
@@ -137,15 +137,15 @@ public class ObjectCheck {
         List<ObjectPlaceCheck> placedBlockCheckManagers = ConfigManager.configManager.getTotemMaterial.get(parsedID);
         ConfigManager.configManager.getCheckingBlock.add(block);
          if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eParsed Block ID: " + parsedID);
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §c-------------Checking Info-------------");
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eParsed Block ID: " + parsedID);
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §c-------------Checking Info-------------");
         }
         big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
             if (!condition.getAllBoolean(player, block.getLocation(), this, singleTotem)) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
+                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                             " because conditions not meet!");
                 }
                 continue;
@@ -155,7 +155,7 @@ public class ObjectCheck {
                     singleTotem.getTotem().getSection().contains("prices");
             if (usePrice && player != null) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eChecking " + singleTotem.getTotem().getTotemID() +
+                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eChecking " + singleTotem.getTotem().getTotemID() +
                             " prices...");
                 }
                 for (String singleSection : singleTotem.getTotem().getSection().getConfigurationSection("prices").getKeys(false)) {
@@ -163,15 +163,15 @@ public class ObjectCheck {
                     if (!singleTotem.getTotem().getKeyMode()) {
                         item = null;
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSet item to null!");
+                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSet item to null!");
                         }
                     }
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eItem: " + item + "!");
+                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eItem: " + item + "!");
                     }
                     if (!priceManager.CheckPrice(false, item)) {
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
+                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                                     " because prices not meet!");
                         }
                         continue big;
@@ -180,7 +180,7 @@ public class ObjectCheck {
             }
             if (singleTotem.getTotem().getCheckMode().equals("VERTICAL")) {
                  if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
+                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " VERTICAL totem check!");
                 }
                 if (verticalTotem(singleTotem)) {
@@ -191,7 +191,7 @@ public class ObjectCheck {
                 }
             } else {
                  if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
+                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
                             " HORIZONTAL totem check!");
                 }
                 if (horizontalTotem(singleTotem)) {
@@ -343,7 +343,7 @@ public class ObjectCheck {
         int offset_column = singleTotem.getColumn();
         int offset_layer = singleTotem.getLayer();
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cChecking: " + offset_row
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cChecking: " + offset_row
                     + " - " +  offset_column
                     + " - " +  offset_layer + "!");
         }
@@ -384,7 +384,7 @@ public class ObjectCheck {
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cStart Location: " + startLocation_1);
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cStart Location: " + startLocation_1);
         }
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.getTotem().getRealRow();
@@ -463,7 +463,7 @@ public class ObjectCheck {
                     }
                     String material = singleTotem.getTotem().getRealMaterial(a, i, b);
                     if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cMaterial should be: " + material);
+                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cMaterial should be: " + material);
                     }
                     //1
                     ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(material, nowLocation_1, 1);
@@ -501,7 +501,7 @@ public class ObjectCheck {
                             }
                         }
                         if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cRule 2 Size: " + validTotemBlockLocation2.size());
+                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cRule 2 Size: " + validTotemBlockLocation2.size());
                         }
                     } else if (checkTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                         checkTrueOrFalse2 = false;

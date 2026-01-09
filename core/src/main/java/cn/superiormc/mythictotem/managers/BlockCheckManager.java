@@ -33,7 +33,7 @@ public class BlockCheckManager {
 
     public void registerChecker(BlockChecker checker) {
         checkers.put(checker.getClass().getSimpleName(), checker);
-        MythicTotem.methodUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded block checker: " + checker.getClass().getSimpleName() + "!");
+        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fLoaded block checker: " + checker.getClass().getSimpleName() + "!");
     }
 
     public BlockChecker getChecker(String name) {

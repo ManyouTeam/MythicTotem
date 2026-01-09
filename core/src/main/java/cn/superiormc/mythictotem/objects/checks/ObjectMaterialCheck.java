@@ -44,7 +44,7 @@ public class ObjectMaterialCheck {
     public boolean checkMaterial() {
         if (materialString.equals("none")) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
-                Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §fSkipped none block.");
+                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fSkipped none block.");
             }
             return true;
         }
@@ -56,9 +56,9 @@ public class ObjectMaterialCheck {
 
                 if (!freeVersionThirdPartyBlocks.contains(baseMaterialType)) {
                     if (freeVersionThirdPartyBlocks.size() >= FREE_VERSION_MAX_THIRD_PARTY_BLOCKS) {
-                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cError: Free version only supports up to " + 
+                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Free version only supports up to " +
                                 FREE_VERSION_MAX_THIRD_PARTY_BLOCKS + " different third-party plugin blocks!");
-                        Bukkit.getConsoleSender().sendMessage(TextUtil.pluginPrefix() + " §cCurrent blocks: " + freeVersionThirdPartyBlocks);
+                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cCurrent blocks: " + freeVersionThirdPartyBlocks);
                         return false;
                     }
                     freeVersionThirdPartyBlocks.add(baseMaterialType);

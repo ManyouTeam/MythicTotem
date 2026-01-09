@@ -20,6 +20,7 @@ public class SubReload extends AbstractCommand {
         MythicTotem.instance.reloadConfig();
         new ConfigManager();
         new ItemManager();
+        new LanguageManager();
         LanguageManager.languageManager.sendStringText(player, "plugin-reloaded");
     }
 
@@ -28,6 +29,7 @@ public class SubReload extends AbstractCommand {
         MythicTotem.instance.reloadConfig();
         new ConfigManager();
         new ItemManager();
+        new LanguageManager();
         LanguageManager.languageManager.sendStringText("plugin-reloaded");
     }
 }

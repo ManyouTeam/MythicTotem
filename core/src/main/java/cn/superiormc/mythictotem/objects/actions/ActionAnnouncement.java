@@ -1,8 +1,8 @@
 package cn.superiormc.mythictotem.objects.actions;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
+import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,7 +20,7 @@ public class ActionAnnouncement extends AbstractRunAction {
     protected void onDoAction(ObjectSingleAction singleAction, Player player, Location startLocation, ObjectCheck check, ObjectPlaceCheck totem) {
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for (Player p : players) {
-            MythicTotem.methodUtil.sendMessage(p, singleAction.getString("message", player, startLocation, check, totem));
+            TextUtil.sendMessage(p, singleAction.getString("message", player, startLocation, check, totem));
         }
     }
 }
