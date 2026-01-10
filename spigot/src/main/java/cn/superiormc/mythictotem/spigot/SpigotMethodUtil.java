@@ -1,6 +1,6 @@
 package cn.superiormc.mythictotem.spigot;
 
-import cn.superiormc.mythicchanger.utils.SchedulerUtil;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.utils.SpecialMethodUtil;
@@ -15,7 +15,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -156,7 +155,7 @@ public class SpigotMethodUtil implements SpecialMethodUtil {
         if (player == null) {
             return;
         }
-        player.sendTitle(cn.superiormc.mythicchanger.utils.TextUtil.parse(title, player), cn.superiormc.mythicchanger.utils.TextUtil.parse(subTitle, player), fadeIn, stay, fadeOut);
+        player.sendTitle(TextUtil.parse(title, player), TextUtil.parse(subTitle, player), fadeIn, stay, fadeOut);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class SpigotMethodUtil implements SpecialMethodUtil {
         }
         player.spigot().sendMessage(
                 net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
-                net.md_5.bungee.api.chat.TextComponent.fromLegacyText(cn.superiormc.mythicchanger.utils.TextUtil.parse(message, player))
+                net.md_5.bungee.api.chat.TextComponent.fromLegacyText(TextUtil.parse(message, player))
         );
     }
 

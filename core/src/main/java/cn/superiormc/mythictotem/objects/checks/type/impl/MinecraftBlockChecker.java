@@ -1,10 +1,8 @@
 package cn.superiormc.mythictotem.objects.checks.type.impl;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import com.google.common.base.Enums;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,15 +12,12 @@ import org.bukkit.entity.EntityType;
 public class MinecraftBlockChecker extends AbstractEntityChecker {
 
     @Override
-    public boolean canCheck(String materialString) {
-        return materialString.startsWith("minecraft:");
-    }
-
-    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         String[] parts = materialString.split(":");
+        if (!isValidMaterialFormat(parts, 2)) {
+            return false;
+        }
         try {
-            // 先检查是否为普通方块
             Material material = Material.getMaterial(parts[1].toUpperCase());
             if (material != null) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
@@ -30,9 +25,7 @@ public class MinecraftBlockChecker extends AbstractEntityChecker {
                             materialString + ", real block: " + block.getType().name() + ", location: " + location + ", ID: " + id + ".");
                 }
                 return material == block.getType();
-            } 
-            // 然后检查是否为实体
-            else {
+            } else {
                 EntityType entityType = Enums.getIfPresent(EntityType.class, parts[1].toUpperCase()).orNull();
                 if (entityType != null) {
                     return checkEntities(materialString, location, parts);

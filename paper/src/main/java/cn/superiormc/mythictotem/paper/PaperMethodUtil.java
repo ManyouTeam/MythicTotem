@@ -1,6 +1,6 @@
 package cn.superiormc.mythictotem.paper;
 
-import cn.superiormc.mythicchanger.utils.SchedulerUtil;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.paper.methods.BuildItemPaper;
@@ -188,7 +188,7 @@ public class PaperMethodUtil implements SpecialMethodUtil {
         if (player == null) {
             return;
         }
-        player.sendActionBar(cn.superiormc.mythicchanger.paper.utils.PaperTextUtil.modernParse(message, player));
+        player.sendActionBar(PaperTextUtil.modernParse(message, player));
     }
 
     @Override
@@ -206,7 +206,7 @@ public class PaperMethodUtil implements SpecialMethodUtil {
         }
 
         BossBar bar = BossBar.bossBar(
-                title == null ? Component.empty() : cn.superiormc.mythicchanger.paper.utils.PaperTextUtil.modernParse(title, player),
+                title == null ? Component.empty() : PaperTextUtil.modernParse(title, player),
                 Math.max(0f, Math.min(1f, progress)),
                 color == null ? BossBar.Color.PINK : BossBar.Color.valueOf(color.toUpperCase()),
                 style == null ? BossBar.Overlay.PROGRESS : BossBar.Overlay.valueOf(style.toUpperCase())

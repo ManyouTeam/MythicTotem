@@ -1,5 +1,7 @@
 package cn.superiormc.mythictotem.objects.checks.type.impl;
 
+import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomFurniture;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -8,12 +10,11 @@ import org.bukkit.entity.Entity;
 public class ItemsAdderFurnitureChecker extends AbstractEntityChecker {
 
     @Override
-    public boolean canCheck(String materialString) {
-        return materialString.startsWith("itemsadder_furniture:");
-    }
-
-    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
+        if (!CommonUtil.checkPluginLoad("ItemsAdder")) {
+            ErrorManager.errorManager.sendErrorMessage("§cError: ItemsAdder is not loaded but you are using block from it as totem layout!");
+            return false;
+        }
         String[] parts = materialString.split(":");
         if (!isValidMaterialFormat(parts, 3)) {
             return false;

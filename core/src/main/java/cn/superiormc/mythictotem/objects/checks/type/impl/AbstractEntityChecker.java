@@ -6,14 +6,13 @@ import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-public abstract class AbstractEntityChecker implements BlockChecker {
+public abstract class AbstractEntityChecker extends BlockChecker {
     
     protected Entity entity;
     
@@ -80,18 +79,6 @@ public abstract class AbstractEntityChecker implements BlockChecker {
     }
     
     /**
-     * 检查材料字符串格式是否有效
-     */
-    protected boolean isValidMaterialFormat(String[] parts, int minParts) {
-        if (parts.length < minParts) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Your " + getCheckerName() + " material does not meet" +
-                    " the format claimed in plugin Wiki!");
-            return false;
-        }
-        return true;
-    }
-    
-    /**
      * 调试日志：显示查找的实体数量
      */
     protected void debugLog(String materialString, int entityCount) {
@@ -120,9 +107,4 @@ public abstract class AbstractEntityChecker implements BlockChecker {
      * 获取距离参数所需的最小部分数量
      */
     protected abstract int getMinPartsLengthForDistance();
-    
-    /**
-     * 获取检查器名称（用于错误信息）
-     */
-    protected abstract String getCheckerName();
 }

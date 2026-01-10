@@ -189,7 +189,7 @@ public class TextUtil {
         if (text.matches("[0-9]+")) {
             return text;
         }
-        if (text.contains("%") && cn.superiormc.mythicchanger.utils.CommonUtil.checkPluginLoad("PlaceholderAPI")) {
+        if (text.contains("%") && CommonUtil.checkPluginLoad("PlaceholderAPI")) {
             text = PlaceholderAPI.setPlaceholders(player, text);
         }
         Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");

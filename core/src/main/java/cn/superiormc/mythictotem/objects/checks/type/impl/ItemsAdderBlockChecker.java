@@ -1,30 +1,27 @@
 package cn.superiormc.mythictotem.objects.checks.type.impl;
 
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
-import cn.superiormc.mythictotem.utils.TextUtil;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import dev.lone.itemsadder.api.CustomBlock;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
-public class ItemsAdderBlockChecker implements BlockChecker {
-
-    @Override
-    public boolean canCheck(String materialString) {
-        return materialString.startsWith("itemsadder:");
-    }
+public class ItemsAdderBlockChecker extends BlockChecker {
 
     @Override
     public boolean check(Block block, String materialString, Location location, int id) {
+        if (!CommonUtil.checkPluginLoad("ItemsAdder")) {
+            ErrorManager.errorManager.sendErrorMessage("§cError: ItemsAdder is not loaded but you are using block from it as totem layout!");
+            return false;
+        }
         String[] parts = materialString.split(":");
+        if (!isValidMaterialFormat(parts, 3)) {
+            return false;
+        }
         try {
-            if (parts.length != 3) {
-                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cError: Your itemsadder material does not meet" +
-                        " the format claimed in plugin Wiki!");
-                return false;
-            }
             CustomBlock iaBlock = CustomBlock.byAlreadyPlaced(block);
             if (iaBlock == null) {
                 return false;
@@ -41,5 +38,10 @@ public class ItemsAdderBlockChecker implements BlockChecker {
     @Override
     public Entity getEntityNeedRemove() {
         return null;
+    }
+
+    @Override
+    protected String getCheckerName() {
+        return "itemsadder";
     }
 }

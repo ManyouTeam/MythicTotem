@@ -1,6 +1,5 @@
 package cn.superiormc.mythictotem.methods;
 
-import cn.superiormc.mythicchanger.MythicChanger;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;

@@ -1,5 +1,7 @@
 package cn.superiormc.mythictotem.objects.checks.type.impl;
 
+import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import io.th0rgal.oraxen.api.OraxenFurniture;
 import io.th0rgal.oraxen.mechanics.provided.gameplay.furniture.FurnitureMechanic;
 import org.bukkit.Location;
@@ -15,6 +17,10 @@ public class OraxenFurnitureChecker extends AbstractEntityChecker {
 
     @Override
     public boolean check(Block block, String materialString, Location location, int id) {
+        if (!CommonUtil.checkPluginLoad("Oraxen")) {
+            ErrorManager.errorManager.sendErrorMessage("§cError: Oraxen is not loaded but you are using block from it as totem layout!");
+            return false;
+        }
         String[] parts = materialString.split(":");
         if (!isValidMaterialFormat(parts, 2)) {
             return false;
