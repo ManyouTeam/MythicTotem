@@ -25,7 +25,7 @@ public abstract class AbstractSingleRun {
         int column = totem.getColumn();
         int layer = totem.getLayer();
 
-        content = CommonUtil.modifyString(content,
+        content = CommonUtil.modifyString(player, content,
                 "world", check.getBlock().getWorld().getName(),
                 "player_world", player.getWorld().getName(),
                 "player_x", String.valueOf(player.getLocation().getX()),

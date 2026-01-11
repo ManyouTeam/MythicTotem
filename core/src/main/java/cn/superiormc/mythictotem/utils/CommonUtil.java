@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.utils;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.managers.LanguageManager;
 import dev.lone.itemsadder.api.CustomBlock;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -16,10 +17,13 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommonUtil {
 
-    public static String modifyString(String text, String... args) {
+    public static String modifyString(Player player, String text, String... args) {
+        text = CommonUtil.parseLang(player, text);
         for (int i = 0 ; i < args.length ; i += 2) {
             String var1 = "{" + args[i] + "}";
             String var2 = "%" + args[i] + "%";
@@ -35,13 +39,14 @@ public class CommonUtil {
     public static List<String> modifyList(Player player, List<String> config, String... args) {
         List<String> resultList = new ArrayList<>();
         for (String s : config) {
+            s = CommonUtil.parseLang(player, s);
             for (int i = 0 ; i < args.length ; i += 2) {
-                String var = "{" + args[i] + "}";
+                String var1 = "{" + args[i] + "}";
+                String var2 = "%" + args[i] + "%";
                 if (args[i + 1] == null) {
-                    s = s.replace(var, "");
-                }
-                else {
-                    s = s.replace(var, args[i + 1]);
+                    s = s.replace(var1, "").replace(var2, "");
+                } else {
+                    s = s.replace(var1, args[i + 1]).replace(var2, args[i + 1]);
                 }
             }
             String[] tempVal1 = s.split(";;");
@@ -54,6 +59,16 @@ public class CommonUtil {
             resultList.add(TextUtil.withPAPI(s, player));
         }
         return resultList;
+    }
+
+    public static String parseLang(Player player, String text) {
+        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
+        Matcher matcher8 = pattern8.matcher(text);
+        while (matcher8.find()) {
+            String placeholder = matcher8.group(1);
+            text = text.replace("{lang:" + placeholder + "}", LanguageManager.languageManager.getStringText(player, "override-lang." + placeholder));
+        }
+        return text;
     }
 
     public static boolean checkPluginLoad(String pluginName){
