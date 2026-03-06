@@ -9,6 +9,8 @@ public class TaskManager {
 
     private SchedulerUtil bonusEffectsTask;
 
+    private SchedulerUtil loadedChunksTask;
+
     public TaskManager() {
         taskManager = this;
         if (!MythicTotem.isFolia && ConfigManager.configManager.getBoolean("bonus-effects.enabled", false)) {
@@ -22,11 +24,19 @@ public class TaskManager {
                     20L,
                     1L
         );
+        loadedChunksTask = SchedulerUtil.runTaskTimer(
+                () -> BonusEffectsManager.manager.tickChunks(),
+                20L,
+                60L
+        );
     }
 
     public void cancelTask() {
         if (bonusEffectsTask != null) {
             bonusEffectsTask.cancel();
+        }
+        if (loadedChunksTask != null) {
+            loadedChunksTask.cancel();
         }
     }
 }

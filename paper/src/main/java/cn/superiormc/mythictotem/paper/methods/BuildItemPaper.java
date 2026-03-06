@@ -344,7 +344,7 @@ public class BuildItemPaper {
                 if (effectParseResult.length < 3) {
                     continue;
                 }
-                PotionEffectType potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
+                PotionEffectType potionEffectType = Registry.EFFECT.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
                 if (potionEffectType != null) {
                     PotionEffect potionEffect = new PotionEffect(potionEffectType,
                             Integer.parseInt(effectParseResult[1]),
@@ -499,7 +499,7 @@ public class BuildItemPaper {
                 if (effectParseResult.length < 3) {
                     continue;
                 }
-                PotionEffectType potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
+                PotionEffectType potionEffectType = Registry.EFFECT.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
                 if (potionEffectType != null) {
                     builder.add(SuspiciousEffectEntry.create(potionEffectType, Integer.parseInt(effectParseResult[1])));
                 }
@@ -714,7 +714,7 @@ public class BuildItemPaper {
                                 if (effectParseResult.length < 4) {
                                     continue;
                                 }
-                                PotionEffectType potionEffectType = Registry.POTION_EFFECT_TYPE.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
+                                PotionEffectType potionEffectType = Registry.EFFECT.get(CommonUtil.parseNamespacedKey(effectParseResult[0]));
                                 if (potionEffectType != null) {
                                     PotionEffect potionEffect = new PotionEffect(potionEffectType,
                                             Integer.parseInt(effectParseResult[1]),

@@ -25,6 +25,8 @@ public class BonusEffectsManager {
 
     private final Map<Integer, List<double[]>> circleCache = new HashMap<>();
 
+    private Collection<Chunk> chunkCache = new ArrayList<>();
+
     public BonusEffectsManager() {
         manager = this;
     }
@@ -51,16 +53,18 @@ public class BonusEffectsManager {
         saveToChunkPDC(chunk);
     }
 
-    public void tick() {
-        Collection<Chunk> chunks = new ArrayList<>();
+    public void tickChunks() {
         for (World world : Bukkit.getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
-                chunks.add(chunk);
+                chunkCache.add(chunk);
                 processChunk(chunk);
             }
         }
+    }
+
+    public void tick() {
         for (Chunk chunk : totemMap.keySet()) {
-            if (!chunks.contains(chunk)) {
+            if (!chunkCache.contains(chunk) || !chunk.isLoaded()) {
                 totemMap.remove(chunk);
             }
         }
