@@ -2,18 +2,16 @@ package cn.superiormc.mythictotem.objects.checks;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
+import cn.superiormc.mythictotem.managers.BlockCheckManager;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.HookManager;
+import cn.superiormc.mythictotem.managers.LanguageManager;
+import cn.superiormc.mythictotem.managers.TotemDebugManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
 import cn.superiormc.mythictotem.objects.singlethings.TotemActiveData;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
-import dev.lone.itemsadder.api.CustomBlock;
-import io.th0rgal.oraxen.api.OraxenBlocks;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.noteblock.NoteBlockMechanic;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.stringblock.StringBlockMechanic;
-import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -133,17 +131,26 @@ public class ObjectCheck {
         }
         List<ObjectPlaceCheck> placedBlockCheckManagers = ConfigManager.configManager.getTotemMaterial.get(parsedID);
         ConfigManager.configManager.getCheckingBlock.add(block);
+        String watchingTotemId = player == null || TotemDebugManager.manager == null ? null : TotemDebugManager.manager.getWatchingTotem(player);
+        boolean watchingTotemPassed = false;
+        boolean watchingTotemConditionFailed = false;
+        boolean watchingTotemPriceFailed = false;
+        LayoutDebugResult watchingTotemFailure = null;
          if (ConfigManager.configManager.getBoolean("debug", false)) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eParsed Block ID: " + parsedID);
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §c-------------Checking Info-------------");
         }
         big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
+            boolean watchingThisTotem = isWatchingTotem(singleTotem);
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
             if (!condition.getAllBoolean(player, new TotemActiveData(block.getLocation(), this, singleTotem))) {
                 if (ConfigManager.configManager.getBoolean("debug", false)) {
                     TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                             " because conditions not meet!");
+                }
+                if (watchingThisTotem) {
+                    watchingTotemConditionFailed = true;
                 }
                 continue;
             }
@@ -170,6 +177,9 @@ public class ObjectCheck {
                             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
                                     " because prices not meet!");
                         }
+                        if (watchingThisTotem) {
+                            watchingTotemPriceFailed = true;
+                        }
                         continue big;
                     }
                 }
@@ -180,10 +190,16 @@ public class ObjectCheck {
                             " VERTICAL totem check!");
                 }
                 if (verticalTotem(singleTotem)) {
+                    if (watchingThisTotem) {
+                        watchingTotemPassed = true;
+                        LanguageManager.languageManager.sendStringText(player, "totem-debug-success", "totem", singleTotem.getTotem().getTotemID());
+                    }
                     if (event instanceof PlayerDropItemEvent && usePrice) {
                         SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
+                } else if (watchingThisTotem) {
+                    watchingTotemFailure = pickBetterResult(watchingTotemFailure, debugVerticalTotem(singleTotem));
                 }
             } else {
                  if (ConfigManager.configManager.getBoolean("debug", false)) {
@@ -191,14 +207,199 @@ public class ObjectCheck {
                             " HORIZONTAL totem check!");
                 }
                 if (horizontalTotem(singleTotem)) {
+                    if (watchingThisTotem) {
+                        watchingTotemPassed = true;
+                        LanguageManager.languageManager.sendStringText(player, "totem-debug-success", "totem", singleTotem.getTotem().getTotemID());
+                    }
                     if (event instanceof PlayerDropItemEvent && usePrice) {
                         SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
+                } else if (watchingThisTotem) {
+                    watchingTotemFailure = pickBetterResult(watchingTotemFailure, debugHorizontalTotem(singleTotem));
                 }
             }
         }
+        if (watchingTotemId != null && !watchingTotemPassed) {
+            if (watchingTotemFailure != null) {
+                sendDebugFailure(watchingTotemId, watchingTotemFailure);
+            } else if (watchingTotemPriceFailed) {
+                LanguageManager.languageManager.sendStringText(player, "totem-debug-price-failed", "totem", watchingTotemId);
+            } else if (watchingTotemConditionFailed) {
+                LanguageManager.languageManager.sendStringText(player, "totem-debug-condition-failed", "totem", watchingTotemId);
+            }
+        }
         ConfigManager.configManager.getCheckingBlock.remove(block);
+    }
+
+    private boolean isWatchingTotem(ObjectPlaceCheck singleTotem) {
+        return player != null
+                && TotemDebugManager.manager != null
+                && TotemDebugManager.manager.isDebugging(player, singleTotem.getTotem().getTotemID());
+    }
+
+    private void sendDebugFailure(String totemId, LayoutDebugResult result) {
+        if (player == null) {
+            return;
+        }
+        if (result == null) {
+            LanguageManager.languageManager.sendStringText(player, "totem-debug-layout-failed-generic",
+                    "totem", totemId);
+            return;
+        }
+
+        String key = result.protectionFailed ? "totem-debug-protection-failed" : "totem-debug-layout-failed";
+        LanguageManager.languageManager.sendStringText(
+                player,
+                key,
+                "totem",
+                totemId,
+                "layer",
+                String.valueOf(result.layer + 1),
+                "row",
+                String.valueOf(result.row + 1),
+                "column",
+                String.valueOf(result.column + 1),
+                "expected",
+                result.expectedMaterial,
+                "actual",
+                result.actualMaterial,
+                "world",
+                result.location.getWorld().getName(),
+                "x",
+                String.valueOf(result.location.getBlockX()),
+                "y",
+                String.valueOf(result.location.getBlockY()),
+                "z",
+                String.valueOf(result.location.getBlockZ()),
+                "rule",
+                String.valueOf(result.rule)
+        );
+    }
+
+    private LayoutDebugResult debugVerticalTotem(ObjectPlaceCheck singleTotem) {
+        int offsetY = singleTotem.getRow();
+        int offsetXOrZ = singleTotem.getColumn();
+
+        Location startLocation1 = new Location(block.getWorld(), block.getLocation().getX(), block.getLocation().getY() + offsetY, block.getLocation().getZ() - offsetXOrZ);
+        Location startLocation2 = new Location(block.getWorld(), block.getLocation().getX(), block.getLocation().getY() + offsetY, block.getLocation().getZ() + offsetXOrZ);
+        Location startLocation3 = new Location(block.getWorld(), block.getLocation().getX() - offsetXOrZ, block.getLocation().getY() + offsetY, block.getLocation().getZ());
+        Location startLocation4 = new Location(block.getWorld(), block.getLocation().getX() + offsetXOrZ, block.getLocation().getY() + offsetY, block.getLocation().getZ());
+
+        LayoutDebugResult bestResult = null;
+        bestResult = pickBetterResult(bestResult, debugVerticalRule(singleTotem, startLocation1, 1, (start, row, column) -> start.clone().add(0, -row, column)));
+        bestResult = pickBetterResult(bestResult, debugVerticalRule(singleTotem, startLocation2, 2, (start, row, column) -> start.clone().add(0, -row, -column)));
+        bestResult = pickBetterResult(bestResult, debugVerticalRule(singleTotem, startLocation3, 3, (start, row, column) -> start.clone().add(column, -row, 0)));
+        bestResult = pickBetterResult(bestResult, debugVerticalRule(singleTotem, startLocation4, 4, (start, row, column) -> start.clone().add(-column, -row, 0)));
+        return bestResult;
+    }
+
+    private LayoutDebugResult debugHorizontalTotem(ObjectPlaceCheck singleTotem) {
+        int offsetRow = singleTotem.getRow();
+        int offsetColumn = singleTotem.getColumn();
+        int offsetLayer = singleTotem.getLayer();
+
+        Location startLocation1 = new Location(block.getWorld(), block.getLocation().getX() + offsetColumn, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() + offsetRow);
+        Location startLocation2 = new Location(block.getWorld(), block.getLocation().getX() + offsetColumn, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() - offsetRow);
+        Location startLocation3 = new Location(block.getWorld(), block.getLocation().getX() - offsetColumn, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() + offsetRow);
+        Location startLocation4 = new Location(block.getWorld(), block.getLocation().getX() - offsetColumn, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() - offsetRow);
+        Location startLocation5 = new Location(block.getWorld(), block.getLocation().getX() + offsetRow, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() + offsetColumn);
+        Location startLocation6 = new Location(block.getWorld(), block.getLocation().getX() + offsetRow, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() - offsetColumn);
+        Location startLocation7 = new Location(block.getWorld(), block.getLocation().getX() - offsetRow, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() + offsetColumn);
+        Location startLocation8 = new Location(block.getWorld(), block.getLocation().getX() - offsetRow, block.getLocation().getY() + offsetLayer - 1, block.getLocation().getZ() - offsetColumn);
+
+        LayoutDebugResult bestResult = null;
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation1, 1, (start, layer, row, column) -> start.clone().add(-column, 1 - layer, -row)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation2, 2, (start, layer, row, column) -> start.clone().add(-column, 1 - layer, row)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation3, 3, (start, layer, row, column) -> start.clone().add(column, 1 - layer, -row)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation4, 4, (start, layer, row, column) -> start.clone().add(column, 1 - layer, row)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation5, 5, (start, layer, row, column) -> start.clone().add(-row, 1 - layer, -column)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation6, 6, (start, layer, row, column) -> start.clone().add(-row, 1 - layer, column)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation7, 7, (start, layer, row, column) -> start.clone().add(row, 1 - layer, -column)));
+        bestResult = pickBetterResult(bestResult, debugHorizontalRule(singleTotem, startLocation8, 8, (start, layer, row, column) -> start.clone().add(row, 1 - layer, column)));
+        return bestResult;
+    }
+
+    private LayoutDebugResult debugVerticalRule(ObjectPlaceCheck singleTotem,
+                                               Location startLocation,
+                                               int rule,
+                                               VerticalLocationResolver resolver) {
+        int matchedBlocks = 0;
+        int baseRow = singleTotem.getTotem().getRealRow();
+        int baseColumn = singleTotem.getTotem().getRealColumn();
+
+        for (int row = 0; row < baseRow; row++) {
+            for (int column = 0; column < baseColumn; column++) {
+                Location nowLocation = resolver.resolve(startLocation, row, column);
+                String expectedMaterial = singleTotem.getTotem().getRealMaterial(1, row, column);
+                if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation)) {
+                    return LayoutDebugResult.protection(rule, 0, row, column, expectedMaterial, matchedBlocks, nowLocation);
+                }
+                if ("none".equals(expectedMaterial)) {
+                    matchedBlocks++;
+                    continue;
+                }
+
+                ObjectMaterialCheck materialManager = new ObjectMaterialCheck(expectedMaterial, nowLocation, rule);
+                if (materialManager.checkMaterial()) {
+                    matchedBlocks++;
+                    continue;
+                }
+
+                return LayoutDebugResult.mismatch(rule, 0, row, column, expectedMaterial, getActualMaterial(nowLocation), matchedBlocks, nowLocation);
+            }
+        }
+        return null;
+    }
+
+    private LayoutDebugResult debugHorizontalRule(ObjectPlaceCheck singleTotem,
+                                                  Location startLocation,
+                                                  int rule,
+                                                  HorizontalLocationResolver resolver) {
+        int matchedBlocks = 0;
+        int baseRow = singleTotem.getTotem().getRealRow();
+        int baseColumn = singleTotem.getTotem().getRealColumn();
+        int baseLayer = singleTotem.getTotem().getTotemLayer();
+
+        for (int layer = 1; layer <= baseLayer; layer++) {
+            for (int row = 0; row < baseRow; row++) {
+                for (int column = 0; column < baseColumn; column++) {
+                    Location nowLocation = resolver.resolve(startLocation, layer, row, column);
+                    String expectedMaterial = singleTotem.getTotem().getRealMaterial(layer, row, column);
+                    if (!HookManager.hookManager.getProtectionCanUse(player, nowLocation)) {
+                        return LayoutDebugResult.protection(rule, layer - 1, row, column, expectedMaterial, matchedBlocks, nowLocation);
+                    }
+                    if ("none".equals(expectedMaterial)) {
+                        matchedBlocks++;
+                        continue;
+                    }
+
+                    ObjectMaterialCheck materialManager = new ObjectMaterialCheck(expectedMaterial, nowLocation, rule);
+                    if (materialManager.checkMaterial()) {
+                        matchedBlocks++;
+                        continue;
+                    }
+
+                    return LayoutDebugResult.mismatch(rule, layer - 1, row, column, expectedMaterial, getActualMaterial(nowLocation), matchedBlocks, nowLocation);
+                }
+            }
+        }
+        return null;
+    }
+
+    private LayoutDebugResult pickBetterResult(LayoutDebugResult current, LayoutDebugResult candidate) {
+        if (candidate == null) {
+            return current;
+        }
+        if (current == null || candidate.matchedBlocks > current.matchedBlocks) {
+            return candidate;
+        }
+        return current;
+    }
+
+    private String getActualMaterial(Location location) {
+        String blockId = BlockCheckManager.blockCheckManager.getBlockId(location.getBlock());
+        return blockId == null ? "unknown" : blockId;
     }
 
     private boolean verticalTotem(ObjectPlaceCheck singleTotem) {
@@ -668,37 +869,86 @@ public class ObjectCheck {
 
     private void initParsedID() {
         // 处理 ItemsAdder 方块
-        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
-            if (CustomBlock.byAlreadyPlaced(block) != null &&
-                    ConfigManager.configManager.getTotemMaterial.containsKey("itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID())) {
-                parsedID = "itemsadder:" + CustomBlock.byAlreadyPlaced(block).getNamespacedID();
-            }
+        String blockId = BlockCheckManager.blockCheckManager.getBlockId(block);
+        if (blockId != null && ConfigManager.configManager.getTotemMaterial.containsKey(blockId)) {
+            parsedID = blockId;
         }
         // 处理 Oraxen 方块
-        if (parsedID == null && CommonUtil.checkPluginLoad("Oraxen") && OraxenBlocks.isOraxenBlock(block)) {
-            NoteBlockMechanic noteBlockMechanic = OraxenBlocks.getNoteBlockMechanic(block);
-            StringBlockMechanic stringBlockMechanic = OraxenBlocks.getStringMechanic(block);
-            if (noteBlockMechanic != null && noteBlockMechanic.getItemID() != null &&
-                    (ConfigManager.configManager.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID()))){
-                parsedID = "oraxen:" + OraxenBlocks.getNoteBlockMechanic(block).getItemID();
-            }
-            else if (stringBlockMechanic != null && stringBlockMechanic.getItemID() != null &&
-                    (ConfigManager.configManager.getTotemMaterial.containsKey("oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID()))) {
-                parsedID = "oraxen:" + OraxenBlocks.getStringMechanic(block).getItemID();
-            }
-        }
         // 处理 MMOItems 方块
-        if (parsedID == null && CommonUtil.checkPluginLoad("MMOItems")) {
-            if (MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData()).isPresent() &&
-                    (ConfigManager.configManager.getTotemMaterial.containsKey("mmoitems:" + MMOItems.plugin.getCustomBlocks().
-                            getFromBlock(block.getBlockData()).get().getId()))) {
-                parsedID = "mmoitems:" + MMOItems.plugin.getCustomBlocks().
-                        getFromBlock(block.getBlockData()).get().getId();
-            }
-        }
         // 处理原版方块
-        if (parsedID == null && ConfigManager.configManager.getTotemMaterial.containsKey("minecraft:" + block.getType().toString().toLowerCase())) {
-            parsedID = "minecraft:" + block.getType().toString().toLowerCase();
+    }
+
+    @FunctionalInterface
+    private interface VerticalLocationResolver {
+
+        Location resolve(Location startLocation, int row, int column);
+    }
+
+    @FunctionalInterface
+    private interface HorizontalLocationResolver {
+
+        Location resolve(Location startLocation, int layer, int row, int column);
+    }
+
+    private static class LayoutDebugResult {
+
+        private final int rule;
+
+        private final int layer;
+
+        private final int row;
+
+        private final int column;
+
+        private final String expectedMaterial;
+
+        private final String actualMaterial;
+
+        private final int matchedBlocks;
+
+        private final boolean protectionFailed;
+
+        private final Location location;
+
+        private LayoutDebugResult(int rule,
+                                  int layer,
+                                  int row,
+                                  int column,
+                                  String expectedMaterial,
+                                  String actualMaterial,
+                                  int matchedBlocks,
+                                  boolean protectionFailed,
+                                  Location location) {
+            this.rule = rule;
+            this.layer = layer;
+            this.row = row;
+            this.column = column;
+            this.expectedMaterial = expectedMaterial;
+            this.actualMaterial = actualMaterial;
+            this.matchedBlocks = matchedBlocks;
+            this.protectionFailed = protectionFailed;
+            this.location = location;
+        }
+
+        private static LayoutDebugResult mismatch(int rule,
+                                                  int layer,
+                                                  int row,
+                                                  int column,
+                                                  String expectedMaterial,
+                                                  String actualMaterial,
+                                                  int matchedBlocks,
+                                                  Location location) {
+            return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, actualMaterial, matchedBlocks, false, location);
+        }
+
+        private static LayoutDebugResult protection(int rule,
+                                                    int layer,
+                                                    int row,
+                                                    int column,
+                                                    String expectedMaterial,
+                                                    int matchedBlocks,
+                                                    Location location) {
+            return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, "protected", matchedBlocks, true, location);
         }
     }
 

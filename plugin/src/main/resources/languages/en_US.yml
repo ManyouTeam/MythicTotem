@@ -6,6 +6,7 @@ help-main-admin: |
   &#98FB98&lMythicTotem &7Made by @PQguanfang
   &f/mythictotem help &7- View help.
   &f/mythictotem blockid &7- Click a block to get its config ID.
+  &f/mythictotem debug <totemId|off> &7- Watch a totem check result.
   &f/mythictotem list &7- View list of valid totems.
   &f/mythictotem reload &7- Reload the plugin.
   &f/mythictotem save &7- Save your mainhand item. &c(Premium)
@@ -28,6 +29,15 @@ generated: "&#98FB98[MythicTotem] &fGenerated hold item's item format at plugin 
 block-id-prompt: "&#98FB98[MythicTotem] &fClick a block to get its material ID."
 block-id-result: "&#98FB98[MythicTotem] &fBlock ID: &a{block_id} &7({world}, {x}, {y}, {z})"
 block-id-failed: "&#98FB98[MythicTotem] &cFailed to detect this block's ID."
+totem-debug-start: "&#98FB98[MythicTotem] &fNow watching totem &a{totem}&f. Use &a/mythictotem debug off &fto stop."
+totem-debug-stop: "&#98FB98[MythicTotem] &fStopped totem debug watching."
+totem-debug-not-found: "&#98FB98[MythicTotem] &cCannot find totem &f{totem}&c."
+totem-debug-success: "&#98FB98[MythicTotem] &aTotem {totem} check passed."
+totem-debug-condition-failed: "&#98FB98[MythicTotem] &eTotem {totem} skipped because its conditions did not pass."
+totem-debug-price-failed: "&#98FB98[MythicTotem] &eTotem {totem} skipped because its prices did not pass."
+totem-debug-layout-failed-generic: "&#98FB98[MythicTotem] &cTotem {totem} check failed, but no exact failing block could be resolved."
+totem-debug-layout-failed: "&#98FB98[MythicTotem] &cTotem {totem} failed at layer &f{layer}&c, row &f{row}&c, column &f{column}&c. Expected &f{expected}&c, got &f{actual}&c at &f{world} {x} {y} {z} &7(rule {rule})"
+totem-debug-protection-failed: "&#98FB98[MythicTotem] &cTotem {totem} was blocked by protection at layer &f{layer}&c, row &f{row}&c, column &f{column}&c. Expected &f{expected}&c at &f{world} {x} {y} {z} &7(rule {rule})"
 bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &fBonus totem upgraded to level &a{level}&f!"
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &cNot enough resources to upgrade this totem."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &eThis bonus totem is already at max level."
