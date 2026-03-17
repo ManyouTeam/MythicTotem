@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BonusEffectsListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         BonusEffectsManager.manager.destroyTotem(block.getLocation());

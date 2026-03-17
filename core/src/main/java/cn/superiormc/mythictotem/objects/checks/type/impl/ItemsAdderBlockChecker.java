@@ -12,6 +12,23 @@ import org.bukkit.entity.Entity;
 public class ItemsAdderBlockChecker extends BlockChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        if (!CommonUtil.checkPluginLoad("ItemsAdder")) {
+            return null;
+        }
+
+        try {
+            CustomBlock iaBlock = CustomBlock.byAlreadyPlaced(block);
+            return iaBlock == null ? null : "itemsadder:" + iaBlock.getNamespacedID();
+        } catch (Exception e) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         if (!CommonUtil.checkPluginLoad("ItemsAdder")) {
             ErrorManager.errorManager.sendErrorMessage("§cError: ItemsAdder is not loaded but you are using block from it as totem layout!");

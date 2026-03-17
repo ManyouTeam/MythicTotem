@@ -13,6 +13,23 @@ import org.bukkit.entity.Entity;
 public class OraxenBlockChecker extends BlockChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        if (!CommonUtil.checkPluginLoad("Oraxen")) {
+            return null;
+        }
+
+        try {
+            Mechanic oraxenBlock = OraxenBlocks.getOraxenBlock(block.getBlockData());
+            return oraxenBlock == null ? null : "oraxen:" + oraxenBlock.getItemID();
+        } catch (Exception e) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         if (!CommonUtil.checkPluginLoad("Oraxen")) {
             ErrorManager.errorManager.sendErrorMessage("§cError: Oraxen is not loaded but you are using block from it as totem layout!");

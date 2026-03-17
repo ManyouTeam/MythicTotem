@@ -25,6 +25,7 @@ public class CommandManager {
     }
 
     private void registerObjectCommand() {
+        registerNewSubCommand(new SubBlockId());
         registerNewSubCommand(new SubGenerateItemFormat());
         registerNewSubCommand(new SubHelp());
         registerNewSubCommand(new SubList());

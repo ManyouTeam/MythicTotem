@@ -14,6 +14,23 @@ import java.util.Optional;
 public class MMOItemsBlockChecker extends BlockChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        if (!CommonUtil.checkPluginLoad("MMOItems")) {
+            return null;
+        }
+
+        try {
+            Optional<net.Indyuce.mmoitems.api.block.CustomBlock> opt = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
+            return opt.map(customBlock -> "mmoitems:" + customBlock.getId()).orElse(null);
+        } catch (Exception e) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         if (!CommonUtil.checkPluginLoad("MMOItems")) {
             ErrorManager.errorManager.sendErrorMessage("§cError: MMOItems is not loaded but you are using block from it as totem layout!");

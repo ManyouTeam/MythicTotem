@@ -6,7 +6,7 @@
 
     <groupId>cn.superiormc.mythictotem</groupId>
     <artifactId>MythicTotem</artifactId>
-    <version>4.5.3</version>
+    <version>4.5.4</version>
     <packaging>pom</packaging>
 
     <modules>

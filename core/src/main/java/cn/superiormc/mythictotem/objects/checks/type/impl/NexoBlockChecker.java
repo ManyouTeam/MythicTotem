@@ -13,6 +13,23 @@ import org.bukkit.entity.Entity;
 public class NexoBlockChecker extends BlockChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        if (!CommonUtil.checkPluginLoad("Nexo")) {
+            return null;
+        }
+
+        try {
+            CustomBlockMechanic nexoBlock = NexoBlocks.customBlockMechanic(block);
+            return nexoBlock == null ? null : "nexo:" + nexoBlock.getItemID();
+        } catch (Exception e) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         if (!CommonUtil.checkPluginLoad("Nexo")) {
             ErrorManager.errorManager.sendErrorMessage("§cError: Nexo is not loaded but you are using block from it as totem layout!");

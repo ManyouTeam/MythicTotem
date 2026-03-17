@@ -5,6 +5,7 @@ help-main: |
 help-main-admin: |
   &#98FB98&lMythicTotem &7Made by @PQguanfang
   &f/mythictotem help &7- View help.
+  &f/mythictotem blockid &7- Click a block to get its config ID.
   &f/mythictotem list &7- View list of valid totems.
   &f/mythictotem reload &7- Reload the plugin.
   &f/mythictotem save &7- Save your mainhand item. &c(Premium)
@@ -24,6 +25,9 @@ error-save-item-not-found: "&#98FB98[MythicTotem] &cWe can't find this save item
 in-game: "&#98FB98[MythicTotem] &cYou have to use this command in game!"
 give-save-item: "&#98FB98[MythicTotem] &fGive {player} save item {item} x{amount}!"
 generated: "&#98FB98[MythicTotem] &fGenerated hold item's item format at plugin config folder, please copy them into your menu or shop configs!"
+block-id-prompt: "&#98FB98[MythicTotem] &fClick a block to get its material ID."
+block-id-result: "&#98FB98[MythicTotem] &fBlock ID: &a{block_id} &7({world}, {x}, {y}, {z})"
+block-id-failed: "&#98FB98[MythicTotem] &cFailed to detect this block's ID."
 bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &fBonus totem upgraded to level &a{level}&f!"
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &cNot enough resources to upgrade this totem."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &eThis bonus totem is already at max level."

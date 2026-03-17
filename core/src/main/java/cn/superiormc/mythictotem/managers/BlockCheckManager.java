@@ -4,8 +4,10 @@ import cn.superiormc.mythictotem.utils.TextUtil;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
 import cn.superiormc.mythictotem.objects.checks.type.impl.*;
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BlockCheckManager {
@@ -16,7 +18,7 @@ public class BlockCheckManager {
 
     public BlockCheckManager() {
         blockCheckManager = this;
-        this.checkers = new HashMap<>();
+        this.checkers = new LinkedHashMap<>();
         registerDefaultCheckers();
     }
 
@@ -48,5 +50,24 @@ public class BlockCheckManager {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public String getBlockId(Block block) {
+        BlockChecker minecraftChecker = null;
+
+        for (BlockChecker checker : checkers.values()) {
+            if (checker instanceof MinecraftBlockChecker) {
+                minecraftChecker = checker;
+                continue;
+            }
+
+            String blockId = checker.getBlockId(block);
+            if (blockId != null) {
+                return blockId;
+            }
+        }
+
+        return minecraftChecker == null ? null : minecraftChecker.getBlockId(block);
     }
 }

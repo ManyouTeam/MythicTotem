@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BlockChecker {
 
@@ -12,6 +13,11 @@ public abstract class BlockChecker {
     }
 
     public abstract boolean check(Block block, String materialString, Location location, int id);
+
+    @Nullable
+    public String getBlockId(Block block) {
+        return null;
+    }
 
     public abstract Entity getEntityNeedRemove();
 

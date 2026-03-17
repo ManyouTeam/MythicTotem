@@ -12,6 +12,11 @@ import org.bukkit.entity.EntityType;
 public class MinecraftBlockChecker extends AbstractEntityChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        return block == null ? null : "minecraft:" + block.getType().name().toLowerCase();
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         String[] parts = materialString.split(":");
         if (!isValidMaterialFormat(parts, 2)) {

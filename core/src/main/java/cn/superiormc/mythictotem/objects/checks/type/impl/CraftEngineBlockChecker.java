@@ -14,6 +14,26 @@ import org.bukkit.entity.Entity;
 public class CraftEngineBlockChecker extends BlockChecker {
 
     @Override
+    public String getBlockId(Block block) {
+        if (!CommonUtil.checkPluginLoad("CraftEngine")) {
+            return null;
+        }
+
+        try {
+            ImmutableBlockState craftEngineBlock = CraftEngineBlocks.getCustomBlockState(block);
+            if (craftEngineBlock == null || craftEngineBlock.owner() == null || craftEngineBlock.owner().value() == null) {
+                return null;
+            }
+            return "craftengine:" + craftEngineBlock.owner().value().id();
+        } catch (Exception e) {
+            if (ConfigManager.configManager.getBoolean("debug", false)) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @Override
     public boolean check(Block block, String materialString, Location location, int id) {
         if (!CommonUtil.checkPluginLoad("CraftEngine")) {
             ErrorManager.errorManager.sendErrorMessage("§cError: CraftEngine is not loaded but you are using block from it as totem layout!");
