@@ -869,10 +869,10 @@ public class ObjectCheck {
 
     private void initParsedID() {
         // 处理 ItemsAdder 方块
-        String blockId = BlockCheckManager.blockCheckManager.getBlockId(block);
-        if (blockId != null && ConfigManager.configManager.getTotemMaterial.containsKey(blockId)) {
-            parsedID = blockId;
-        }
+        parsedID = BlockCheckManager.blockCheckManager.getMatchingBlockId(
+                block,
+                ConfigManager.configManager.getTotemMaterial.keySet()
+        );
         // 处理 Oraxen 方块
         // 处理 MMOItems 方块
         // 处理原版方块

@@ -7,6 +7,7 @@ import cn.superiormc.mythictotem.objects.checks.type.impl.*;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -69,5 +70,32 @@ public class BlockCheckManager {
         }
 
         return minecraftChecker == null ? null : minecraftChecker.getBlockId(block);
+    }
+
+    @Nullable
+    public String getMatchingBlockId(Block block, Collection<String> availableIds) {
+        BlockChecker minecraftChecker = null;
+
+        for (BlockChecker checker : checkers.values()) {
+            if (checker instanceof MinecraftBlockChecker) {
+                minecraftChecker = checker;
+                continue;
+            }
+
+            String blockId = checker.getBlockId(block);
+            if (blockId != null && availableIds.contains(blockId)) {
+                return blockId;
+            }
+        }
+
+        if (minecraftChecker == null) {
+            return null;
+        }
+
+        String vanillaBlockId = minecraftChecker.getBlockId(block);
+        if (vanillaBlockId != null && availableIds.contains(vanillaBlockId)) {
+            return vanillaBlockId;
+        }
+        return null;
     }
 }
