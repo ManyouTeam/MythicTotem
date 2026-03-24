@@ -125,7 +125,10 @@ public class ObjectCheck {
          if (ConfigManager.configManager.getBoolean("debug", false)) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eBlock Type: " + block.getType().name());
         }
-        initParsedID();
+        parsedID = BlockCheckManager.blockCheckManager.getMatchingBlockId(
+                block,
+                ConfigManager.configManager.getTotemMaterial.keySet()
+        );
         if (parsedID == null) {
             return;
         }
@@ -865,17 +868,6 @@ public class ObjectCheck {
                     this.block.getLocation());
             Bukkit.getPluginManager().callEvent(totemActivedEvent);
         });
-    }
-
-    private void initParsedID() {
-        // 处理 ItemsAdder 方块
-        parsedID = BlockCheckManager.blockCheckManager.getMatchingBlockId(
-                block,
-                ConfigManager.configManager.getTotemMaterial.keySet()
-        );
-        // 处理 Oraxen 方块
-        // 处理 MMOItems 方块
-        // 处理原版方块
     }
 
     @FunctionalInterface

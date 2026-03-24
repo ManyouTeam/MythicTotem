@@ -23,8 +23,6 @@ public final class MythicTotem extends JavaPlugin {
 
     public static int minorVersion;
 
-    public static boolean newSkullMethod;
-
     @Override
     public void onEnable() {
         instance = this;
@@ -75,10 +73,6 @@ public final class MythicTotem extends JavaPlugin {
         new TaskManager();
         new CommandManager();
         new ItemManager();
-        if (!CommonUtil.checkClass("com.mojang.authlib.properties.Property", "getValue") && CommonUtil.getMinorVersion(21, 1)) {
-            newSkullMethod = true;
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fNew AuthLib found, enabled new skull get method!");
-        }
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fYour Minecraft version is: 1." + majorVersion + "." + minorVersion + "!");
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is loaded. Author: PQguanfang.");
     }
