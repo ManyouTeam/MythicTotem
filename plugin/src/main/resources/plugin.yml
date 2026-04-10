@@ -20,13 +20,13 @@ softdepend:
   - ItemsAdder
   - Vault
   - PlayerPoints
-  - GamePoints
   - Oraxen
   - EcoItems
   - EcoArmor
   - PlaceholderAPI
   - UltraEconomy
   - CoinsEngine
+  - ExcellentEconomy
   - RedisEconomy
   - EcoBits
   - MythicMobs
