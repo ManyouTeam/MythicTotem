@@ -14,6 +14,7 @@ debuild-item-method: 'LEGACY'
 
 # Item Price
 item-price:
+  shulker-box-check: false
   # Support Value: Bukkit, ItemFormat.
   check-method: Bukkit
   item-format:

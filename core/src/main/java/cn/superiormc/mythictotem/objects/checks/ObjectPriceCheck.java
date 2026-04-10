@@ -6,6 +6,7 @@ import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.methods.BuildItem;
+import cn.superiormc.mythictotem.objects.ItemStorage;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.MathUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
@@ -65,6 +66,7 @@ public class ObjectPriceCheck {
             return false;
         }
         boolean priceBoolean = false;
+        ItemStorage storage = getPriceStorage(keyItems);
         switch (type) {
             case "free":
                 priceBoolean = true;
@@ -75,19 +77,18 @@ public class ObjectPriceCheck {
                 });
                 break;
             case "hook":
-                priceBoolean = ItemPriceUtil.getPrice(section.getString("hook-plugin"),
+                priceBoolean = ItemPriceUtil.getPrice(storage, section.getString("hook-plugin"),
                         section.getString("hook-item"),
-                        player,
-                        (int) cost, take, keyItems);
+                        (int) cost, take);
                 break;
             case "match":
-                priceBoolean = ItemPriceUtil.getPrice(player, section, (int) cost, take);
+                priceBoolean = ItemPriceUtil.getPrice(storage, player, section, (int) cost, take);
                 break;
             case "vanilla":
-                priceBoolean = ItemPriceUtil.getPrice(player,
+                priceBoolean = ItemPriceUtil.getPrice(storage,
                         BuildItem.buildItemStack(player, section, 1),
                         (int) cost,
-                        take, keyItems);
+                        take);
                 break;
             case "economy":
                 priceBoolean = HookManager.hookManager.getPrice(player, section.getString("economy-plugin"),
@@ -103,6 +104,27 @@ public class ObjectPriceCheck {
                 break;
         }
         return priceBoolean;
+    }
+
+    private ItemStorage getPriceStorage(ItemStack keyItems) {
+        if (keyItems == null) {
+            if (player == null) {
+                return ItemStorage.of(new ItemStack[0]);
+            }
+            return ItemStorage.of(player.getInventory());
+        }
+        return new ItemStorage() {
+            private final ItemStack[] contents = new ItemStack[]{keyItems};
+
+            @Override
+            public ItemStack[] getStorageContents() {
+                return contents;
+            }
+
+            @Override
+            public void setStorageContents(ItemStack[] contents) {
+            }
+        };
     }
 
     public ConfigurationSection getSection() {
