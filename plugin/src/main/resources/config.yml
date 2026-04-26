@@ -60,6 +60,15 @@ trigger:
 
 math:
   enabled: false
+  scale: 2
+
+number-display:
+  format:
+    enabled: true
+    decimal: "#,##0.00##########"
+    integer: "#,##0"
+  strip-trailing-zeros:
+    enabled: true
 
 bonus-effects:
   enabled: false

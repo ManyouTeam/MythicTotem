@@ -8,6 +8,7 @@ import cn.superiormc.mythictotem.objects.effect.AbstractEffect;
 import cn.superiormc.mythictotem.objects.effect.EffectStatus;
 import cn.superiormc.mythictotem.objects.effect.EffectUtil;
 import cn.superiormc.mythictotem.utils.CommonUtil;
+import cn.superiormc.mythictotem.utils.MathUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -103,7 +104,7 @@ public class BonusTotemData extends AbstractThingData implements Comparable<Bonu
         if (priceCheck == null || priceCheck.getSection() == null) {
             return "Unknown";
         }
-        return CommonUtil.modifyString(player, priceCheck.getSection().getString("placeholder", "Unknown"), "amount", String.valueOf(priceCheck.getCost()));
+        return CommonUtil.modifyString(player, priceCheck.getSection().getString("placeholder", "Unknown"), "amount", MathUtil.toDisplayString(priceCheck.getCost()));
     }
 
     public double getRange() {

@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
@@ -60,12 +61,18 @@ public class CommonUtil {
         return resultList;
     }
 
+    public static Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
+    public static Pattern pattern9 = Pattern.compile("\\{number:(.*?)}");
     public static String parseLang(Player player, String text) {
-        Pattern pattern8 = Pattern.compile("\\{lang:(.*?)}");
         Matcher matcher8 = pattern8.matcher(text);
         while (matcher8.find()) {
             String placeholder = matcher8.group(1);
             text = text.replace("{lang:" + placeholder + "}", LanguageManager.languageManager.getStringText(player, "override-lang." + placeholder));
+        }
+        Matcher matcher9 = pattern9.matcher(text);
+        while (matcher9.find()) {
+            String placeholder = matcher9.group(1);
+            text = text.replace("{number:" + placeholder + "}", MathUtil.toDisplayString(new BigDecimal(placeholder)));
         }
         return text;
     }

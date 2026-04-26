@@ -19,15 +19,15 @@ public class ConditionPlaceholder extends AbstractCheckCondition {
         try {
             switch (singleCondition.getString("rule")) {
                 case ">=":
-                    return MathUtil.doCalculate(placeholder) >= MathUtil.doCalculate(value);
+                    return MathUtil.doCalculate(placeholder).doubleValue() >= MathUtil.doCalculate(value).doubleValue();
                 case ">":
-                    return MathUtil.doCalculate(placeholder) > MathUtil.doCalculate(value);
+                    return MathUtil.doCalculate(placeholder).doubleValue() > MathUtil.doCalculate(value).doubleValue();
                 case "=":
-                    return MathUtil.doCalculate(placeholder) == MathUtil.doCalculate(value);
+                    return MathUtil.doCalculate(placeholder).doubleValue() == MathUtil.doCalculate(value).doubleValue();
                 case "<":
-                    return MathUtil.doCalculate(placeholder) < MathUtil.doCalculate(value);
+                    return MathUtil.doCalculate(placeholder).doubleValue() < MathUtil.doCalculate(value).doubleValue();
                 case "<=":
-                    return MathUtil.doCalculate(placeholder) <= MathUtil.doCalculate(value);
+                    return MathUtil.doCalculate(placeholder).doubleValue() <= MathUtil.doCalculate(value).doubleValue();
                 case "==":
                     return placeholder.equals(value);
                 case "!=":

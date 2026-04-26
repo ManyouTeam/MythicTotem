@@ -5,7 +5,7 @@ import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import net.momirealms.craftengine.bukkit.api.CraftEngineBlocks;
-import net.momirealms.craftengine.core.block.CustomBlock;
+import net.momirealms.craftengine.core.block.BlockDefinition;
 import net.momirealms.craftengine.core.block.ImmutableBlockState;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -48,7 +48,7 @@ public class CraftEngineBlockChecker extends BlockChecker {
             if (craftEngineBlock == null) {
                 return false;
             }
-            CustomBlock customBlock = craftEngineBlock.owner().value();
+            BlockDefinition customBlock = craftEngineBlock.owner().value();
             String expectedId = parts[1] + ":" + parts[2];
             return customBlock != null && expectedId.equals(customBlock.id().toString());
         } catch (Exception e) {

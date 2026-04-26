@@ -4,6 +4,7 @@ main: cn.superiormc.mythictotem.MythicTotem
 api-version: 1.14
 folia-supported: true
 softdepend:
+  # Protection
   - WorldGuard
   - Towny
   - Dominion
@@ -15,26 +16,34 @@ softdepend:
   - HuskTowns
   - HuskClaims
   - SuperiorSkyblock2
-  - MMOItems
-  - MythicLib
-  - ItemsAdder
+  # Economy
   - Vault
   - PlayerPoints
-  - Oraxen
-  - EcoItems
-  - EcoArmor
-  - PlaceholderAPI
   - UltraEconomy
   - CoinsEngine
   - ExcellentEconomy
   - RedisEconomy
+  - RoyaleEconomy
   - EcoBits
-  - MythicMobs
+  - PEconomy
   - VotingPlugin
+  # Item
+  - MMOItems
+  - ItemsAdder
+  - Oraxen
+  - Nexo
+  - EcoItems
+  - EcoArmor
+  - MythicMobs
   - ExecutableItems
-  - MythicChanger
   - CraftEngine
+  - NeigeItems
+  - eco
+  # Others
+  - PlaceholderAPI
+  - MythicChanger
   - NBTAPI
+  # Stats
   - AuraSkills
   - libreforge
 commands:

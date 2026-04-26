@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.managers;
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.objects.ObjectTotem;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
+import cn.superiormc.mythictotem.utils.MathUtil;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,6 +38,7 @@ public class ConfigManager {
         MythicTotem.instance.saveDefaultConfig();
         this.config = MythicTotem.instance.getConfig();
         initTotemConfigs();
+        MathUtil.init();
     }
 
     private void initTotemConfigs() {

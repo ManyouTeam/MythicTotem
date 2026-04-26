@@ -106,11 +106,11 @@ public abstract class AbstractSingleRun {
     }
 
     public double getDouble(String path) {
-        return MathUtil.doCalculate(section.getString(path));
+        return MathUtil.doCalculate(section.getString(path)).doubleValue();
     }
 
     public double getDouble(String path, Player player, AbstractThingData data) {
-        return MathUtil.doCalculate(replacePlaceholder(section.getString(path), player, data));
+        return MathUtil.doCalculate(replacePlaceholder(section.getString(path), player, data)).doubleValue();
     }
 
     public boolean getBoolean(String path, boolean defaultValue) {
