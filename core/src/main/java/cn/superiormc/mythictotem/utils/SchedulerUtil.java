@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.utils;
 import cn.superiormc.mythictotem.MythicTotem;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
 
 public class SchedulerUtil {
@@ -31,6 +32,14 @@ public class SchedulerUtil {
     public static void runSync(Runnable task) {
         if (MythicTotem.isFolia) {
             Bukkit.getGlobalRegionScheduler().execute(MythicTotem.instance, task);
+        } else {
+            Bukkit.getScheduler().runTask(MythicTotem.instance, task);
+        }
+    }
+
+    public static void runSync(Entity entity, Runnable task) {
+        if (MythicTotem.isFolia) {
+            entity.getScheduler().run(MythicTotem.instance, scheduledTask -> task.run(), null);
         } else {
             Bukkit.getScheduler().runTask(MythicTotem.instance, task);
         }

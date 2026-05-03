@@ -41,3 +41,4 @@ totem-debug-protection-failed: "&#98FB98[MythicTotem] &cTotem {totem} was blocke
 bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &fBonus totem upgraded to level &a{level}&f!"
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &cNot enough resources to upgrade this totem."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &eThis bonus totem is already at max level."
+dupe-removed: "&#98FB98[UltimateShop] &fA illegal item from your inventory has been removed!"

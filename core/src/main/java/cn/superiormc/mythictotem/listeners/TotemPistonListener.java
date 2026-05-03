@@ -10,7 +10,7 @@ public class TotemPistonListener implements Listener {
 
     @EventHandler
     public void PistonEvent(BlockPistonExtendEvent event) {
-        SchedulerUtil.runTaskLaterAsynchronously( () -> {
+        SchedulerUtil.runTaskLaterAsynchronously(() -> {
             synchronized(event) {
                 new ObjectCheck(event);
             }

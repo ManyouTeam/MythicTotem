@@ -41,3 +41,4 @@ totem-debug-protection-failed: "&#98FB98[MythicTotem] &c图腾 {totem} 在第 &f
 bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &f增益图腾已升级到 &a{level} &f级!"
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &c升级该图腾所需资源不足."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &e该增益图腾已达到最高等级."
+dupe-removed: "&#98FB98[UltimateShop] &f你的背包的一件非法物品已被移除!"

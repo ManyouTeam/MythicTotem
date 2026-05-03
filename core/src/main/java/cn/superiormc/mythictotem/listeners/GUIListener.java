@@ -3,6 +3,7 @@ package cn.superiormc.mythictotem.listeners;
 import cn.superiormc.mythictotem.gui.InvGUI;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -66,8 +67,10 @@ public class GUIListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getPlayer().equals(player)) {
-            HandlerList.unregisterAll(this);
-            player.updateInventory();
+            SchedulerUtil.runSync(player, () -> {
+                HandlerList.unregisterAll(this);
+                player.updateInventory();
+            });
         }
     }
 

@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.gui;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.listeners.GUIListener;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -27,10 +28,12 @@ public abstract class InvGUI extends AbstractGUI {
     public void openGUI() {
         constructGUI();
         if (inv != null) {
-            player.openInventory(inv);
+            SchedulerUtil.runSync(player, () -> {
+                this.guiListener = new GUIListener(this);
+                Bukkit.getPluginManager().registerEvents(guiListener, MythicTotem.instance);
+                player.openInventory(inv);
+            });
         }
-        this.guiListener = new GUIListener(this);
-        Bukkit.getPluginManager().registerEvents(guiListener, MythicTotem.instance);
     }
 
     public Inventory getInv() {

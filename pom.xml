@@ -21,7 +21,7 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.6.3</revision>
+        <revision>4.6.4</revision>
         <name>MythicTotem</name>
     </properties>
 
@@ -39,7 +39,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -48,6 +48,12 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>redempt.crunch</pattern>
+                                    <shadedPattern>cn.superiormc.mythictotem.libs.redempt.crunch</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -159,6 +165,10 @@
         <repository>
             <id>nightexpress-releases</id>
             <url>https://repo.nightexpressdev.com/releases</url>
+        </repository>
+        <repository>
+            <id>gtemc-repo</id>
+            <url>https://repo.gtemc.net/releases/</url>
         </repository>
     </repositories>
 

@@ -12,6 +12,9 @@ config-files:
 
 debuild-item-method: 'LEGACY'
 
+# Support value: DEFAULT or ITEMBRIDGE
+hook-item-method: 'DEFAULT'
+
 # Item Price
 item-price:
   shulker-box-check: false
