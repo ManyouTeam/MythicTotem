@@ -65,7 +65,7 @@ public class TotemInfoGUI extends InvGUI {
             totemInfoSlot = totemInfoSection.getInt("slot", 11);
             if (totemInfoSection.getBoolean("enabled", true) && totemInfoSlot >= 0) {
                 ItemStack totemInfoItem = BuildItem.buildItemStack(player, totemInfoSection, totemInfoSection.getInt("amount", 1), tempVal1);
-                inv.setItem(totemInfoSlot, totemInfoItem);
+                setItem(totemInfoSlot, totemInfoItem);
             }
         }
         boolean displayUpgradeOrMax = data.getLevel() < data.getMaxLevel() && data.getUpgradePrice(player) != null;
@@ -75,7 +75,7 @@ public class TotemInfoGUI extends InvGUI {
                 totemUpgradeSlot = totemUpgradeSection.getInt("slot", 15);
                 if (totemUpgradeSection.getBoolean("enabled", true) && totemUpgradeSlot >= 0) {
                     ItemStack totemUpgradeItem = BuildItem.buildItemStack(player, totemUpgradeSection, totemUpgradeSection.getInt("amount", 1), tempVal1);
-                    inv.setItem(totemUpgradeSlot, totemUpgradeItem);
+                    setItem(totemUpgradeSlot, totemUpgradeItem);
                 }
             }
         } else {
@@ -83,7 +83,7 @@ public class TotemInfoGUI extends InvGUI {
             if (totemMaxUpgradeSection != null) {
                 if (totemMaxUpgradeSection.getBoolean("enabled", true) && totemUpgradeSlot >= 0) {
                     ItemStack totemUpgradeItem = BuildItem.buildItemStack(player, totemMaxUpgradeSection, totemMaxUpgradeSection.getInt("amount", 1));
-                    inv.setItem(totemUpgradeSlot, totemUpgradeItem);
+                    setItem(totemUpgradeSlot, totemUpgradeItem);
                 }
             }
         }
@@ -93,7 +93,7 @@ public class TotemInfoGUI extends InvGUI {
             for (String key : customItemSection.getKeys(false)){
                 ConfigurationSection itemSection = customItemSection.getConfigurationSection(key);
                 if (itemSection != null) {
-                    inv.setItem(Integer.parseInt(key), BuildItem.buildItemStack(player, itemSection, itemSection.getInt("amount", 1)));
+                    setItem(Integer.parseInt(key), BuildItem.buildItemStack(player, itemSection, itemSection.getInt("amount", 1)));
                 }
             }
         }

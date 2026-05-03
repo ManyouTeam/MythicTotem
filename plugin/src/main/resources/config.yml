@@ -99,6 +99,7 @@ bonus-effects:
     enabled: true
     title: 'Totem Info'
     size: 27
+    anti-dupe-fixes: false
     ignore-click-outside: false
     totem-info-item:
       slot: 11

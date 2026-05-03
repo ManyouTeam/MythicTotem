@@ -1,14 +1,8 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.listeners.BlockIdInspectListener;
-import cn.superiormc.mythictotem.listeners.BonusEffectsListener;
-import cn.superiormc.mythictotem.listeners.EntityPlaceListener;
-import cn.superiormc.mythictotem.listeners.PlayerClickListener;
-import cn.superiormc.mythictotem.listeners.PlayerDropListener;
-import cn.superiormc.mythictotem.listeners.PlayerPlaceListener;
-import cn.superiormc.mythictotem.listeners.TotemPistonListener;
-import cn.superiormc.mythictotem.listeners.TotemRedstoneListener;
+import cn.superiormc.mythictotem.listeners.*;
+import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
 
@@ -49,6 +43,10 @@ public class ListenerManager {
         }
         if (!MythicTotem.isFolia && ConfigManager.configManager.getBoolean("bonus-effects.enabled", false)) {
             Bukkit.getPluginManager().registerEvents(new BonusEffectsListener(), MythicTotem.instance);
+        }
+        if (CommonUtil.getMajorVersion(19) && MythicTotem.methodUtil.methodID().equals("paper") &&
+                ConfigManager.configManager.getBoolean("bonus-effects.gui.anti-dupe-checker", false)) {
+            Bukkit.getPluginManager().registerEvents(new DupeListener(), MythicTotem.instance);
         }
     }
 }
