@@ -1,8 +1,8 @@
 package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
-import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,25 +22,18 @@ public class PlayerPlaceListener implements Listener {
         if (ConfigManager.configManager.getBoolean("trigger.BlockPlaceEvent.require-shift", false) && (!event.getPlayer().isSneaking())) {
             return;
         }
-        if (ConfigManager.configManager.getCheckingPlayer.contains(event.getPlayer())) {
+        if (RuntimeStateManager.runtimeStateManager.isPlayerCoolingDown(event.getPlayer())) {
             return;
         }
         if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
-        ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
-        if (event.canBuild() && (!event.isCancelled())){
-            SchedulerUtil.runTaskAsynchronously(() -> {
-                synchronized(event) {
-                    new ObjectCheck(event);
-                }
-            });
-            SchedulerUtil.runTaskLater(() -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()), ConfigManager.configManager.getLong("cooldown-tick", 5L));
+        if (event.canBuild() && (!event.isCancelled())) {
+            RuntimeStateManager.runtimeStateManager.startPlayerCooldown(event.getPlayer());
+            new ObjectCheck(event);
         }
         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + event.getBlockPlaced().getLocation());
-            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlockPlaced()).getNamespacedID());
-            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cBiome: " + event.getBlock().getBiome());
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §ePlace trigger!");
         }
     }
 }

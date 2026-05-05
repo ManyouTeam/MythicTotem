@@ -20,7 +20,7 @@ public class SubDebug extends AbstractCommand {
     @Override
     public void executeCommandInGame(String[] args, Player player) {
         if (args[1].equalsIgnoreCase("off")) {
-            TotemDebugManager.manager.stopDebug(player);
+            TotemDebugManager.totemDebugManager.stopDebug(player);
             LanguageManager.languageManager.sendStringText(player, "totem-debug-stop");
             return;
         }
@@ -30,7 +30,7 @@ public class SubDebug extends AbstractCommand {
             return;
         }
 
-        TotemDebugManager.manager.startDebug(player, args[1]);
+        TotemDebugManager.totemDebugManager.startDebug(player, args[1]);
         LanguageManager.languageManager.sendStringText(player, "totem-debug-start", "totem", args[1]);
     }
 

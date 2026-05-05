@@ -3,8 +3,11 @@ package cn.superiormc.mythictotem.utils;
 import cn.superiormc.mythictotem.MythicTotem;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.concurrent.TimeUnit;
 
 public class SchedulerUtil {
 
@@ -45,10 +48,18 @@ public class SchedulerUtil {
         }
     }
 
+    public static void runSync(Location location, Runnable task) {
+        if (MythicTotem.isFolia) {
+            Bukkit.getRegionScheduler().run(MythicTotem.instance, location, scheduledTask -> task.run());
+        } else {
+            Bukkit.getScheduler().runTask(MythicTotem.instance, task);
+        }
+    }
+
     // 在异步线程上运行任务
     public static void runTaskAsynchronously(Runnable task) {
         if (MythicTotem.isFolia) {
-            task.run();
+            Bukkit.getAsyncScheduler().runNow(MythicTotem.instance, scheduledTask -> task.run());
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(MythicTotem.instance, task);
         }
@@ -67,6 +78,30 @@ public class SchedulerUtil {
         }
     }
 
+    public static SchedulerUtil runTaskLater(Location location, Runnable task, long delayTicks) {
+        if (MythicTotem.isFolia) {
+            if (delayTicks <= 0) {
+                delayTicks = 1;
+            }
+            return new SchedulerUtil(Bukkit.getRegionScheduler().runDelayed(MythicTotem.instance,
+                    location, scheduledTask -> task.run(), delayTicks));
+        } else {
+            return new SchedulerUtil(Bukkit.getScheduler().runTaskLater(MythicTotem.instance, task, delayTicks));
+        }
+    }
+
+    public static SchedulerUtil runTaskLater(Entity entity, Runnable task, long delayTicks) {
+        if (MythicTotem.isFolia) {
+            if (delayTicks <= 0) {
+                delayTicks = 1;
+            }
+            return new SchedulerUtil(entity.getScheduler().runDelayed(MythicTotem.instance,
+                    scheduledTask -> task.run(), null, delayTicks));
+        } else {
+            return new SchedulerUtil(Bukkit.getScheduler().runTaskLater(MythicTotem.instance, task, delayTicks));
+        }
+    }
+
     // 定时循环任务
     public static SchedulerUtil runTaskTimer(Runnable task, long delayTicks, long periodTicks) {
         if (MythicTotem.isFolia) {
@@ -80,8 +115,8 @@ public class SchedulerUtil {
     // 延迟执行任务
     public static SchedulerUtil runTaskLaterAsynchronously(Runnable task, long delayTicks) {
         if (MythicTotem.isFolia) {
-            return new SchedulerUtil(Bukkit.getGlobalRegionScheduler().runDelayed(MythicTotem.instance,
-                    scheduledTask -> task.run(), delayTicks));
+            return new SchedulerUtil(Bukkit.getAsyncScheduler().runDelayed(MythicTotem.instance,
+                    scheduledTask -> task.run(), delayTicks * 50L, TimeUnit.MILLISECONDS));
         } else {
             return new SchedulerUtil(Bukkit.getScheduler().runTaskLaterAsynchronously(MythicTotem.instance, task, delayTicks));
         }

@@ -66,6 +66,7 @@ public final class MythicTotem extends JavaPlugin {
         new ConfigManager();
         new BlockCheckManager();
         new TotemDebugManager();
+        new RuntimeStateManager();
         new HookManager();
         new LanguageManager();
         new BonusEffectsManager();

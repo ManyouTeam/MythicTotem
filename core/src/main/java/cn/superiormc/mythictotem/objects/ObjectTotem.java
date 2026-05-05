@@ -6,15 +6,10 @@ import cn.superiormc.mythictotem.managers.BonusEffectsManager;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
-import cn.superiormc.mythictotem.objects.effect.AbstractEffect;
-import cn.superiormc.mythictotem.objects.effect.EffectStatus;
-import cn.superiormc.mythictotem.objects.effect.EffectUtil;
-import cn.superiormc.mythictotem.objects.singlethings.BonusTotemData;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 

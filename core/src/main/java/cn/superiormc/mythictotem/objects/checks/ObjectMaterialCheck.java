@@ -2,26 +2,20 @@ package cn.superiormc.mythictotem.objects.checks;
 
 import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.BlockCheckManager;
-import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
 import cn.superiormc.mythictotem.objects.checks.type.impl.AbstractEntityChecker;
-import cn.superiormc.mythictotem.objects.checks.type.impl.MinecraftBlockChecker;
 import cn.superiormc.mythictotem.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ObjectMaterialCheck {
-
-    public static Collection<String> loggedMaterials = new ArrayList<>();
 
     private static final Set<String> freeVersionThirdPartyBlocks = new HashSet<>();
 
@@ -35,7 +29,10 @@ public class ObjectMaterialCheck {
 
     private Entity entity;
 
-    public ObjectMaterialCheck(@NotNull String materialString, @NotNull Location location, int id) {
+    private final ObjectCheck check;
+
+    public ObjectMaterialCheck(@NotNull ObjectCheck check, @NotNull String materialString, @NotNull Location location, int id) {
+        this.check = check;
         this.materialString = materialString;
         this.location = location;
         this.id = id;
@@ -43,11 +40,12 @@ public class ObjectMaterialCheck {
 
     public boolean checkMaterial() {
         if (materialString.equals("none")) {
-            if (ConfigManager.configManager.getBoolean("debug", false)) {
-                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fSkipped none block.");
-            }
             return true;
         }
+        if (RuntimeStateManager.runtimeStateManager.isCheckingBlock(location, check)) {
+            return false;
+        }
+        RuntimeStateManager.runtimeStateManager.markCheckingBlock(location, check);
 
         BlockChecker checker = BlockCheckManager.blockCheckManager.getSuitableChecker(materialString);
         if (checker != null) {

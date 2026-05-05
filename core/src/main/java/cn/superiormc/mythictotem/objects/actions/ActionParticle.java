@@ -4,6 +4,7 @@ import cn.superiormc.mythictotem.managers.ErrorManager;
 import cn.superiormc.mythictotem.objects.singlethings.BonusTotemData;
 import cn.superiormc.mythictotem.objects.singlethings.AbstractThingData;
 import cn.superiormc.mythictotem.objects.singlethings.TotemActiveData;
+import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -50,7 +51,8 @@ public class ActionParticle extends AbstractRunAction {
 
             try {
                 Particle particle = Particle.valueOf(particleName.toUpperCase());
-                location.getWorld().spawnParticle(particle, location, count, offsetX, offsetY, offsetZ, speed);
+                Location finalLocation = location;
+                SchedulerUtil.runSync(finalLocation, () -> finalLocation.getWorld().spawnParticle(particle, finalLocation, count, offsetX, offsetY, offsetZ, speed));
             } catch (IllegalArgumentException e) {
                 ErrorManager.errorManager.sendErrorMessage("§cInvalid particle name: " + particleName);
             }

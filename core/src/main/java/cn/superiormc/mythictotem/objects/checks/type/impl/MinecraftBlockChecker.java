@@ -25,10 +25,6 @@ public class MinecraftBlockChecker extends AbstractEntityChecker {
         try {
             Material material = Material.getMaterial(parts[1].toUpperCase());
             if (material != null) {
-                if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fShould be: " +
-                            materialString + ", real block: " + block.getType().name() + ", location: " + location + ", ID: " + id + ".");
-                }
                 return material == block.getType();
             } else {
                 EntityType entityType = Enums.getIfPresent(EntityType.class, parts[1].toUpperCase()).orNull();

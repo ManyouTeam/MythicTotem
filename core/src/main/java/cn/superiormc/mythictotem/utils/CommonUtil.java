@@ -142,13 +142,15 @@ public class CommonUtil {
         if (block == null) {
             return;
         }
-        if (CommonUtil.checkPluginLoad("ItemsAdder")) {
-            CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
-            if (customBlock != null) {
-                customBlock.remove();
+        SchedulerUtil.runSync(block.getLocation(), () -> {
+            if (CommonUtil.checkPluginLoad("ItemsAdder")) {
+                CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
+                if (customBlock != null) {
+                    customBlock.remove();
+                }
             }
-        }
-        block.setType(Material.AIR);
+            block.setType(Material.AIR);
+        });
     }
 
     public static void mkDir(File dir) {

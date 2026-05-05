@@ -25,7 +25,7 @@ public class BonusEffectsManager {
 
     private final Map<Integer, List<double[]>> circleCache = new HashMap<>();
 
-    private Collection<Chunk> chunkCache = new ArrayList<>();
+    private final Collection<Chunk> chunkCache = new ArrayList<>();
 
     public BonusEffectsManager() {
         manager = this;
@@ -54,6 +54,7 @@ public class BonusEffectsManager {
     }
 
     public void tickChunks() {
+        chunkCache.clear();
         for (World world : Bukkit.getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
                 chunkCache.add(chunk);
@@ -119,8 +120,9 @@ public class BonusEffectsManager {
 
                         if (!active.containsKey(totemData.location)) {
                             int limit = EffectUtil.getMaxEffectsAmount(player, totemData);
-                            if (active.size() < limit && (ConfigManager.configManager.getBoolean("bonus-effects.limit.same-totem-only-active-once", true) &&
-                                    !nowTotemID.contains(totemData.totemId))) {
+                            boolean allowSameTotem = !ConfigManager.configManager.getBoolean("bonus-effects.limit.same-totem-only-active-once", true)
+                                    || !nowTotemID.contains(totemData.totemId);
+                            if (active.size() < limit && allowSameTotem) {
                                 active.put(totemData.location, totemData);
                                 applyBonus(player, totemData);
                             }

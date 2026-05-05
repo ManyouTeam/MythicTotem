@@ -244,6 +244,40 @@ public class BonusTotemData extends AbstractThingData implements Comparable<Bonu
 
     @Override
     public int compareTo(@NonNull BonusTotemData data) {
-        return (int) (data.placeTime - this.placeTime);
+        if (equals(data)) {
+            return 0;
+        }
+
+        int placeTimeCompare = Long.compare(data.placeTime, this.placeTime);
+        if (placeTimeCompare != 0) {
+            return placeTimeCompare;
+        }
+
+        int uuidCompare = this.totemUUID.compareTo(data.totemUUID);
+        if (uuidCompare != 0) {
+            return uuidCompare;
+        }
+
+        int worldCompare = this.location.getWorld().getName().compareTo(data.location.getWorld().getName());
+        if (worldCompare != 0) {
+            return worldCompare;
+        }
+
+        int xCompare = Integer.compare(this.location.getBlockX(), data.location.getBlockX());
+        if (xCompare != 0) {
+            return xCompare;
+        }
+
+        int yCompare = Integer.compare(this.location.getBlockY(), data.location.getBlockY());
+        if (yCompare != 0) {
+            return yCompare;
+        }
+
+        int zCompare = Integer.compare(this.location.getBlockZ(), data.location.getBlockZ());
+        if (zCompare != 0) {
+            return zCompare;
+        }
+
+        return Boolean.compare(this.isCore, data.isCore);
     }
 }

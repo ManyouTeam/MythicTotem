@@ -4,11 +4,9 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.objects.ObjectTotem;
 import cn.superiormc.mythictotem.objects.checks.ObjectPlaceCheck;
 import cn.superiormc.mythictotem.utils.MathUtil;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -17,13 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigManager {
 
-    public List<Block> getCheckingBlock = Collections.synchronizedList(new ArrayList<>());
-
-    public List<Player> getCheckingPlayer = new ArrayList<>();
-
     public Map<String, List<ObjectPlaceCheck>> getTotemMaterial = new ConcurrentHashMap<>();
-
-    public List<Item> getDroppedItems = new ArrayList<>();
 
     public static ConfigManager configManager;
 

@@ -1,10 +1,9 @@
 package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
-import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -24,20 +23,14 @@ public class PlayerDropListener implements Listener {
         if (ConfigManager.configManager.getBoolean("trigger.PlayerDropItemEvent.require-shift", true) && (!event.getPlayer().isSneaking())) {
             return;
         }
-        if (ConfigManager.configManager.getCheckingPlayer.contains(event.getPlayer())) {
+        if (RuntimeStateManager.runtimeStateManager.isPlayerCoolingDown(event.getPlayer())) {
             return;
         }
-        ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
-        SchedulerUtil.runTaskAsynchronously(() -> {
-            synchronized(event) {
-                new ObjectCheck(event);
-            }
-        });
+        RuntimeStateManager.runtimeStateManager.startPlayerCooldown(event.getPlayer());
+        new ObjectCheck(event);
         if (ConfigManager.configManager.getBoolean("debug", false)) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eDrop trigger!");
         }
-        SchedulerUtil.runTaskLater(() -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()),
-                ConfigManager.configManager.getLong("cooldown-tick", 5L));
     }
 
     @EventHandler
@@ -45,7 +38,7 @@ public class PlayerDropListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (ConfigManager.configManager.getDroppedItems.contains(event.getItem())) {
+        if (RuntimeStateManager.runtimeStateManager.isDroppedItem(event.getItem())) {
             event.setCancelled(true);
         }
     }
@@ -55,7 +48,7 @@ public class PlayerDropListener implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        if (ConfigManager.configManager.getDroppedItems.contains(event.getItem())) {
+        if (RuntimeStateManager.runtimeStateManager.isDroppedItem(event.getItem())) {
             event.setCancelled(true);
         }
     }

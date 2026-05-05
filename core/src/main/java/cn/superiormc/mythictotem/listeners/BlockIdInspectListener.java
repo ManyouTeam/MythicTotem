@@ -23,7 +23,7 @@ public class BlockIdInspectListener implements Listener {
         waitingPlayers.add(player.getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInspect(PlayerInteractEvent event) {
         if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;

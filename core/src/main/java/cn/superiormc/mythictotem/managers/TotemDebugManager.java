@@ -8,12 +8,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TotemDebugManager {
 
-    public static TotemDebugManager manager;
+    public static TotemDebugManager totemDebugManager;
 
     private final Map<UUID, String> debuggingTotems = new ConcurrentHashMap<>();
 
     public TotemDebugManager() {
-        manager = this;
+        totemDebugManager = this;
     }
 
     public void startDebug(Player player, String totemId) {

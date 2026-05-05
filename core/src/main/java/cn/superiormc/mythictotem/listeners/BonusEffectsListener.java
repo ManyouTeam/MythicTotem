@@ -8,6 +8,7 @@ import cn.superiormc.mythictotem.objects.singlethings.BonusTotemData;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -18,41 +19,41 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BonusEffectsListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         BonusEffectsManager.manager.destroyTotem(block.getLocation());
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList()) {
             BonusEffectsManager.manager.destroyTotem(block.getLocation());
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         for (Block block : event.blockList()) {
             BonusEffectsManager.manager.destroyTotem(block.getLocation());
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
             BonusEffectsManager.manager.destroyTotem(block.getLocation());
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
             BonusEffectsManager.manager.destroyTotem(block.getLocation());
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityGrief(EntityChangeBlockEvent event) {
         Block block = event.getBlock();
         BonusEffectsManager.manager.destroyTotem(block.getLocation());
@@ -70,7 +71,7 @@ public class BonusEffectsListener implements Listener {
         BonusEffectsManager.manager.removePlayer(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null
                 && BonusEffectsManager.manager != null

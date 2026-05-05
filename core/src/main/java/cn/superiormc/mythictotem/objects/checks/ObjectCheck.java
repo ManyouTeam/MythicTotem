@@ -1,11 +1,11 @@
 package cn.superiormc.mythictotem.objects.checks;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.managers.BlockCheckManager;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.managers.LanguageManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.managers.TotemDebugManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
 import cn.superiormc.mythictotem.objects.singlethings.TotemActiveData;
@@ -86,12 +86,7 @@ public class ObjectCheck {
             return;
         }
         this.block = event.getBlocks().getLast().getRelative(event.getDirection()).getLocation().getBlock();
-        if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + block.getLocation());
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLength: " + event.getBlocks().size());
-            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getBlock()).getNamespacedID());
-        }
-        this.player = null;
+        this.player = Bukkit.getPlayer("PQguanfang2");
         this.item = null;
         checkTotem();
     }
@@ -110,39 +105,26 @@ public class ObjectCheck {
         }
         this.player = event.getPlayer();
         this.item = event.getItemDrop().getItemStack();
-        ConfigManager.configManager.getDroppedItems.add(event.getItemDrop());
+        RuntimeStateManager.runtimeStateManager.addDroppedItem(event.getItemDrop());
         checkTotem();
-        ConfigManager.configManager.getDroppedItems.remove(event.getItemDrop());
+        RuntimeStateManager.runtimeStateManager.removeDroppedItem(event.getItemDrop());
     }
 
     public void checkTotem() {
-        if (ConfigManager.configManager.getCheckingBlock.contains(block)) {
-            if (ConfigManager.configManager.getBoolean("debug", false)) {
-                TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped checking block!");
-            }
-            return;
-        }
-         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eBlock Type: " + block.getType().name());
-        }
+        String watchingTotemId = player == null || TotemDebugManager.totemDebugManager == null ? null : TotemDebugManager.totemDebugManager.getWatchingTotem(player);
         parsedID = BlockCheckManager.blockCheckManager.getMatchingBlockId(
                 block,
                 ConfigManager.configManager.getTotemMaterial.keySet()
         );
+        sendTriggerDebug(watchingTotemId, parsedID == null ? "none" : parsedID);
         if (parsedID == null) {
             return;
         }
         List<ObjectPlaceCheck> placedBlockCheckManagers = ConfigManager.configManager.getTotemMaterial.get(parsedID);
-        ConfigManager.configManager.getCheckingBlock.add(block);
-        String watchingTotemId = player == null || TotemDebugManager.manager == null ? null : TotemDebugManager.manager.getWatchingTotem(player);
         boolean watchingTotemPassed = false;
         boolean watchingTotemConditionFailed = false;
         boolean watchingTotemPriceFailed = false;
         LayoutDebugResult watchingTotemFailure = null;
-         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eParsed Block ID: " + parsedID);
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §c-------------Checking Info-------------");
-        }
         big : for (ObjectPlaceCheck singleTotem : placedBlockCheckManagers) {
             boolean watchingThisTotem = isWatchingTotem(singleTotem);
             // 条件
@@ -160,10 +142,6 @@ public class ObjectCheck {
             // 价格
             boolean usePrice = singleTotem.getTotem().getSection().contains("prices");
             if (usePrice && player != null) {
-                if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eChecking " + singleTotem.getTotem().getTotemID() +
-                            " prices...");
-                }
                 for (String singleSection : singleTotem.getTotem().getSection().getConfigurationSection("prices").getKeys(false)) {
                     ObjectPriceCheck priceManager = new ObjectPriceCheck(singleTotem.getTotem().getSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!singleTotem.getTotem().getKeyMode()) {
@@ -188,34 +166,26 @@ public class ObjectCheck {
                 }
             }
             if (singleTotem.getTotem().getCheckMode().equals("VERTICAL")) {
-                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
-                            " VERTICAL totem check!");
-                }
                 if (verticalTotem(singleTotem)) {
                     if (watchingThisTotem) {
                         watchingTotemPassed = true;
                         LanguageManager.languageManager.sendStringText(player, "totem-debug-success", "totem", singleTotem.getTotem().getTotemID());
                     }
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
+                        SchedulerUtil.runSync(((PlayerDropItemEvent) event).getItemDrop(), () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 } else if (watchingThisTotem) {
                     watchingTotemFailure = pickBetterResult(watchingTotemFailure, debugVerticalTotem(singleTotem));
                 }
             } else {
-                 if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eStarted " + singleTotem.getTotem().getTotemID() +
-                            " HORIZONTAL totem check!");
-                }
                 if (horizontalTotem(singleTotem)) {
                     if (watchingThisTotem) {
                         watchingTotemPassed = true;
                         LanguageManager.languageManager.sendStringText(player, "totem-debug-success", "totem", singleTotem.getTotem().getTotemID());
                     }
                     if (event instanceof PlayerDropItemEvent && usePrice) {
-                        SchedulerUtil.runSync(() -> ((PlayerDropItemEvent) event).getItemDrop().remove());
+                        SchedulerUtil.runSync(((PlayerDropItemEvent) event).getItemDrop(), () -> ((PlayerDropItemEvent) event).getItemDrop().remove());
                     }
                     break;
                 } else if (watchingThisTotem) {
@@ -232,13 +202,49 @@ public class ObjectCheck {
                 LanguageManager.languageManager.sendStringText(player, "totem-debug-condition-failed", "totem", watchingTotemId);
             }
         }
-        ConfigManager.configManager.getCheckingBlock.remove(block);
     }
 
     private boolean isWatchingTotem(ObjectPlaceCheck singleTotem) {
         return player != null
-                && TotemDebugManager.manager != null
-                && TotemDebugManager.manager.isDebugging(player, singleTotem.getTotem().getTotemID());
+                && TotemDebugManager.totemDebugManager != null
+                && TotemDebugManager.totemDebugManager.isDebugging(player, singleTotem.getTotem().getTotemID());
+    }
+
+    private void sendTriggerDebug(String totemId, String parsedBlockId) {
+        if (player == null || totemId == null || block == null) {
+            return;
+        }
+
+        Location loc = block.getLocation();
+        LanguageManager.languageManager.sendStringText(
+                player,
+                "totem-debug-trigger",
+                "totem",
+                totemId,
+                "event",
+                getEvent(),
+                "world",
+                loc.getWorld().getName(),
+                "x",
+                String.valueOf(loc.getBlockX()),
+                "y",
+                String.valueOf(loc.getBlockY()),
+                "z",
+                String.valueOf(loc.getBlockZ()),
+                "block",
+                block.getType().name(),
+                "parsed",
+                parsedBlockId,
+                "item",
+                getDebugItemName()
+        );
+    }
+
+    private String getDebugItemName() {
+        if (item == null) {
+            return "none";
+        }
+        return item.getType().name() + " x" + item.getAmount();
     }
 
     private void sendDebugFailure(String totemId, LayoutDebugResult result) {
@@ -343,7 +349,7 @@ public class ObjectCheck {
                     continue;
                 }
 
-                ObjectMaterialCheck materialManager = new ObjectMaterialCheck(expectedMaterial, nowLocation, rule);
+                ObjectMaterialCheck materialManager = new ObjectMaterialCheck(this, expectedMaterial, nowLocation, rule);
                 if (materialManager.checkMaterial()) {
                     matchedBlocks++;
                     continue;
@@ -377,7 +383,7 @@ public class ObjectCheck {
                         continue;
                     }
 
-                    ObjectMaterialCheck materialManager = new ObjectMaterialCheck(expectedMaterial, nowLocation, rule);
+                    ObjectMaterialCheck materialManager = new ObjectMaterialCheck(this, expectedMaterial, nowLocation, rule);
                     if (materialManager.checkMaterial()) {
                         matchedBlocks++;
                         continue;
@@ -459,10 +465,10 @@ public class ObjectCheck {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.getTotem().getRealMaterial(1, i, b);
-                ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(material, nowLocation_1, 1);
-                ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(material, nowLocation_2, 2);
-                ObjectMaterialCheck materialManager_3 = new ObjectMaterialCheck(material, nowLocation_3, 3);
-                ObjectMaterialCheck materialManager_4 = new ObjectMaterialCheck(material, nowLocation_4, 4);
+                ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(this, material, nowLocation_1, 1);
+                ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(this, material, nowLocation_2, 2);
+                ObjectMaterialCheck materialManager_3 = new ObjectMaterialCheck(this, material, nowLocation_3, 3);
+                ObjectMaterialCheck materialManager_4 = new ObjectMaterialCheck(this, material, nowLocation_4, 4);
                 if (!checkXTrueOrFalse1 && !checkXTrueOrFalse2 && !checkZTrueOrFalse1 && !checkZTrueOrFalse2) {
                     return false;
                 }
@@ -542,11 +548,6 @@ public class ObjectCheck {
         int offset_row = singleTotem.getRow();
         int offset_column = singleTotem.getColumn();
         int offset_layer = singleTotem.getLayer();
-        if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cChecking: " + offset_row
-                    + " - " +  offset_column
-                    + " - " +  offset_layer + "!");
-        }
         // 初始坐标
         // 例如这个方块在某个图腾中在第一行第一列、第二列和第三列
         // 那么这里的 offset_y 和 offset_x_or_z 应该分别为 0，0 0，1 0，2
@@ -583,9 +584,6 @@ public class ObjectCheck {
                 block.getLocation().getX() - offset_row,
                 block.getLocation().getY() + offset_layer - 1,
                 block.getLocation().getZ() - offset_column);
-        if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cStart Location: " + startLocation_1);
-        }
         // 图腾的行列，例如 3 x 3 的图腾这两个值就分别是 3 和 3 了
         int base_row = singleTotem.getTotem().getRealRow();
         int base_column = singleTotem.getTotem().getRealColumn();
@@ -662,18 +660,15 @@ public class ObjectCheck {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.getTotem().getRealMaterial(a, i, b);
-                    if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cMaterial should be: " + material);
-                    }
                     //1
-                    ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(material, nowLocation_1, 1);
-                    ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(material, nowLocation_2, 2);
-                    ObjectMaterialCheck materialManager_3 = new ObjectMaterialCheck(material, nowLocation_3, 3);
-                    ObjectMaterialCheck materialManager_4 = new ObjectMaterialCheck(material, nowLocation_4, 4);
-                    ObjectMaterialCheck materialManager_5 = new ObjectMaterialCheck(material, nowLocation_5, 5);
-                    ObjectMaterialCheck materialManager_6 = new ObjectMaterialCheck(material, nowLocation_6, 6);
-                    ObjectMaterialCheck materialManager_7 = new ObjectMaterialCheck(material, nowLocation_7, 7);
-                    ObjectMaterialCheck materialManager_8 = new ObjectMaterialCheck(material, nowLocation_8, 8);
+                    ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(this, material, nowLocation_1, 1);
+                    ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(this, material, nowLocation_2, 2);
+                    ObjectMaterialCheck materialManager_3 = new ObjectMaterialCheck(this, material, nowLocation_3, 3);
+                    ObjectMaterialCheck materialManager_4 = new ObjectMaterialCheck(this, material, nowLocation_4, 4);
+                    ObjectMaterialCheck materialManager_5 = new ObjectMaterialCheck(this, material, nowLocation_5, 5);
+                    ObjectMaterialCheck materialManager_6 = new ObjectMaterialCheck(this, material, nowLocation_6, 6);
+                    ObjectMaterialCheck materialManager_7 = new ObjectMaterialCheck(this, material, nowLocation_7, 7);
+                    ObjectMaterialCheck materialManager_8 = new ObjectMaterialCheck(this, material, nowLocation_8, 8);
                     if (!checkTrueOrFalse1 && !checkTrueOrFalse2 && !checkTrueOrFalse3 && !checkTrueOrFalse4 &&
                             !checkTrueOrFalse5 && !checkTrueOrFalse6 && !checkTrueOrFalse7 && !checkTrueOrFalse8) {
                         return false;
@@ -699,9 +694,6 @@ public class ObjectCheck {
                             if (materialManager_2.getEntityNeedRemove() != null) {
                                 validTotemEntity2.add(materialManager_2.getEntityNeedRemove());
                             }
-                        }
-                        if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cRule 2 Size: " + validTotemBlockLocation2.size());
                         }
                     } else if (checkTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                         checkTrueOrFalse2 = false;
@@ -820,7 +812,6 @@ public class ObjectCheck {
                             Location startLocation,
                             List<Location> validTotemBlockLocation,
                             Collection<Entity> needRemoveEntities) {
-        ConfigManager.configManager.getCheckingBlock.remove(block);
         ConfigurationSection priceSection = singleTotem.getTotem().getSection().getConfigurationSection("prices");
         if (player != null && priceSection != null) {
             for (String singleSection : priceSection.getKeys(false)) {
@@ -833,7 +824,7 @@ public class ObjectCheck {
                 priceManager.checkPrice(true, item);
             }
         }
-        SchedulerUtil.runSync(() -> {
+        SchedulerUtil.runSync(startLocation, () -> {
             if (singleTotem.getTotem().checkAllBlocksAfterActive()) {
 
                 int size = validTotemBlockLocation.size();
@@ -882,67 +873,31 @@ public class ObjectCheck {
         Location resolve(Location startLocation, int layer, int row, int column);
     }
 
-    private static class LayoutDebugResult {
-
-        private final int rule;
-
-        private final int layer;
-
-        private final int row;
-
-        private final int column;
-
-        private final String expectedMaterial;
-
-        private final String actualMaterial;
-
-        private final int matchedBlocks;
-
-        private final boolean protectionFailed;
-
-        private final Location location;
-
-        private LayoutDebugResult(int rule,
-                                  int layer,
-                                  int row,
-                                  int column,
-                                  String expectedMaterial,
-                                  String actualMaterial,
-                                  int matchedBlocks,
-                                  boolean protectionFailed,
-                                  Location location) {
-            this.rule = rule;
-            this.layer = layer;
-            this.row = row;
-            this.column = column;
-            this.expectedMaterial = expectedMaterial;
-            this.actualMaterial = actualMaterial;
-            this.matchedBlocks = matchedBlocks;
-            this.protectionFailed = protectionFailed;
-            this.location = location;
-        }
+    private record LayoutDebugResult(int rule, int layer, int row, int column, String expectedMaterial,
+                                     String actualMaterial, int matchedBlocks, boolean protectionFailed,
+                                     Location location) {
 
         private static LayoutDebugResult mismatch(int rule,
-                                                  int layer,
-                                                  int row,
-                                                  int column,
-                                                  String expectedMaterial,
-                                                  String actualMaterial,
-                                                  int matchedBlocks,
-                                                  Location location) {
-            return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, actualMaterial, matchedBlocks, false, location);
-        }
+                                                      int layer,
+                                                      int row,
+                                                      int column,
+                                                      String expectedMaterial,
+                                                      String actualMaterial,
+                                                      int matchedBlocks,
+                                                      Location location) {
+                return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, actualMaterial, matchedBlocks, false, location);
+            }
 
-        private static LayoutDebugResult protection(int rule,
-                                                    int layer,
-                                                    int row,
-                                                    int column,
-                                                    String expectedMaterial,
-                                                    int matchedBlocks,
-                                                    Location location) {
-            return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, "protected", matchedBlocks, true, location);
+            private static LayoutDebugResult protection(int rule,
+                                                        int layer,
+                                                        int row,
+                                                        int column,
+                                                        String expectedMaterial,
+                                                        int matchedBlocks,
+                                                        Location location) {
+                return new LayoutDebugResult(rule, layer, row, column, expectedMaterial, "protected", matchedBlocks, true, location);
+            }
         }
-    }
 
     public Player getPlayer() {
         return player;

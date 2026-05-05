@@ -1,6 +1,7 @@
 package cn.superiormc.mythictotem.listeners;
 
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
@@ -22,26 +23,22 @@ public class PlayerClickListener implements Listener {
         if (ConfigManager.configManager.getBoolean("trigger.PlayerInteractEvent.require-shift", true) && (!event.getPlayer().isSneaking())) {
             return;
         }
-        if (ConfigManager.configManager.getCheckingPlayer.contains(event.getPlayer())) {
-            return;
-        }
         if (!EquipmentSlot.HAND.equals(event.getHand())) {
             return;
         }
+        if (event.getClickedBlock() == null) {
+            return;
+        }
 
-        ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
-        SchedulerUtil.runTaskAsynchronously(() -> {
-            synchronized(event) {
-                new ObjectCheck(event);
+        SchedulerUtil.runTaskLater(event.getClickedBlock().getLocation(), () -> {
+            if (RuntimeStateManager.runtimeStateManager.isPlayerCoolingDown(event.getPlayer())) {
+                return;
             }
-        });
-        SchedulerUtil.runTaskLater(() -> {
-            ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer());
-        }, ConfigManager.configManager.getLong("cooldown-tick", 5L));
-         if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eLocation: " + event.getClickedBlock().getLocation());
-            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §bIA Block: " + CustomBlock.byAlreadyPlaced(event.getClickedBlock()).getNamespacedID());
-            //TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §cBiome: " + event.getClickedBlock().getBiome().name());
+            RuntimeStateManager.runtimeStateManager.startPlayerCooldown(event.getPlayer());
+            new ObjectCheck(event);
+        }, 1L);
+        if (ConfigManager.configManager.getBoolean("debug", false)) {
+            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eClick trigger!");
         }
     }
 }

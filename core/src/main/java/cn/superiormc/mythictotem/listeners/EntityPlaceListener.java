@@ -1,11 +1,10 @@
 package cn.superiormc.mythictotem.listeners;
 
-import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
+import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.objects.checks.ObjectCheck;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPlaceEvent;
@@ -23,16 +22,15 @@ public class EntityPlaceListener implements Listener {
         if (ConfigManager.configManager.getBoolean("trigger.EntityPlaceEvent.require-shift", false) && (!event.getPlayer().isSneaking())) {
             return;
         }
-        if (ConfigManager.configManager.getCheckingPlayer.contains(event.getPlayer())) {
+        if (RuntimeStateManager.runtimeStateManager.isPlayerCoolingDown(event.getPlayer())) {
             return;
         }
-        ConfigManager.configManager.getCheckingPlayer.add(event.getPlayer());
-        SchedulerUtil.runTaskAsynchronously(() -> {
+        RuntimeStateManager.runtimeStateManager.startPlayerCooldown(event.getPlayer());
+        SchedulerUtil.runSync(event.getEntity(), () -> {
             synchronized(event) {
                 new ObjectCheck(event);
             }
         });
-        SchedulerUtil.runTaskLater(() -> ConfigManager.configManager.getCheckingPlayer.remove(event.getPlayer()), ConfigManager.configManager.getLong("cooldown-tick", 5L));
          if (ConfigManager.configManager.getBoolean("debug", false)) {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eEntity place trigger!");
         }
