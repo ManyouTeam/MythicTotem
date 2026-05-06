@@ -86,7 +86,7 @@ public class ObjectCheck {
             return;
         }
         this.block = event.getBlocks().getLast().getRelative(event.getDirection()).getLocation().getBlock();
-        this.player = Bukkit.getPlayer("PQguanfang2");
+        this.player = null;
         this.item = null;
         checkTotem();
     }
