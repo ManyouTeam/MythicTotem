@@ -36,7 +36,7 @@ public class LibreforgeEffects {
         HolderProviderKt.registerHolderProvider((HolderProvider) dispatcher -> {
             Collection<ProvidedHolder> tempVal1 = new HashSet<>();
             if (dispatcher.getDispatcher() instanceof Player player) {
-                for (BonusTotemData tempVal2: BonusEffectsManager.manager.getPlayerActivedBonus(player)) {
+                for (BonusTotemData tempVal2: BonusEffectsManager.bonusEffectsManager.getPlayerActivedBonus(player)) {
                     LibreforgeEffect tempVal3 = libreforgeEffectMap.get(tempVal2.totemId);
                     if (tempVal3 == null) {
                         continue;

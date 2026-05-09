@@ -55,7 +55,7 @@ public class TotemInfoGUI extends InvGUI {
                 "bonus_range", String.format("%.1f", data.getRange()),
                 "bonus_description", data.getDescription(),
                 "bonus_limit", String.valueOf(EffectUtil.getMaxEffectsAmount(player, data)),
-                "bonus_amount", String.valueOf(BonusEffectsManager.manager.getPlayerActivedBonus(player).size()),
+                "bonus_amount", String.valueOf(BonusEffectsManager.bonusEffectsManager.getPlayerActivedBonus(player).size()),
                 "next_level", String.valueOf(data.getLevel() + 1),
                 "next_price", data.getUpgradePriceName(player),
                 "next_price_amount", data.getUpgradePrice(player) == null ? "0" : MathUtil.toDisplayString(data.getUpgradePrice(player).getCost()),
@@ -102,7 +102,7 @@ public class TotemInfoGUI extends InvGUI {
     @Override
     public boolean clickEventHandle(Inventory inventory, ClickType type, int slot) {
         if (slot == totemUpgradeSlot) {
-            if (BonusEffectsManager.manager.upgradeBonusTotem(player, data)) {
+            if (BonusEffectsManager.bonusEffectsManager.upgradeBonusTotem(player, data)) {
                 openGUI(player, data);
             }
         }

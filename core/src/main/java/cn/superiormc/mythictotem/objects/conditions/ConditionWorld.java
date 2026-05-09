@@ -15,7 +15,7 @@ public class ConditionWorld extends AbstractCheckCondition {
     }
 
     @Override
-    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player,  AbstractThingData thingData) {
+    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, AbstractThingData thingData) {
         Location location = null;
         if (player == null || singleCondition.getBoolean("block-as-trigger", false)) {
             if (thingData instanceof TotemActiveData totemActiveData) {

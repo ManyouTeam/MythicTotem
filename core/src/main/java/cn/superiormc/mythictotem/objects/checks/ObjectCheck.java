@@ -2,6 +2,7 @@ package cn.superiormc.mythictotem.objects.checks;
 
 import cn.superiormc.mythictotem.api.TotemActivedEvent;
 import cn.superiormc.mythictotem.managers.BlockCheckManager;
+import cn.superiormc.mythictotem.managers.BonusEffectsManager;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.managers.HookManager;
 import cn.superiormc.mythictotem.managers.LanguageManager;
@@ -130,10 +131,6 @@ public class ObjectCheck {
             // 条件
             ObjectCondition condition = singleTotem.getTotem().getTotemCondition();
             if (!condition.getAllBoolean(player, new TotemActiveData(block.getLocation(), this, singleTotem))) {
-                if (ConfigManager.configManager.getBoolean("debug", false)) {
-                    TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
-                            " because conditions not meet!");
-                }
                 if (watchingThisTotem) {
                     watchingTotemConditionFailed = true;
                 }
@@ -146,18 +143,8 @@ public class ObjectCheck {
                     ObjectPriceCheck priceManager = new ObjectPriceCheck(singleTotem.getTotem().getSection().getConfigurationSection("prices." + singleSection), player, block);
                     if (!singleTotem.getTotem().getKeyMode()) {
                         item = null;
-                        if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSet item to null!");
-                        }
-                    }
-                    if (ConfigManager.configManager.getBoolean("debug", false)) {
-                        TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eItem: " + item + "!");
                     }
                     if (!priceManager.checkPrice(false, item)) {
-                        if (ConfigManager.configManager.getBoolean("debug", false)) {
-                            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §eSkipped " + singleTotem.getTotem().getTotemID() +
-                                    " because prices not meet!");
-                        }
                         if (watchingThisTotem) {
                             watchingTotemPriceFailed = true;
                         }
@@ -831,6 +818,8 @@ public class ObjectCheck {
                 int middleIndex = size / 2;
 
                 UUID uuid = UUID.randomUUID();
+                boolean shouldAddBonusEffects = singleTotem.getTotem().isBonusEffectsEnabled()
+                        && !BonusEffectsManager.bonusEffectsManager.hasBonusTotemInLocations(validTotemBlockLocation, singleTotem.getTotem().getTotemID());
                 for (int i = 0; i < size; i++) {
                     Location loc = validTotemBlockLocation.get(i);
                     Block blockAtLoc = loc.getBlock();
@@ -839,7 +828,7 @@ public class ObjectCheck {
                         CommonUtil.removeBlock(blockAtLoc);
                     }
 
-                    if (singleTotem.getTotem().isBonusEffectsEnabled()) {
+                    if (shouldAddBonusEffects) {
                         boolean isCore = (i == middleIndex);
                         singleTotem.getTotem().addBonusEffects(blockAtLoc, isCore, uuid);
                     }

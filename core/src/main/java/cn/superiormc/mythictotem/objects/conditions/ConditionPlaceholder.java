@@ -13,7 +13,7 @@ public class ConditionPlaceholder extends AbstractCheckCondition {
     }
 
     @Override
-    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player,  AbstractThingData thingData) {
+    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, AbstractThingData thingData) {
         String placeholder = singleCondition.getString("placeholder", player, thingData);
         String value = singleCondition.getString("value", player, thingData);
         try {

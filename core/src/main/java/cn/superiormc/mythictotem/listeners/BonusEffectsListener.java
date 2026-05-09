@@ -22,41 +22,41 @@ public class BonusEffectsListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        BonusEffectsManager.manager.destroyTotem(block.getLocation());
+        BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList()) {
-            BonusEffectsManager.manager.destroyTotem(block.getLocation());
+            BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         for (Block block : event.blockList()) {
-            BonusEffectsManager.manager.destroyTotem(block.getLocation());
+            BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
-            BonusEffectsManager.manager.destroyTotem(block.getLocation());
+            BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
-            BonusEffectsManager.manager.destroyTotem(block.getLocation());
+            BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityGrief(EntityChangeBlockEvent event) {
         Block block = event.getBlock();
-        BonusEffectsManager.manager.destroyTotem(block.getLocation());
+        BonusEffectsManager.bonusEffectsManager.destroyTotem(block.getLocation());
     }
 
     @EventHandler
@@ -68,15 +68,15 @@ public class BonusEffectsListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        BonusEffectsManager.manager.removePlayer(event.getPlayer());
+        BonusEffectsManager.bonusEffectsManager.removePlayer(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null
-                && BonusEffectsManager.manager != null
+                && BonusEffectsManager.bonusEffectsManager != null
                 && ConfigManager.configManager.getBoolean("bonus-effects.gui.enabled", true)) {
-            BonusTotemData data = BonusEffectsManager.manager.getBonusTotemAt(event.getClickedBlock().getLocation());
+            BonusTotemData data = BonusEffectsManager.bonusEffectsManager.getBonusTotemAt(event.getClickedBlock().getLocation());
             if (data != null) {
                 TotemInfoGUI.openGUI(event.getPlayer(), data);
             }

@@ -13,7 +13,7 @@ public class ConditionTrigger extends AbstractCheckCondition {
     }
 
     @Override
-    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player,  AbstractThingData thingData) {
+    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, AbstractThingData thingData) {
         if (thingData instanceof TotemActiveData totemActiveData) {
             return totemActiveData.check.getEvent().equals(singleCondition.getString("event"));
         }

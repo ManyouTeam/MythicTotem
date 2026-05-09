@@ -52,9 +52,6 @@ public class ObjectPriceCheck {
             type = "free";
         }
         this.cost = MathUtil.doCalculate(section.getString("amount", "1")).doubleValue();
-        if (ConfigManager.configManager.getBoolean("debug", false)) {
-            TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §aPrice Type: " + type + "!");
-        }
     }
 
     public boolean checkPrice(boolean take, ItemStack keyItems) {

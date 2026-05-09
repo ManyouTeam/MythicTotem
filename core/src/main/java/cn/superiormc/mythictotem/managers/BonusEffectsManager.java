@@ -15,20 +15,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BonusEffectsManager {
 
-    public static BonusEffectsManager manager;
+    public static BonusEffectsManager bonusEffectsManager;
 
     public static final NamespacedKey KEY_CHUNK_TOTEMS = new NamespacedKey(MythicTotem.instance, "bonus_totems");
 
     private final Map<Chunk, Collection<BonusTotemData>> totemMap = new ConcurrentHashMap<>();
 
-    private final Map<UUID, Map<Location, BonusTotemData>> playerActive = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<UUID, BonusTotemData>> playerActive = new ConcurrentHashMap<>();
 
     private final Map<Integer, List<double[]>> circleCache = new HashMap<>();
 
     private final Collection<Chunk> chunkCache = new ArrayList<>();
 
     public BonusEffectsManager() {
-        manager = this;
+        bonusEffectsManager = this;
     }
 
     public void addBonusEffectBlock(Block block,
@@ -36,7 +36,6 @@ public class BonusEffectsManager {
                                     String totemId,
                                     boolean isCore,
                                     UUID uuid) {
-
         Chunk chunk = block.getChunk();
 
         BonusTotemData data = new BonusTotemData(
@@ -81,10 +80,14 @@ public class BonusEffectsManager {
         int radius = ConfigManager.configManager.getInt("bonus-effects.check-radius", 10);
         int chunkRadius = (int) Math.ceil(radius / 16.0);
 
-        Map<Location, BonusTotemData> active = playerActive.computeIfAbsent(player.getUniqueId(), k -> new LinkedHashMap<>());
+        Map<UUID, BonusTotemData> active = playerActive.computeIfAbsent(player.getUniqueId(), k -> new LinkedHashMap<>());
 
-        Set<Location> nowInRange = new HashSet<>();
+        Set<UUID> nowInRange = new HashSet<>();
         Set<String> nowTotemID = new HashSet<>();
+        Set<String> activeTotemID = new HashSet<>();
+        for (BonusTotemData activeData : active.values()) {
+            activeTotemID.add(activeData.totemId);
+        }
 
         for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {
             for (int dz = -chunkRadius; dz <= chunkRadius; dz++) {
@@ -113,17 +116,18 @@ public class BonusEffectsManager {
                     double distSq = totemData.location.distance(loc);
 
                     if (distSq <= totemData.getRange()) {
-                        nowInRange.add(totemData.location);
+                        nowInRange.add(totemData.totemUUID);
                         if (ConfigManager.configManager.getBoolean("bonus-effects.range-display.enabled", true)) {
                             showTotemRange(player, totemData);
                         }
 
-                        if (!active.containsKey(totemData.location)) {
+                        if (!active.containsKey(totemData.totemUUID)) {
                             int limit = EffectUtil.getMaxEffectsAmount(player, totemData);
                             boolean allowSameTotem = !ConfigManager.configManager.getBoolean("bonus-effects.limit.same-totem-only-active-once", true)
-                                    || !nowTotemID.contains(totemData.totemId);
+                                    || (!nowTotemID.contains(totemData.totemId) && !activeTotemID.contains(totemData.totemId));
                             if (active.size() < limit && allowSameTotem) {
-                                active.put(totemData.location, totemData);
+                                active.put(totemData.totemUUID, totemData);
+                                activeTotemID.add(totemData.totemId);
                                 applyBonus(player, totemData);
                             }
                         } else {
@@ -136,9 +140,9 @@ public class BonusEffectsManager {
         }
 
         // 离开检测
-        Iterator<Map.Entry<Location, BonusTotemData>> it = active.entrySet().iterator();
+        Iterator<Map.Entry<UUID, BonusTotemData>> it = active.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Location, BonusTotemData> entry = it.next();
+            Map.Entry<UUID, BonusTotemData> entry = it.next();
 
             if (!nowInRange.contains(entry.getKey())) {
                 removeBonus(player, entry.getValue());
@@ -256,17 +260,17 @@ public class BonusEffectsManager {
             }
         }
 
-        for (Map.Entry<UUID, Map<Location, BonusTotemData>> playerEntry : playerActive.entrySet()) {
+        for (Map.Entry<UUID, Map<UUID, BonusTotemData>> playerEntry : playerActive.entrySet()) {
 
             Player player = Bukkit.getPlayer(playerEntry.getKey());
             if (player == null) continue;
 
-            Map<Location, BonusTotemData> map = playerEntry.getValue();
+            Map<UUID, BonusTotemData> map = playerEntry.getValue();
 
-            Iterator<Map.Entry<Location, BonusTotemData>> it = map.entrySet().iterator();
+            Iterator<Map.Entry<UUID, BonusTotemData>> it = map.entrySet().iterator();
 
             while (it.hasNext()) {
-                Map.Entry<Location, BonusTotemData> e = it.next();
+                Map.Entry<UUID, BonusTotemData> e = it.next();
 
                 if (e.getValue().totemUUID.equals(uuid)) {
                     removeBonus(player, e.getValue());
@@ -309,7 +313,7 @@ public class BonusEffectsManager {
     }
 
     public Collection<BonusTotemData> getPlayerActivedBonus(Player player) {
-        Map<Location, BonusTotemData> tempVal1 = playerActive.get(player.getUniqueId());
+        Map<UUID, BonusTotemData> tempVal1 = playerActive.get(player.getUniqueId());
         if (tempVal1 == null) {
             return new ArrayList<>();
         }
@@ -379,6 +383,16 @@ public class BonusEffectsManager {
             }
         }
         return null;
+    }
+
+    public boolean hasBonusTotemInLocations(Collection<Location> locations, String totemId) {
+        for (Location location : locations) {
+            BonusTotemData data = getBonusTotemAt(location);
+            if (data != null && data.totemId.equals(totemId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean upgradeBonusTotem(Player player, BonusTotemData data) {

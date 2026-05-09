@@ -212,7 +212,7 @@ public class ObjectTotem {
             return;
         }
 
-        BonusEffectsManager.manager.addBonusEffectBlock(block, totemSection.getInt("bonus-effects.default-level", 1), totemID, isCore, uuid);
+        BonusEffectsManager.bonusEffectsManager.addBonusEffectBlock(block, totemSection.getInt("bonus-effects.default-level", 1), totemID, isCore, uuid);
     }
 
     public boolean isBonusEffectsEnabled() {

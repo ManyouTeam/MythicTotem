@@ -20,7 +20,7 @@ public class ConditionTriggerItem extends AbstractCheckCondition {
     }
 
     @Override
-    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player,  AbstractThingData thingData) {
+    protected boolean onCheckCondition(ObjectSingleCondition singleCondition, Player player, AbstractThingData thingData) {
         if (thingData instanceof TotemActiveData totemActiveData) {
             ObjectCheck check = totemActiveData.check;
             if (check.getItem() == null) {

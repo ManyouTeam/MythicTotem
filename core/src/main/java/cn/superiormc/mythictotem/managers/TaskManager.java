@@ -20,12 +20,12 @@ public class TaskManager {
 
     public void initBonusEffectsTasks() {
         bonusEffectsTask = SchedulerUtil.runTaskTimer(
-                    () -> BonusEffectsManager.manager.tick(),
+                    () -> BonusEffectsManager.bonusEffectsManager.tick(),
                     20L,
                     1L
         );
         loadedChunksTask = SchedulerUtil.runTaskTimer(
-                () -> BonusEffectsManager.manager.tickChunks(),
+                () -> BonusEffectsManager.bonusEffectsManager.tickChunks(),
                 20L,
                 60L
         );
