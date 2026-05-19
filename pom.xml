@@ -21,7 +21,7 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.7.1</revision>
+        <revision>4.7.2</revision>
         <name>MythicTotem</name>
     </properties>
 
@@ -52,6 +52,10 @@
                                 <relocation>
                                     <pattern>redempt.crunch</pattern>
                                     <shadedPattern>cn.superiormc.mythictotem.libs.redempt.crunch</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>cn.gtemc.itembridge</pattern>
+                                    <shadedPattern>cn.superiormc.enchantmentslots.libs.itembridge</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

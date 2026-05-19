@@ -116,19 +116,7 @@ public class CommonUtil {
     }
 
     public static Collection<Entity> getNearbyEntity(Location location, double distance) {
-        Collection<Entity> tempVal2 = new HashSet<>();
-        if (MythicTotem.isFolia) {
-            ErrorManager.errorManager.sendErrorMessage("§cError: Folia servers do not support entity as totem layout, skipping totem check.");
-        } else {
-            try {
-                tempVal2 = Bukkit.getScheduler().callSyncMethod(MythicTotem.instance, () -> location.getWorld().getNearbyEntities(location, distance,
-                        distance, distance)).get();
-            } catch (InterruptedException | ExecutionException e) {
-                ErrorManager.errorManager.sendErrorMessage("§cError: There is something wrong when get nearby entities.");
-                return new HashSet<>();
-            }
-        }
-        return tempVal2;
+        return location.getWorld().getNearbyEntities(location, distance, distance, distance);
     }
 
     public static void summonMythicMobs(Location location, String mobID, int level) {
