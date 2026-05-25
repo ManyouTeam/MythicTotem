@@ -21,7 +21,7 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.7.2</revision>
+        <revision>4.7.3</revision>
         <name>MythicTotem</name>
     </properties>
 
@@ -55,7 +55,7 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>cn.gtemc.itembridge</pattern>
-                                    <shadedPattern>cn.superiormc.enchantmentslots.libs.itembridge</shadedPattern>
+                                    <shadedPattern>cn.superiormc.mythictotem.libs.itembridge</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

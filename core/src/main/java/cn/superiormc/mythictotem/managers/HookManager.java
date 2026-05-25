@@ -189,7 +189,7 @@ public class HookManager {
             return false;
         }
         AbstractEconomyHook economyHook = economyHooks.get(pluginName);
-        if (player.hasPermission("ultimateshop.bypassprice")) {
+        if (player.hasPermission("mythictotem.bypassprice")) {
             return true;
         }
         return economyHook.isEnabled() && economyHook.checkEconomy(player, value, take, currencyID);
@@ -216,7 +216,7 @@ public class HookManager {
             return false;
         }
         ErrorManager.errorManager.sendErrorMessage("§cError: You set economy type to "
-                + vanillaType + " in shop config, however for now UltimateShop does not support it!");
+                + vanillaType + " in shop config, however for now MythicTotem does not support it!");
         return false;
     }
 
@@ -261,7 +261,7 @@ public class HookManager {
             return;
         }
         ErrorManager.errorManager.sendErrorMessage("§cError: You set economy type to "
-                + vanillaType + " in shop config, however for now UltimateShop does not support it!");
+                + vanillaType + " in shop config, however for now MythicTotem does not support it!");
         return;
     }
 
