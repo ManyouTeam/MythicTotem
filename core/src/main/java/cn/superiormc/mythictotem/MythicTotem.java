@@ -80,6 +80,7 @@ public final class MythicTotem extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        ListenerManager.listenerManager.unregisterAllListener();
         TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fPlugin is disabled. Author: PQguanfang.");
     }
 
