@@ -6,6 +6,7 @@ import cn.superiormc.mythictotem.objects.checks.type.BlockChecker;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import io.th0rgal.oraxen.mechanics.Mechanic;
+import io.th0rgal.oraxen.mechanics.provided.gameplay.shaped.ShapedBlockMechanic;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -17,10 +18,16 @@ public class OraxenBlockChecker extends BlockChecker {
         if (!CommonUtil.checkPluginLoad("Oraxen")) {
             return null;
         }
-
         try {
             Mechanic oraxenBlock = OraxenBlocks.getOraxenBlock(block.getBlockData());
-            return oraxenBlock == null ? null : "oraxen:" + oraxenBlock.getItemID();
+            if (oraxenBlock == null) {
+                ShapedBlockMechanic shapedBlockMechanic = OraxenBlocks.getShapedMechanic(block);
+                if (shapedBlockMechanic != null) {
+                    return "oraxen:" + shapedBlockMechanic.getItemID();
+                }
+                return null;
+            }
+            return "oraxen:" + oraxenBlock.getItemID();
         } catch (Exception e) {
             if (ConfigManager.configManager.getBoolean("debug", false)) {
                 e.printStackTrace();
