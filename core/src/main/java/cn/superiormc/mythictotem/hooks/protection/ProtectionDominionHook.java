@@ -16,7 +16,7 @@ public class ProtectionDominionHook extends AbstractProtectionHook {
     public boolean canUse(Player player, Location location) {
         try {
             DominionAPI dominionAPI = DominionAPI.getInstance();
-            DominionDTO dominionDTO = dominionAPI.getDominionByLoc(location);
+            DominionDTO dominionDTO = dominionAPI.getDominion(location);
             if (dominionDTO != null) {
                 return dominionAPI.checkPrivilegeFlag(dominionDTO, Flags.BREAK_BLOCK, player);
             }

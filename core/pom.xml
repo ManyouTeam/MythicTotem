@@ -338,7 +338,7 @@
         <dependency>
             <groupId>cn.lunadeer</groupId>
             <artifactId>DominionAPI</artifactId>
-            <version>3.5</version>
+            <version>4.7.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
