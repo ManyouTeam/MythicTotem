@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BonusTotemData extends AbstractThingData implements Comparable<BonusTotemData> {
 
@@ -43,7 +44,7 @@ public class BonusTotemData extends AbstractThingData implements Comparable<Bonu
 
     private ObjectAction bonusEffectCircleActions;
 
-    private final Map<UUID, EffectStatus> mmoEffects = new HashMap<>();
+    private final Map<UUID, EffectStatus> mmoEffects = new ConcurrentHashMap<>();
 
     public BonusTotemData(Location location,
                           int level,

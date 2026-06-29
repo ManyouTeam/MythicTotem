@@ -36,7 +36,7 @@ public class TotemInfoGUI extends InvGUI {
         title = TextUtil.withPAPI(ConfigManager.configManager.getString(player, "bonus-effects.gui.title", "Bonus Totem info"), player);
         if (Objects.isNull(inv)) {
             int size = ConfigManager.configManager.getInt("bonus-effects.gui.size", 27);
-            inv = MythicTotem.methodUtil.createNewInv(player, size, title);
+            inv = MythicTotem.methodUtil.createNewInv(player, size, title, this);
         }
         String[] tempVal1 = {"world", data.location.getWorld().getName(),
                 "player_world", player.getWorld().getName(),

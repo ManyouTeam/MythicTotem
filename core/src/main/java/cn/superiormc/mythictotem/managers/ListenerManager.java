@@ -1,23 +1,15 @@
 package cn.superiormc.mythictotem.managers;
 
 import cn.superiormc.mythictotem.MythicTotem;
-import cn.superiormc.mythictotem.gui.InvGUI;
 import cn.superiormc.mythictotem.listeners.*;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.TextUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class ListenerManager {
 
     public static ListenerManager listenerManager;
-
-    private final Map<UUID, InvGUI> listeners = new HashMap<>();
 
     public ListenerManager() {
         listenerManager = this;
@@ -58,23 +50,6 @@ public class ListenerManager {
                 ConfigManager.configManager.getBoolean("bonus-effects.gui.anti-dupe-checker", false)) {
             Bukkit.getPluginManager().registerEvents(new DupeListener(), MythicTotem.instance);
         }
-    }
-
-    public void registerNewGUIListener(Player player, InvGUI inv) {
-        unregisterListeners(player);
-        listeners.put(player.getUniqueId(), inv);
-    }
-
-    public void unregisterNewGUIListener(Player player, InvGUI inv) {
-        listeners.remove(player.getUniqueId(), inv);
-    }
-
-    public void unregisterListeners(Player player) {
-        listeners.remove(player.getUniqueId());
-    }
-
-    public InvGUI getInvGUI(Player player) {
-        return listeners.get(player.getUniqueId());
     }
 
     public void unregisterAllListener() {

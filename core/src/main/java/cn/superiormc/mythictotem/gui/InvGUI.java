@@ -1,15 +1,16 @@
 package cn.superiormc.mythictotem.gui;
 
-import cn.superiormc.mythictotem.managers.ListenerManager;
 import cn.superiormc.mythictotem.methods.Dupe;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
-public abstract class InvGUI extends AbstractGUI {
+public abstract class InvGUI extends AbstractGUI implements InventoryHolder {
 
     protected Inventory inv;
 
@@ -25,14 +26,12 @@ public abstract class InvGUI extends AbstractGUI {
     public void openGUI() {
         constructGUI();
         if (inv != null) {
-            SchedulerUtil.runSync(player, () -> {
-                player.openInventory(inv);
-                ListenerManager.listenerManager.registerNewGUIListener(player, this);
-            });
+            SchedulerUtil.runSync(player, () -> player.openInventory(inv));
         }
     }
 
-    public Inventory getInv() {
+    @Override
+    public @NonNull Inventory getInventory() {
         return inv;
     }
 
