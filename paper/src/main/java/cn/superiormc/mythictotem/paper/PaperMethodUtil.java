@@ -5,6 +5,7 @@ import cn.superiormc.mythictotem.MythicTotem;
 import cn.superiormc.mythictotem.managers.ConfigManager;
 import cn.superiormc.mythictotem.paper.methods.BuildItemPaper;
 import cn.superiormc.mythictotem.paper.methods.DebuildItemPaper;
+import cn.superiormc.mythictotem.paper.listener.PaperBonusEffectsListener;
 import cn.superiormc.mythictotem.paper.utils.PaperTextUtil;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SpecialMethodUtil;
@@ -30,6 +31,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.*;
 
 public class PaperMethodUtil implements SpecialMethodUtil {
+
+    @Override
+    public void bonusEffectsListener() {
+        Bukkit.getPluginManager().registerEvents(new PaperBonusEffectsListener(), MythicTotem.instance);
+    }
 
     @Override
     public String methodID() {

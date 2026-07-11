@@ -14,6 +14,8 @@ import java.util.List;
 
 public interface SpecialMethodUtil {
 
+    void bonusEffectsListener();
+
     String methodID();
 
     void dispatchCommand(String command);

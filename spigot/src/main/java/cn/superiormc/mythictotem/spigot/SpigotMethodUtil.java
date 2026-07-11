@@ -1,5 +1,7 @@
 package cn.superiormc.mythictotem.spigot;
 
+import cn.superiormc.mythictotem.MythicTotem;
+import cn.superiormc.mythictotem.listeners.BonusEffectsListener;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
 import cn.superiormc.mythictotem.utils.SpecialMethodUtil;
@@ -27,6 +29,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SpigotMethodUtil implements SpecialMethodUtil {
+
+    @Override
+    public void bonusEffectsListener() {
+        Bukkit.getPluginManager().registerEvents(new BonusEffectsListener(), MythicTotem.instance);
+    }
 
     private static final Pattern TEXTURE_URL_PATTERN = Pattern.compile("\"url\"\\s*:\\s*\"(https?://textures\\.minecraft\\.net/texture/[^\"]+)\"");
 

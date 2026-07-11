@@ -44,7 +44,7 @@ public class ListenerManager {
             TextUtil.sendMessage(null, TextUtil.pluginPrefix() + " §fEnabled EntityPlaceEvent trigger.");
         }
         if (!MythicTotem.isFolia && ConfigManager.configManager.getBoolean("bonus-effects.enabled", false)) {
-            Bukkit.getPluginManager().registerEvents(new BonusEffectsListener(), MythicTotem.instance);
+            MythicTotem.methodUtil.bonusEffectsListener();
         }
         if (CommonUtil.getMajorVersion(19) && MythicTotem.methodUtil.methodID().equals("paper") &&
                 ConfigManager.configManager.getBoolean("bonus-effects.gui.anti-dupe-checker", false)) {
