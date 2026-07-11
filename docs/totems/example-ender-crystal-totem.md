@@ -1,0 +1,62 @@
+# 📚Example: Ender Crystal Totem
+
+## Config
+
+```yaml
+mode: 'HORIZONTAL'
+layouts:
+  1:
+    - 'AAAAA'
+    - 'AAAAA'
+    - 'AABAA'
+    - 'AAAAA'
+    - 'AAAAA'
+  2:
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+    - 'CCCCC'
+explains:
+  A: 'minecraft:end_stone'
+  B: 'minecraft:obsidian'
+  C: 'minecraft:diamond_block'
+actions:
+  1:
+    type: message
+    message: 'Hello!'
+  2:
+    type: mythicmobs_spawn
+    entity: SkeletalKnight'
+conditions: []
+# Core block means what block player should place ender crystal on.
+core-blocks:
+  - B
+disappear: true
+
+# Can also be:
+#mode: 'HORIZONTAL'
+#layouts:
+#  1:
+#    - 'CCDCC'
+#    - 'CCCCC'
+#    - 'DCCCD'
+#    - 'CCCCC'
+#    - 'CCDCC'
+#  2:
+#    - 'CCBCC'
+#    - 'CCCCC'
+#    - 'BCCCB'
+#    - 'CCCCC'
+#    - 'CCBCC'
+#explains:
+#  A: 'none'
+#  B: 'minecraft:obsidian'
+#  C: 'none'
+#  D: 'minecraft:ENDER_CRYSTAL'
+#
+```
+
+## Info
+
+We use `trigger` condition to make this totem can only be active when player place ender crystal onto a block, and `core-blocks` option and can help us make this totem can only actived when player place ender crystal onto this block.
