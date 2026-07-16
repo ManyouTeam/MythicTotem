@@ -21,7 +21,7 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>4.7.10</revision>
+        <revision>4.7.11</revision>
         <name>MythicTotem</name>
     </properties>
 

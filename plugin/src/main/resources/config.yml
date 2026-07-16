@@ -63,6 +63,7 @@ trigger:
 
 math:
   enabled: false
+  enable-function: true
   scale: 2
 
 number-display:
