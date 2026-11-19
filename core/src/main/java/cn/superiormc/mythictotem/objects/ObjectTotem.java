@@ -26,6 +26,8 @@ public class ObjectTotem {
     // 行列，Material
     private final Map<String, String> totemLocationMaterial = new HashMap<>();
 
+    private final Set<String> disappearingPositions = new HashSet<>();
+
     private final ObjectAction totemAction;
 
     private final ObjectCondition totemCondition;
@@ -44,7 +46,8 @@ public class ObjectTotem {
 
     public ObjectTotem(String id, YamlConfiguration section) {
         this.totemID = id;
-        this.totemDisappear = section.getBoolean("disappear", true);
+        Set<String> disappearBlocks = new HashSet<>(section.getStringList("disappear-blocks"));
+        this.totemDisappear = section.getBoolean("disappear", !section.isList("disappear-blocks"));
         this.totemAction = new ObjectAction(section.getConfigurationSection("actions"));
         this.totemCondition = new ObjectCondition(section.getConfigurationSection("conditions"));
         this.totemCheckMode = section.getString("mode", "VERTICAL").toUpperCase();
@@ -95,10 +98,11 @@ public class ObjectTotem {
                     for (this.totemColumn = 0; this.totemColumn < s.length(); this.totemColumn++) {
                         char realChar = s.charAt(this.totemColumn);
                         // realString 代表对应 layout 中对应 realChar 字节的 material
-                        String realString = totemLayoutsExplain.get(String.valueOf(realChar));
+                        String layoutKey = String.valueOf(realChar);
+                        String realString = totemLayoutsExplain.get(layoutKey);
                         // 放置到方块表中
                         // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
-                        if (totemCoreBlocks.isEmpty() || totemCoreBlocks.contains(String.valueOf(realChar))) {
+                        if (totemCoreBlocks.isEmpty() || totemCoreBlocks.contains(layoutKey)) {
                             if (ConfigManager.configManager.getTotemMaterial.containsKey(realString)) {
                                 ConfigManager.configManager.getTotemMaterial.get(realString).add(
                                         new ObjectPlaceCheck(this,
@@ -111,7 +115,11 @@ public class ObjectTotem {
                                 ConfigManager.configManager.getTotemMaterial.put(realString, placedBlockCheckManagers);
                             }
                         }
-                        this.totemLocationMaterial.put(generateID(i, totemRow, totemColumn), realString);
+                        String position = generateID(i, totemRow, totemColumn);
+                        this.totemLocationMaterial.put(position, realString);
+                        if (disappearBlocks.contains(layoutKey)) {
+                            disappearingPositions.add(position);
+                        }
                     }
                     this.totemRow++;
                 }
@@ -125,7 +133,8 @@ public class ObjectTotem {
                 for (this.totemColumn = 0 ; this.totemColumn < s.length() ; this.totemColumn++){
                     char realChar = s.charAt(this.totemColumn);
                     // realString 代表对应 layout 中对应 realChar 字节的 material
-                    String realString = totemLayoutsExplain.get(String.valueOf(realChar));
+                    String layoutKey = String.valueOf(realChar);
+                    String realString = totemLayoutsExplain.get(layoutKey);
                     // 放置到方块表中
                     // 插件的方块表是玩家放置方块时查询这个方块是否是图腾方块一部分使用的
                     if (ConfigManager.configManager.getTotemMaterial.containsKey(realString)){
@@ -136,7 +145,11 @@ public class ObjectTotem {
                         placedBlockCheckManagers.add(new ObjectPlaceCheck(this, totemRow, totemColumn));
                         ConfigManager.configManager.getTotemMaterial.put(realString, placedBlockCheckManagers);
                     }
-                    this.totemLocationMaterial.put(generateID(1, totemRow, totemColumn), realString);
+                    String position = generateID(1, totemRow, totemColumn);
+                    this.totemLocationMaterial.put(position, realString);
+                    if (disappearBlocks.contains(layoutKey)) {
+                        disappearingPositions.add(position);
+                    }
                 }
                 this.totemRow++;
             }
@@ -183,6 +196,10 @@ public class ObjectTotem {
         return this.totemDisappear;
     }
 
+    public boolean shouldDisappear(int layer, int row, int column) {
+        return totemDisappear || disappearingPositions.contains(generateID(layer, row, column));
+    }
+
     public String getCheckMode() {
         return this.totemCheckMode;
     }
@@ -220,6 +237,6 @@ public class ObjectTotem {
     }
 
     public boolean checkAllBlocksAfterActive() {
-        return totemDisappear || totemBonusEffects;
+        return totemDisappear || !disappearingPositions.isEmpty() || totemBonusEffects;
     }
 }

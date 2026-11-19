@@ -119,7 +119,7 @@ bonus-effects:
 ## Note
 
 * All options in this page require restart the server to take effect.
-* Make sure you disable `disappear` option in your totem configs to use this feature.
+* To use bonus effects, keep the layout with `disappear: false` or leave at least one layout block in place with [`disappear-blocks`](totem-config/README.md#disappear-blocks).
 * Make sure your totem layout must not include entity.
 * This feature does not support **Folia** servers.
 * This feature is disabled in `config.yml` and totem configs, you need enable them in both files if you want to use this feature.
@@ -370,3 +370,29 @@ The section below `default` are for different groups. You can set group at each 
 ## GUI
 
 You can open GUI by clicking the totem blocks.
+
+## EnchantmentReform Temporary Powers
+
+Use EnchantmentReform's Temporary Powers as totem bonuses with two `console_command` actions. Set up an enabled power in EnchantmentReform's `temp_powers/` folder, then add the following to your totem file. This example uses the power ID `totem_bonus` from `temp_powers/totem_bonus.yml`.
+
+```yaml
+bonus-effects:
+  enabled: true
+  1:
+    range: 16
+    apply-actions:
+      1:
+        type: console_command
+        command: 'er temppower set {player} totem_bonus 1'
+    remove-actions:
+      1:
+        type: console_command
+        command: 'er temppower remove {player} totem_bonus'
+```
+
+MythicTotem replaces `{player}` with the affected player's name. The console grants the power when the bonus starts and removes it when the bonus ends. The final `1` in the `set` command is the power level. Omit it to use the power's `default-level`.
+
+Set `remember: false` in the power file to clear the grant when the player reconnects or the server restarts. If multiple totem bonuses can be active at once, give them distinct power IDs so that ending one bonus removes only its own grant.
+
+- [EnchantmentReform on SpigotMC](https://www.spigotmc.org/resources/enchantmentreform-custom-item-enchants-attributes-skills-all-in-1-26-1-1-21-6-paper.137261/)
+- [EnchantmentReform documentation](https://enchantedmobs.superiormc.cn/for-enchantmentreform?fallback=true)

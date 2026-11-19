@@ -43,3 +43,28 @@ bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &f增益图腾已升级到 &a{
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &c升级该图腾所需资源不足."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &e该增益图腾已达到最高等级."
 dupe-removed: "&#98FB98[MythicTotem] &f你的背包的一件非法物品已被移除!"
+
+override-lang:
+  bonus-gui:
+    title: '图腾信息'
+    totem-info-item:
+      name: '&e图腾信息'
+      id: '&7图腾 ID：{totem_id}'
+      range: '&7图腾范围：{bonus_range}'
+      level: '&7图腾等级：{bonus_level}'
+      bonus: '&7图腾加成：'
+      description: '&7{bonus_description}'
+      you: '&b你的图腾'
+      limit: '&7图腾上限：{bonus_limit}'
+      active-amount: '&7已激活的加成数量：{bonus_amount}'
+    totem-upgrade-item:
+      name: '&c升级'
+      premium-only: '&c仅限付费版'
+      bonus: '&7升级后加成：'
+      description: '&7{next_description}'
+      level: '&7下一级：{next_level}'
+      price: '&7升级费用：{next_price}'
+    totem-max-upgrade-item:
+      name: '&4已满级'
+      bonus: '&7图腾加成：'
+      description: '&7{bonus_description}'

@@ -65,3 +65,7 @@ You can add those plugins stat as totem bonus effect.
 * MythicLib (Support stat from MMOCore or MMOItems)
 * MythicMobs
 * AuraSkills&#x20;
+
+## Command-based compatibility
+
+Use [EnchantmentReform Temporary Powers](../totems/bonus-effects-for-totem.md#enchantmentreform-temporary-powers) as totem bonuses by granting and removing them with console commands.

@@ -9,6 +9,7 @@ import cn.superiormc.mythictotem.managers.LanguageManager;
 import cn.superiormc.mythictotem.managers.RuntimeStateManager;
 import cn.superiormc.mythictotem.managers.TotemDebugManager;
 import cn.superiormc.mythictotem.objects.ObjectCondition;
+import cn.superiormc.mythictotem.objects.ObjectTotem;
 import cn.superiormc.mythictotem.objects.singlethings.TotemActiveData;
 import cn.superiormc.mythictotem.utils.CommonUtil;
 import cn.superiormc.mythictotem.utils.SchedulerUtil;
@@ -420,14 +421,10 @@ public class ObjectCheck {
         int validZNoneBlockAmount1 = 0;
         int validZNoneBlockAmount2 = 0;
         // 存放实际方块摆放位置和图腾配置一致的 List
-        List<Location> validXTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validXTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validZTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validZTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validXTotemEntity1 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validXTotemEntity2 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validZTotemEntity1 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validZTotemEntity2 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validXTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validXTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validZTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validZTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
         boolean checkXTrueOrFalse1 = true;
         boolean checkXTrueOrFalse2 = true;
         boolean checkZTrueOrFalse1 = true;
@@ -452,6 +449,7 @@ public class ObjectCheck {
                     checkZTrueOrFalse2 = false;
                 }
                 String material = singleTotem.getTotem().getRealMaterial(1, i, b);
+                boolean disappear = singleTotem.getTotem().shouldDisappear(1, i, b);
                 ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(this, material, nowLocation_1, 1);
                 ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(this, material, nowLocation_2, 2);
                 ObjectMaterialCheck materialManager_3 = new ObjectMaterialCheck(this, material, nowLocation_3, 3);
@@ -464,10 +462,7 @@ public class ObjectCheck {
                     if (material.equals("none")) {
                         validXNoneBlockAmount1++;
                     } else {
-                        validXTotemBlockLocation1.add(nowLocation_1);
-                        if (materialManager_1.getEntityNeedRemove() != null) {
-                            validXTotemEntity1.add(materialManager_1.getEntityNeedRemove());
-                        }
+                        validXTotemBlockLocation1.add(new MatchedPosition(nowLocation_1, disappear, materialManager_1.getEntityNeedRemove()));
                     }
                 } else if (checkXTrueOrFalse1 && !materialManager_1.checkMaterial()) {
                     checkXTrueOrFalse1 = false;
@@ -477,10 +472,7 @@ public class ObjectCheck {
                     if (material.equals("none")) {
                         validXNoneBlockAmount2++;
                     } else {
-                        validXTotemBlockLocation2.add(nowLocation_2);
-                        if (materialManager_2.getEntityNeedRemove() != null) {
-                            validXTotemEntity2.add(materialManager_2.getEntityNeedRemove());
-                        }
+                        validXTotemBlockLocation2.add(new MatchedPosition(nowLocation_2, disappear, materialManager_2.getEntityNeedRemove()));
                     }
                 } else if (checkXTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                     checkXTrueOrFalse2 = false;
@@ -490,10 +482,7 @@ public class ObjectCheck {
                     if (material.equals("none")) {
                         validZNoneBlockAmount1++;
                     } else {
-                        validZTotemBlockLocation1.add(nowLocation_3);
-                        if (materialManager_3.getEntityNeedRemove() != null) {
-                            validZTotemEntity1.add(materialManager_3.getEntityNeedRemove());
-                        }
+                        validZTotemBlockLocation1.add(new MatchedPosition(nowLocation_3, disappear, materialManager_3.getEntityNeedRemove()));
                     }
                 } else if (checkZTrueOrFalse1 && !materialManager_3.checkMaterial()) {
                     checkZTrueOrFalse1 = false;
@@ -503,26 +492,23 @@ public class ObjectCheck {
                     if (material.equals("none")) {
                         validZNoneBlockAmount2++;
                     } else {
-                        validZTotemBlockLocation2.add(nowLocation_4);
-                        if (materialManager_4.getEntityNeedRemove() != null) {
-                            validZTotemEntity2.add(materialManager_4.getEntityNeedRemove());
-                        }
+                        validZTotemBlockLocation2.add(new MatchedPosition(nowLocation_4, disappear, materialManager_4.getEntityNeedRemove()));
                     }
                 } else if (checkZTrueOrFalse2 && !materialManager_4.checkMaterial()) {
                     checkZTrueOrFalse2 = false;
                 }
                 // 条件满足
                 if (validXTotemBlockLocation1.size() == (base_row * base_column - validXNoneBlockAmount1)) {
-                    afterCheck(singleTotem, startLocation_1, validXTotemBlockLocation1, validXTotemEntity1);
+                    afterCheck(singleTotem, startLocation_1, nowLocation_1, validXTotemBlockLocation1);
                     return true;
                 } else if (validXTotemBlockLocation2.size() == (base_row * base_column - validXNoneBlockAmount2)) {
-                    afterCheck(singleTotem, startLocation_2, validXTotemBlockLocation2, validXTotemEntity2);
+                    afterCheck(singleTotem, startLocation_2, nowLocation_2, validXTotemBlockLocation2);
                     return true;
                 } else if (validZTotemBlockLocation1.size() == (base_row * base_column - validZNoneBlockAmount1)) {
-                    afterCheck(singleTotem, startLocation_3, validZTotemBlockLocation1, validZTotemEntity1);
+                    afterCheck(singleTotem, startLocation_3, nowLocation_3, validZTotemBlockLocation1);
                     return true;
                 } else if (validZTotemBlockLocation2.size() == (base_row * base_column - validZNoneBlockAmount2)) {
-                    afterCheck(singleTotem, startLocation_4, validZTotemBlockLocation2, validZTotemEntity2);
+                    afterCheck(singleTotem, startLocation_4, nowLocation_4, validZTotemBlockLocation2);
                     return true;
                 }
             }
@@ -586,22 +572,14 @@ public class ObjectCheck {
         int validNoneBlockAmount7 = 0;
         int validNoneBlockAmount8 = 0;
         // 存放实际方块摆放位置和图腾配置一致的 List
-        List<Location> validTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation3 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation4 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation5 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation6 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation7 = Collections.synchronizedList(new ArrayList<>());
-        List<Location> validTotemBlockLocation8 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity1 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity2 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity3 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity4 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity5 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity6 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity7 = Collections.synchronizedList(new ArrayList<>());
-        List<Entity> validTotemEntity8 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation1 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation2 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation3 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation4 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation5 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation6 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation7 = Collections.synchronizedList(new ArrayList<>());
+        List<MatchedPosition> validTotemBlockLocation8 = Collections.synchronizedList(new ArrayList<>());
         boolean checkTrueOrFalse1 = true;
         boolean checkTrueOrFalse2 = true;
         boolean checkTrueOrFalse3 = true;
@@ -647,6 +625,7 @@ public class ObjectCheck {
                         checkTrueOrFalse8 = false;
                     }
                     String material = singleTotem.getTotem().getRealMaterial(a, i, b);
+                    boolean disappear = singleTotem.getTotem().shouldDisappear(a, i, b);
                     //1
                     ObjectMaterialCheck materialManager_1 = new ObjectMaterialCheck(this, material, nowLocation_1, 1);
                     ObjectMaterialCheck materialManager_2 = new ObjectMaterialCheck(this, material, nowLocation_2, 2);
@@ -664,10 +643,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount1++;
                         } else {
-                            validTotemBlockLocation1.add(nowLocation_1);
-                            if (materialManager_1.getEntityNeedRemove() != null) {
-                                validTotemEntity1.add(materialManager_1.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation1.add(new MatchedPosition(nowLocation_1, disappear, materialManager_1.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse1 && !materialManager_1.checkMaterial()) {
                         checkTrueOrFalse1 = false;
@@ -677,10 +653,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount2++;
                         } else {
-                            validTotemBlockLocation2.add(nowLocation_2);
-                            if (materialManager_2.getEntityNeedRemove() != null) {
-                                validTotemEntity2.add(materialManager_2.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation2.add(new MatchedPosition(nowLocation_2, disappear, materialManager_2.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse2 && !materialManager_2.checkMaterial()) {
                         checkTrueOrFalse2 = false;
@@ -690,10 +663,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount3++;
                         } else {
-                            validTotemBlockLocation3.add(nowLocation_3);
-                            if (materialManager_3.getEntityNeedRemove() != null) {
-                                validTotemEntity3.add(materialManager_3.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation3.add(new MatchedPosition(nowLocation_3, disappear, materialManager_3.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse3 && !materialManager_3.checkMaterial()) {
                         checkTrueOrFalse3 = false;
@@ -703,10 +673,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount4++;
                         } else {
-                            validTotemBlockLocation4.add(nowLocation_4);
-                            if (materialManager_4.getEntityNeedRemove() != null) {
-                                validTotemEntity4.add(materialManager_4.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation4.add(new MatchedPosition(nowLocation_4, disappear, materialManager_4.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse4 && !materialManager_4.checkMaterial()) {
                         checkTrueOrFalse4 = false;
@@ -716,10 +683,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount5++;
                         } else {
-                            validTotemBlockLocation5.add(nowLocation_5);
-                            if (materialManager_5.getEntityNeedRemove() != null) {
-                                validTotemEntity5.add(materialManager_5.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation5.add(new MatchedPosition(nowLocation_5, disappear, materialManager_5.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse5 && !materialManager_5.checkMaterial()) {
                         checkTrueOrFalse5 = false;
@@ -729,10 +693,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount6++;
                         } else {
-                            validTotemBlockLocation6.add(nowLocation_6);
-                            if (materialManager_6.getEntityNeedRemove() != null) {
-                                validTotemEntity6.add(materialManager_6.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation6.add(new MatchedPosition(nowLocation_6, disappear, materialManager_6.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse6 && !materialManager_6.checkMaterial()) {
                         checkTrueOrFalse6 = false;
@@ -742,10 +703,7 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount7++;
                         } else {
-                            validTotemBlockLocation7.add(nowLocation_7);
-                            if (materialManager_7.getEntityNeedRemove() != null) {
-                                validTotemEntity7.add(materialManager_7.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation7.add(new MatchedPosition(nowLocation_7, disappear, materialManager_7.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse7 && !materialManager_7.checkMaterial()) {
                         checkTrueOrFalse7 = false;
@@ -755,38 +713,35 @@ public class ObjectCheck {
                         if (material.equals("none")) {
                             validNoneBlockAmount8++;
                         } else {
-                            validTotemBlockLocation8.add(nowLocation_8);
-                            if (materialManager_8.getEntityNeedRemove() != null) {
-                                validTotemEntity8.add(materialManager_8.getEntityNeedRemove());
-                            }
+                            validTotemBlockLocation8.add(new MatchedPosition(nowLocation_8, disappear, materialManager_8.getEntityNeedRemove()));
                         }
                     } else if (checkTrueOrFalse8 && !materialManager_8.checkMaterial()) {
                         checkTrueOrFalse8 = false;
                     }
                     // 条件满足
                     if (validTotemBlockLocation1.size() == (base_row * base_column) * base_layer - validNoneBlockAmount1) {
-                        afterCheck(singleTotem, startLocation_1, validTotemBlockLocation1, validTotemEntity1);
+                        afterCheck(singleTotem, startLocation_1, nowLocation_1, validTotemBlockLocation1);
                         return true;
                     } else if (validTotemBlockLocation2.size() == (base_row * base_column) * base_layer - validNoneBlockAmount2) {
-                        afterCheck(singleTotem, startLocation_2, validTotemBlockLocation2, validTotemEntity2);
+                        afterCheck(singleTotem, startLocation_2, nowLocation_2, validTotemBlockLocation2);
                         return true;
                     } else if (validTotemBlockLocation3.size() == (base_row * base_column) * base_layer - validNoneBlockAmount3) {
-                        afterCheck(singleTotem, startLocation_3, validTotemBlockLocation3, validTotemEntity3);
+                        afterCheck(singleTotem, startLocation_3, nowLocation_3, validTotemBlockLocation3);
                         return true;
                     } else if (validTotemBlockLocation4.size() == (base_row * base_column) * base_layer - validNoneBlockAmount4) {
-                        afterCheck(singleTotem, startLocation_4, validTotemBlockLocation4, validTotemEntity4);
+                        afterCheck(singleTotem, startLocation_4, nowLocation_4, validTotemBlockLocation4);
                         return true;
                     } else if (validTotemBlockLocation5.size() == (base_row * base_column) * base_layer - validNoneBlockAmount5) {
-                        afterCheck(singleTotem, startLocation_5, validTotemBlockLocation5, validTotemEntity5);
+                        afterCheck(singleTotem, startLocation_5, nowLocation_5, validTotemBlockLocation5);
                         return true;
                     } else if (validTotemBlockLocation6.size() == (base_row * base_column) * base_layer - validNoneBlockAmount6) {
-                        afterCheck(singleTotem, startLocation_6, validTotemBlockLocation6, validTotemEntity6);
+                        afterCheck(singleTotem, startLocation_6, nowLocation_6, validTotemBlockLocation6);
                         return true;
                     } else if (validTotemBlockLocation7.size() == (base_row * base_column) * base_layer - validNoneBlockAmount7) {
-                        afterCheck(singleTotem, startLocation_7, validTotemBlockLocation7, validTotemEntity7);
+                        afterCheck(singleTotem, startLocation_7, nowLocation_7, validTotemBlockLocation7);
                         return true;
                     } else if (validTotemBlockLocation8.size() == (base_row * base_column) * base_layer - validNoneBlockAmount8) {
-                        afterCheck(singleTotem, startLocation_8, validTotemBlockLocation8, validTotemEntity8);
+                        afterCheck(singleTotem, startLocation_8, nowLocation_8, validTotemBlockLocation8);
                         return true;
                     }
                 }
@@ -797,8 +752,8 @@ public class ObjectCheck {
 
     private void afterCheck(ObjectPlaceCheck singleTotem,
                             Location startLocation,
-                            List<Location> validTotemBlockLocation,
-                            Collection<Entity> needRemoveEntities) {
+                            Location oppositeCorner,
+                            List<MatchedPosition> matchedPositions) {
         ConfigurationSection priceSection = singleTotem.getTotem().getSection().getConfigurationSection("prices");
         if (player != null && priceSection != null) {
             for (String singleSection : priceSection.getKeys(false)) {
@@ -812,42 +767,44 @@ public class ObjectCheck {
             }
         }
         SchedulerUtil.runSync(startLocation, () -> {
-            if (singleTotem.getTotem().checkAllBlocksAfterActive()) {
-
-                int size = validTotemBlockLocation.size();
-                int middleIndex = size / 2;
-
-                UUID uuid = UUID.randomUUID();
-                boolean shouldAddBonusEffects = singleTotem.getTotem().isBonusEffectsEnabled()
-                        && !BonusEffectsManager.bonusEffectsManager.hasBonusTotemInLocations(validTotemBlockLocation, singleTotem.getTotem().getTotemID());
-                for (int i = 0; i < size; i++) {
-                    Location loc = validTotemBlockLocation.get(i);
-                    Block blockAtLoc = loc.getBlock();
-
-                    if (singleTotem.getTotem().getTotemDisappear()) {
-                        CommonUtil.removeBlock(blockAtLoc);
-                    }
-
-                    if (shouldAddBonusEffects) {
-                        boolean isCore = (i == middleIndex);
-                        singleTotem.getTotem().addBonusEffects(blockAtLoc, isCore, uuid);
+            ObjectTotem totem = singleTotem.getTotem();
+            if (totem.checkAllBlocksAfterActive()) {
+                List<Location> bonusLocations = new ArrayList<>();
+                for (MatchedPosition position : matchedPositions) {
+                    if (position.disappear() && (totem.getTotemDisappear() || position.entity() == null)) {
+                        CommonUtil.removeBlock(position.location().getBlock());
+                    } else if (totem.isBonusEffectsEnabled()) {
+                        bonusLocations.add(position.location());
                     }
                 }
 
+                if (!bonusLocations.isEmpty()
+                        && !BonusEffectsManager.bonusEffectsManager.hasBonusTotemInLocations(bonusLocations, totem.getTotemID())) {
+                    UUID uuid = UUID.randomUUID();
+                    int middleIndex = bonusLocations.size() / 2;
+                    for (int i = 0; i < bonusLocations.size(); i++) {
+                        totem.addBonusEffects(bonusLocations.get(i).getBlock(), i == middleIndex, uuid);
+                    }
+                }
             }
             if (event instanceof EntityPlaceEvent) {
                 ((EntityPlaceEvent) event).getEntity().remove();
             }
-            for (Entity singleEntity : needRemoveEntities) {
-                singleEntity.remove();
+            for (MatchedPosition position : matchedPositions) {
+                if (position.entity() != null) {
+                    position.entity().remove();
+                }
             }
-            singleTotem.getTotem().getTotemAction().runAllActions(player, new TotemActiveData(startLocation, this, singleTotem));
+            singleTotem.getTotem().getTotemAction().runAllActions(player, new TotemActiveData(startLocation, this, singleTotem, oppositeCorner));
             TotemActivedEvent totemActivedEvent = new TotemActivedEvent(
                     singleTotem.getTotem().getTotemID(),
                     this.player,
                     this.block.getLocation());
             Bukkit.getPluginManager().callEvent(totemActivedEvent);
         });
+    }
+
+    private record MatchedPosition(Location location, boolean disappear, Entity entity) {
     }
 
     @FunctionalInterface

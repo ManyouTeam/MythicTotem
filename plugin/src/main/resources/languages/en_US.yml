@@ -43,3 +43,28 @@ bonus-gui-upgrade-success: "&#98FB98[MythicTotem] &fBonus totem upgraded to leve
 bonus-gui-upgrade-failed: "&#98FB98[MythicTotem] &cNot enough resources to upgrade this totem."
 bonus-gui-max-level: "&#98FB98[MythicTotem] &eThis bonus totem is already at max level."
 dupe-removed: "&#98FB98[MythicTotem] &fA illegal item from your inventory has been removed!"
+
+override-lang:
+  bonus-gui:
+    title: 'Totem Info'
+    totem-info-item:
+      name: '&eTotem Info'
+      id: '&7Totem ID: {totem_id}'
+      range: '&7Totem Range: {bonus_range}'
+      level: '&7Totem Level: {bonus_level}'
+      bonus: '&7Totem Bonus:'
+      description: '&7{bonus_description}'
+      you: '&bYou'
+      limit: '&7Totem Limit: {bonus_limit}'
+      active-amount: '&7Active Bonus Amount: {bonus_amount}'
+    totem-upgrade-item:
+      name: '&cUpgrade'
+      premium-only: '&cPREMIUM VERSION ONLY'
+      bonus: '&7Upgrade Bonus:'
+      description: '&7{next_description}'
+      level: '&7Next Level: {next_level}'
+      price: '&7Price: {next_price}'
+    totem-max-upgrade-item:
+      name: '&4MAX LEVEL'
+      bonus: '&7Upgrade Bonus:'
+      description: '&7{bonus_description}'

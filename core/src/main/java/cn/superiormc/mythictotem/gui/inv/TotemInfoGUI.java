@@ -82,7 +82,7 @@ public class TotemInfoGUI extends InvGUI {
             ConfigurationSection totemMaxUpgradeSection = ConfigManager.configManager.getConfigurationSection("bonus-effects.gui.totem-max-upgrade-item");
             if (totemMaxUpgradeSection != null) {
                 if (totemMaxUpgradeSection.getBoolean("enabled", true) && totemUpgradeSlot >= 0) {
-                    ItemStack totemUpgradeItem = BuildItem.buildItemStack(player, totemMaxUpgradeSection, totemMaxUpgradeSection.getInt("amount", 1));
+                    ItemStack totemUpgradeItem = BuildItem.buildItemStack(player, totemMaxUpgradeSection, totemMaxUpgradeSection.getInt("amount", 1), tempVal1);
                     setItem(totemUpgradeSlot, totemUpgradeItem);
                 }
             }

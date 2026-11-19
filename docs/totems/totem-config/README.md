@@ -86,7 +86,7 @@ Each line for this option consists of `key: value`. The `key` is a character whi
 
 The material can be set to:
 
-* `none`, this means this position block is not limited, and it will also not be removed if disappear option is enabled. You can regard it as a position not in the totem.
+* `none` lets any block occupy this position. The totem leaves that block in place after activation.
 * `minecraft:<Minecraft Block ID>`, like minecraft:stone.
 * `minecraft:<Minecraft Entity ID>:<Check Distance>`, like `minecraft:ENDER_CRYSTAL` or `minecraft:ENDER_CRYSTAL:1` **.**
 
@@ -158,7 +158,19 @@ This totem will have "core block" if this option exists, player must last place 
 
 ## Disappear
 
-Does the totem disappear after activation?
+Set `disappear: true` to remove all matched layout blocks after activation. Set `disappear: false` to keep them unless `disappear-blocks` selects specific blocks. If you omit both options, the totem removes all matched layout blocks by default.
+
+## Disappear Blocks
+
+Use `disappear-blocks` to remove only the blocks marked with the listed characters in `layout` or `layouts`. Omit `disappear` or set it to `false` to use the list. An explicit `disappear: true` takes precedence.
+
+```yaml
+disappear-blocks:
+  - 'A'
+  - 'B'
+```
+
+Every block marked `A` or `B` is removed after activation. Other blocks stay in place, even if they use the same material. An empty list keeps all blocks when `disappear` is omitted or set to `false`.
 
 ## Bonus Effects
 

@@ -147,7 +147,18 @@ actions:
 
 ## Spawn vanilla mobs
 
-Spawn vanilla mobs.
+Spawn vanilla mobs. The `spawn-location` setting in `config.yml` controls the default for both `entity_spawn` and `mythicmobs_spawn`.
+
+| Value | Spawn location |
+| --- | --- |
+| `TOTEM_CENTER` (default) | Center of the matched totem layout |
+| `TOTEM_START` | First position of the matched layout |
+| `TRIGGER_BLOCK` | Block that triggered the layout check |
+| `PLAYER` | Player's current location, or the trigger block for actions that run without a player |
+
+Bonus-effect actions use the registered bonus block for the three totem-based modes. `TOTEM_CENTER` uses the middle of that block.
+
+For a player-triggered action, set `world` and `x`, `y`, and `z` to choose a specific spawn location. Set `block-as-trigger: true` to use the trigger block.
 
 ```yaml
 actions:
@@ -174,22 +185,16 @@ actions:
     x: 100.0 # Optional
     y: 2.0 # Optional
     z: -100.0 # Optional
-    block-as-trigger: true # Optional
+    block-as-trigger: false # Optional
 ```
 
-Want to summon mobs at center of totem, try this config!
+Leave out the location options to use the totem center with the default global setting.
 
 ```yaml
 actions:
   1:
     type: mythicmobs_spawn
     entity: Super_Skeleton
-    level: 1 # Optional
-    world: LOBBY # Optional
-    x: '%totem_center_x%' # Optional
-    y: '%totem_center_y%' # Optional
-    z: '%totem_center_z%' # Optional
-    block-as-trigger: true # Optional
 ```
 
 ## Delay <mark style="color:red;">- Premium</mark>
